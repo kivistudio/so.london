@@ -1,0 +1,9 @@
+# esbuild and sharp ship platform binaries via postinstall; allow them to run.
+allowBuilds:
+  esbuild: true
+  sharp: true
+
+# We deliberately pin dependencies to latest stable (see AGENTS.md), which
+# conflicts with pnpm 11's default "minimum release age" gate. Disable the gate
+# for this repo so a just-released version installs without per-version excludes.
+minimumReleaseAge: 0
