@@ -1,0 +1,1959 @@
+---
+import platesData from '../../../public/anna-atkins/plates.json';
+import volumesData from '../../../public/anna-atkins/volumes.json';
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Photographs of British Algae — Anna Atkins, 1843–1853</title>
+<meta name="description" content="A complete reading of Anna Atkins's Photographs of British Algae: 310 cyanotype plates, each paired with the species depicted, its habitat, the photographic label, and a modern photograph of the same alga." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style is:global is:inline>
+
+/* ============================================================
+   CYANOTYPE — Photographs of British Algae
+   A page in conversation with Anna Atkins (1799–1871)
+   ============================================================ */
+
+:root {
+  --night:        #07142B;  /* deepest cyanotype night */
+  --night-warm:   #0F2247;  /* the colour of the cyanotype itself */
+  --night-line:   #1B3568;  /* a subtle border in the dark */
+  --paper:        #ECE2C6;  /* aged ivory */
+  --paper-warm:   #E0D2AE;  /* deeper paper */
+  --ink:          #15110A;  /* warm black */
+  --ink-soft:     #4A3F2A;  /* faded ink */
+  --brass:        #B88B3D;  /* aged brass */
+  --brass-dim:    #6E5421;
+  --cream:        #DBD0B3;  /* text on dark */
+  --cream-dim:    #9C8E72;
+
+  --group-red:    #8B2D1E;
+  --group-brown:  #6E4823;
+  --group-green:  #3F6132;
+  --group-cyano:  #1F3A6B;
+  --group-diatom: #886820;
+  --group-lichen: #2A2A26;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--night);
+  color: var(--cream);
+  font-family: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Film-grain noise & cyanotype texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.45'/></svg>");
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse at top, rgba(36,72,128,0.35), transparent 70%),
+    radial-gradient(ellipse at bottom, rgba(8,22,46,0.65), transparent 60%);
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  padding: 6vh 8vw 8vh;
+  display: grid;
+  grid-template-columns: minmax(auto, 56ch) 1fr;
+  gap: 4vw;
+  align-items: end;
+}
+
+/* Top-right navigation menu, white letters, hairline-thin uppercase. */
+.hero__menu {
+  position: absolute;
+  top: 4vh; right: 8vw;
+  display: flex; gap: 2.6em;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  z-index: 3;
+}
+.hero__menu a {
+  color: #fff;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 4px;
+  transition: opacity 200ms ease;
+}
+.hero__menu a::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: #fff;
+  opacity: 0;
+  transform: scaleX(0.4);
+  transform-origin: left;
+  transition: opacity 220ms ease, transform 320ms cubic-bezier(.16,.84,.44,1);
+}
+.hero__menu a:hover::after { opacity: 0.9; transform: scaleX(1); }
+
+.hero__title-block { max-width: 56ch; }
+
+.hero__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(54px, 9.2vw, 156px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  margin-bottom: 0.5em;
+}
+.hero__title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--paper-warm);
+}
+.hero__title .ampersand {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--brass);
+}
+.hero__title .small {
+  display: block;
+  font-size: 0.36em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: var(--cream-dim);
+  margin-top: 0.9em;
+}
+.hero__title > span.line {
+  display: block;
+  opacity: 0;
+  transform: translateY(28px);
+  animation: heroLine 1.2s forwards cubic-bezier(.16,.84,.44,1);
+}
+.hero__title > span.line:nth-child(1) { animation-delay: 0.3s; }
+.hero__title > span.line:nth-child(2) { animation-delay: 0.45s; }
+.hero__title > span.line:nth-child(3) { animation-delay: 0.6s; }
+.hero__title > span.line:nth-child(4) { animation-delay: 0.8s; }
+
+.hero__byline {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 22px;
+  color: var(--cream);
+  max-width: 40ch;
+  margin-top: 2em;
+  opacity: 0;
+  animation: fadeUp 1.5s 1.1s forwards;
+}
+.hero__byline a {
+  color: var(--brass);
+  border-bottom: 1px solid rgba(184,139,61,0.4);
+  text-decoration: none;
+  padding-bottom: 1px;
+}
+.hero__byline a:hover { color: var(--paper); border-bottom-color: var(--paper); }
+
+/* ============================================================
+   SHELF — three books standing in the hero
+   ============================================================ */
+.shelf-wrap {
+  align-self: center;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 44px;
+  opacity: 0;
+  animation: fadeUp 2s 0.7s forwards;
+}
+.shelf-hint {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--cream-dim);
+  letter-spacing: 0.04em;
+}
+.shelf-hint::before, .shelf-hint::after {
+  content: '·'; margin: 0 0.6em; color: var(--brass);
+}
+
+.shelf {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 24px;
+  perspective: 2000px;
+}
+.shelf::after {
+  /* "shelf" line under the books */
+  content: '';
+  position: absolute;
+  left: -10%; right: -10%;
+  bottom: -22px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(184,139,61,0.55) 30%, rgba(184,139,61,0.55) 70%, transparent);
+}
+
+.book {
+  position: relative;
+  width: clamp(200px, 17vw, 260px);
+  flex: 0 0 auto;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 600ms cubic-bezier(.16,.84,.44,1);
+}
+.book:nth-child(1) { transform: rotateY(10deg) translateY(4px); }
+.book:nth-child(2) { transform: rotateY(0deg);   width: clamp(232px, 20vw, 304px); }
+.book:nth-child(3) { transform: rotateY(-10deg) translateY(4px); }
+.book:hover {
+  transform: translateY(-14px) rotateY(0deg);
+}
+
+.book__front {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 100 / 150;
+  background: #0f2247;
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,0.5),
+    -10px 14px 30px rgba(0,0,0,0.55),
+    -2px 0 0 2px rgba(0,0,0,0.5),  /* spine shadow */
+    -5px 0 0 4px rgba(11,22,46,0.7); /* spine edge */
+}
+.book__front img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.book__front::before {
+  /* spine */
+  content: ''; position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 8px;
+  background: linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.25) 50%, transparent);
+  z-index: 2;
+}
+.book__front::after {
+  /* glare across the cover */
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(105deg, rgba(255,255,255,0.0) 30%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.0) 70%);
+  pointer-events: none;
+}
+
+.book__plate {
+  position: absolute;
+  top: 28%; left: 24%;
+  width: 60%;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  text-align: center;
+  color: rgba(236,226,198,0.92);
+  text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+  pointer-events: none;
+  z-index: 3;
+}
+.book__plate .roman {
+  font-size: 36px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+.book__plate .word {
+  font-family: 'DM Mono', monospace;
+  font-style: normal;
+  font-size: 8px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  margin-top: 6px;
+  opacity: 0.7;
+}
+
+.book__caption {
+  margin-top: 22px;
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+.book__caption strong {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 17px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--cream);
+  margin-bottom: 3px;
+}
+
+/* ============================================================
+   READER DIALOG (flip book)
+   ============================================================ */
+/* ============================================================
+   LIGHTBOX (image popup) — click any card image to enlarge
+   ============================================================ */
+dialog.lightbox {
+  border: none;
+  padding: 0;
+  background: transparent;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  color: var(--cream);
+}
+dialog.lightbox::backdrop {
+  background: rgba(4,8,18,0.96);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.lightbox__figure {
+  position: absolute;
+  inset: 4vh 4vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+.lightbox__figure img {
+  max-width: 100%;
+  max-height: calc(100% - 60px);
+  object-fit: contain;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+  cursor: zoom-out;
+  background: var(--night-warm);
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+.lightbox__figure img.loaded { opacity: 1; }
+.lightbox__figure figcaption {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--cream);
+  text-align: center;
+  max-width: 80ch;
+  letter-spacing: 0.01em;
+}
+.lightbox__close {
+  position: absolute;
+  top: 3vh; right: 3vw;
+  background: transparent;
+  border: 1px solid rgba(219,208,179,0.3);
+  color: var(--cream);
+  padding: 9px 18px;
+  cursor: pointer;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  z-index: 2;
+  transition: 200ms ease;
+}
+.lightbox__close:hover {
+  background: var(--paper); color: var(--ink); border-color: var(--paper);
+}
+
+/* Hint that the card images are interactive */
+.card__cyanotype { cursor: zoom-in; }
+.card__photo img { cursor: zoom-in; }
+
+dialog.reader {
+  border: none;
+  background: transparent;
+  padding: 0;
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  color: var(--cream);
+  /* Page-flip 3D transforms extend the rotating leaf into off-screen space
+     for the duration of the animation — without overflow:hidden the browser
+     briefly grows the page and a scrollbar flashes in. */
+  overflow: hidden;
+}
+dialog.reader::backdrop {
+  background: radial-gradient(ellipse at center, rgba(11,22,52,0.92), rgba(4,8,18,0.98));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.reader__wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 1vh;
+  padding: 3vh 4vw;
+}
+
+.reader__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+.reader__head .vol {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 28px;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--paper);
+  font-weight: 400;
+}
+.reader__head .vol em { color: var(--brass); font-style: italic; }
+.reader__counter { min-width: 9ch; text-align: left; color: var(--cream); }
+
+.reader__jump-form {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: inherit; font-size: 11px;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--cream-dim);
+}
+.reader__jump-form label {
+  letter-spacing: 0.22em;
+}
+.reader__jump-form input[type="number"] {
+  width: 7ch;
+  background: transparent;
+  border: 1px solid rgba(219,208,179,0.22);
+  color: var(--paper);
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  text-align: center;
+  padding: 4px 6px;
+  border-radius: 3px;
+  -moz-appearance: textfield;
+}
+.reader__jump-form input[type="number"]::-webkit-outer-spin-button,
+.reader__jump-form input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.reader__jump-form input[type="number"]:focus {
+  outline: none;
+  border-color: var(--brass);
+  background: rgba(255,255,255,0.04);
+}
+
+/* Blank verso of a single-sided plate
+   NYPL did not scan the blank versos of Atkins's plates (only content-bearing
+   surfaces were photographed).  We reconstruct them by reusing a real scan
+   of an end-paper from Volume III — same paper, same scanning bed — so the
+   verso visually matches the recto's framing instead of looking like a CSS
+   rectangle. */
+.spread__page.blank {
+  background-image: url("/anna-atkins/book/523_front-end-papers_id57321147.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.spread__page.right.blank { transform: scaleX(-1); }   /* mirror so the binding edge of the scan reads as the spine */
+.reader__close {
+  background: transparent; border: 1px solid rgba(219,208,179,0.3); color: var(--cream);
+  padding: 8px 18px; cursor: pointer;
+  font-family: inherit; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  border-radius: 999px;
+  transition: 200ms ease;
+}
+.reader__close:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+
+/* Page spread (the open book) */
+.reader__book {
+  position: relative;
+  align-self: center;
+  justify-self: center;
+  perspective: 2400px;
+  width: min(94vw, calc(94vh - 100px) * (4/3));
+  aspect-ratio: 4 / 3;
+  /* The flipping leaf carries a 60-px box-shadow during the rotation; clip it
+     so it can't push the page out and trigger a scrollbar. */
+  overflow: hidden;
+}
+
+/* When the reader is open we freeze the underlying long page entirely
+   (html + body), otherwise the rotating leaf briefly extends the document
+   and Chromium flashes a scrollbar between flips. */
+html.reader-open,
+html.reader-open body {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
+.spread {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  transform-style: preserve-3d;
+}
+
+.spread::after {
+  /* spine shadow down the middle */
+  content: '';
+  position: absolute;
+  left: 50%; top: 4%;
+  width: 24px; height: 92%;
+  transform: translateX(-50%);
+  background: linear-gradient(to right,
+    transparent 0%,
+    rgba(0,0,0,0.45) 35%,
+    rgba(0,0,0,0.7) 50%,
+    rgba(0,0,0,0.45) 65%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 6;
+}
+
+.spread__page {
+  position: relative;
+  background: var(--paper);
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 60px rgba(0,0,0,0.18),
+    0 10px 36px rgba(0,0,0,0.5);
+  transition: opacity 220ms ease;
+}
+.spread__page.empty {
+  background: transparent;
+  box-shadow: none;
+}
+.spread__page img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  background: var(--paper);
+  display: block;
+}
+.spread__page.left  { border-radius: 4px 0 0 4px; }
+.spread__page.right { border-radius: 0 4px 4px 0; }
+
+/* The flipping page */
+.flipper {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  transform-style: preserve-3d;
+  z-index: 10;
+  pointer-events: none;
+}
+.flipper.right { right: 0; transform-origin: left center; }
+.flipper.left  { left: 0;  transform-origin: right center; }
+
+.flipper__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background: var(--paper);
+  overflow: hidden;
+  box-shadow: inset 0 0 60px rgba(0,0,0,0.18);
+}
+.flipper__face img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+.flipper__face--front { z-index: 2; }
+.flipper__face--back  { transform: rotateY(180deg); }
+
+.flipper.is-flipping-fwd { animation: pageFlipFwd 800ms cubic-bezier(.6,.02,.4,1) forwards; }
+.flipper.is-flipping-bwd { animation: pageFlipBwd 800ms cubic-bezier(.6,.02,.4,1) forwards; }
+@keyframes pageFlipFwd {
+  from { transform: rotateY(0deg);   box-shadow: 0 0 0 rgba(0,0,0,0); }
+  to   { transform: rotateY(-180deg); box-shadow: -30px 10px 60px rgba(0,0,0,0.3); }
+}
+@keyframes pageFlipBwd {
+  from { transform: rotateY(0deg);  }
+  to   { transform: rotateY(180deg); }
+}
+
+/* Page tap zones */
+.reader__zone {
+  position: absolute; top: 0; bottom: 0; width: 50%;
+  cursor: pointer;
+  z-index: 7;
+}
+.reader__zone.prev { left: 0; }
+.reader__zone.next { right: 0; }
+.reader__zone:hover { background: rgba(184,139,61,0.04); }
+
+/* Nav controls */
+.reader__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+.reader__nav button {
+  background: transparent; border: 1px solid rgba(219,208,179,0.3); color: var(--cream);
+  padding: 10px 22px; cursor: pointer;
+  font-family: inherit; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  border-radius: 999px; transition: 200ms ease;
+}
+.reader__nav button:hover:not(:disabled) { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.reader__nav button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.reader__caption {
+  text-align: center;
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: var(--cream);
+  max-width: 60ch;
+  margin: 0 auto;
+}
+
+@keyframes heroLine {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   INTRO
+   ============================================================ */
+.intro {
+  position: relative;
+  z-index: 2;
+  padding: 8vh 8vw 12vh;
+  background: linear-gradient(to bottom, transparent, rgba(11,22,52,0.6));
+}
+.intro__wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 6vw;
+  align-items: start;
+}
+.intro__lead {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  line-height: 1.35;
+  font-weight: 300;
+  color: var(--paper);
+  font-style: italic;
+}
+.intro__lead::first-letter {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 84px;
+  line-height: 0.85;
+  float: left;
+  margin: 0.08em 0.12em 0 -0.04em;
+  color: var(--brass);
+}
+.intro__body p {
+  margin-bottom: 1.2em;
+  color: var(--cream);
+}
+.intro__body em { color: var(--paper); font-style: italic; }
+.intro__body strong { font-weight: 500; color: var(--paper); }
+.intro__body p:last-child { margin-bottom: 0; }
+
+/* ============================================================
+   STICKY KEY / FILTER BAR
+   ============================================================ */
+.key {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(7,20,43,0.86);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-top: 1px solid rgba(36,72,128,0.4);
+  border-bottom: 1px solid rgba(36,72,128,0.4);
+  padding: 18px 8vw;
+}
+.key__row {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  flex-wrap: wrap;
+}
+.key__label {
+  color: var(--cream-dim);
+  margin-right: 0.5em;
+}
+.key__btn {
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid rgba(219,208,179,0.18);
+  color: var(--cream);
+  padding: 8px 14px;
+  letter-spacing: 0.18em;
+  font-family: inherit;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  border-radius: 999px;
+  transition: 220ms cubic-bezier(.16,.84,.44,1);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.key__btn:hover { color: var(--paper); border-color: rgba(219,208,179,0.5); }
+.key__btn.is-active {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--paper);
+}
+.key__btn .swatch {
+  display: inline-block;
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.swatch.red    { background: var(--group-red); }
+.swatch.brown  { background: var(--group-brown); }
+.swatch.green  { background: var(--group-green); }
+.swatch.cyano  { background: var(--group-cyano); }
+.swatch.diatom { background: var(--group-diatom); }
+.swatch.lichen { background: var(--group-lichen); }
+
+.key__count {
+  margin-left: auto;
+  color: var(--brass);
+  font-size: 10.5px;
+}
+
+/* ============================================================
+   CATALOG — Werner-style table, one section per algal group
+   ============================================================ */
+.gallery {
+  position: relative;
+  z-index: 2;
+  padding: 6vh 6vw 14vh;
+}
+.catalog {
+  max-width: 1200px;
+  margin: 0 auto;
+  color: var(--cream);
+}
+
+.catalog__section {
+  margin-bottom: 7vh;
+}
+.catalog__section[hidden] { display: none; }
+
+.catalog__section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(219,208,179,0.22);
+  margin-bottom: 6px;
+}
+.catalog__section-head .swatch {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  align-self: center;
+}
+.catalog__section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(32px, 4.4vw, 56px);
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  line-height: 1;
+}
+.catalog__section-title em { font-style: italic; color: var(--paper-warm); }
+.catalog__section-count {
+  font-family: 'DM Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-left: auto;
+}
+
+/* Column header strip — sits under each section title */
+.catalog__head,
+.catalog__row {
+  display: grid;
+  grid-template-columns: 64px 1.45fr 1.25fr 1fr 96px;
+  gap: 24px;
+  align-items: center;
+}
+
+.catalog__head {
+  padding: 12px 8px 10px;
+  border-bottom: 1px solid rgba(219,208,179,0.12);
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+
+.catalog__row {
+  padding: 14px 8px;
+  border-bottom: 1px solid rgba(219,208,179,0.08);
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease;
+  align-items: center;
+}
+.catalog__row:hover {
+  background: rgba(236,226,198,0.05);
+  border-left-color: var(--brass);
+}
+.catalog__row.is-open {
+  background: rgba(236,226,198,0.06);
+  border-left-color: var(--brass);
+  border-bottom-color: transparent;
+}
+
+.catalog__cell {
+  font-size: 16px;
+  line-height: 1.35;
+}
+.catalog__cell--name {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 19px;
+  color: var(--paper);
+}
+.catalog__cell--name .plate-no {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-style: normal;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  color: var(--cream-dim);
+  margin-right: 10px;
+  vertical-align: 0.18em;
+}
+.catalog__cell--modern {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--cream-dim);
+}
+.catalog__cell--modern.is-empty { color: rgba(156,142,114,0.55); font-style: normal; }
+.catalog__cell--notes {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 15.5px;
+  color: var(--cream-dim);
+}
+.catalog__cell--map {
+  display: flex;
+  justify-content: flex-end;
+}
+.catalog__map {
+  width: 60px;
+  height: 36px;
+  display: block;
+  opacity: 0.55;
+}
+.catalog__row:hover .catalog__map { opacity: 0.85; }
+
+/* Cyanotype thumbnail at the start of each row */
+.catalog__cell--thumb {
+  width: 64px;
+  height: 84px;
+  background: var(--night-warm);
+  overflow: hidden;
+  display: block;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+.catalog__cell--thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+.catalog__cell--thumb img.loaded { opacity: 1; }
+.catalog__row:hover .catalog__cell--thumb {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+}
+
+/* Group-tinted left rule + map fill */
+.catalog__section[data-group="red"]    .catalog__row:hover,
+.catalog__section[data-group="red"]    .catalog__row.is-open    { border-left-color: var(--group-red); }
+.catalog__section[data-group="brown"]  .catalog__row:hover,
+.catalog__section[data-group="brown"]  .catalog__row.is-open    { border-left-color: var(--group-brown); }
+.catalog__section[data-group="green"]  .catalog__row:hover,
+.catalog__section[data-group="green"]  .catalog__row.is-open    { border-left-color: var(--group-green); }
+.catalog__section[data-group="cyano"]  .catalog__row:hover,
+.catalog__section[data-group="cyano"]  .catalog__row.is-open    { border-left-color: var(--group-cyano); }
+.catalog__section[data-group="diatom"] .catalog__row:hover,
+.catalog__section[data-group="diatom"] .catalog__row.is-open    { border-left-color: var(--group-diatom); }
+.catalog__section[data-group="lichen"] .catalog__row:hover,
+.catalog__section[data-group="lichen"] .catalog__row.is-open    { border-left-color: var(--group-lichen); }
+
+/* Expanded panel — appears directly below a row */
+.catalog__panel {
+  display: none;
+  padding: 24px 8px 34px;
+  border-bottom: 1px solid rgba(219,208,179,0.12);
+  background: rgba(7,20,43,0.4);
+}
+.catalog__panel.is-open { display: grid; }
+.catalog__panel {
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 36px;
+}
+
+.catalog__panel-cyano {
+  position: relative;
+  background: var(--night-warm);
+  padding: 14px;
+  cursor: zoom-in;
+}
+.catalog__panel-cyano img {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+.catalog__panel-cyano img.loaded { opacity: 1; }
+.catalog__panel-cyano::after {
+  content: '↗ enlarge';
+  position: absolute;
+  right: 12px; bottom: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  background: rgba(7,20,43,0.7);
+  padding: 4px 8px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.catalog__panel-cyano:hover::after { opacity: 1; }
+
+.catalog__panel-body { color: var(--cream); }
+
+.catalog__panel-section {
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin: 14px 0 6px;
+  display: flex; align-items: center; gap: 12px;
+}
+.catalog__panel-section:first-child { margin-top: 0; }
+.catalog__panel-section::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: rgba(184,139,61,0.25);
+}
+
+.catalog__panel-body p {
+  font-family: 'EB Garamond', serif;
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--cream);
+}
+.catalog__panel-body .range { font-style: italic; color: var(--cream-dim); }
+.catalog__panel-body .label {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--paper-warm);
+}
+.catalog__panel-body .notes {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  color: var(--cream-dim);
+  border-left: 2px solid var(--brass);
+  padding-left: 12px;
+  margin-top: 6px;
+}
+
+.catalog__photo {
+  position: relative;
+  margin-top: 14px;
+  background: rgba(15,34,71,0.5);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.catalog__photo img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  opacity: 0; transition: opacity 600ms ease;
+}
+.catalog__photo img.loaded { opacity: 1; }
+.catalog__photo.placeholder::before {
+  content: 'searching iNaturalist…';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 0 18px;
+  font-family: 'EB Garamond', serif; font-style: italic; font-size: 14px;
+  color: var(--cream-dim);
+  opacity: 0.7;
+}
+.catalog__photo.missing {
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(219,208,179,0.06) 0,
+      rgba(219,208,179,0.06) 8px,
+      transparent 8px,
+      transparent 16px),
+    rgba(15,34,71,0.5);
+  border: 1px dashed rgba(219,208,179,0.18);
+}
+.catalog__photo.missing::before {
+  content: 'no exact-species photograph located';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 0 22px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 17px;
+  color: var(--cream-dim);
+  opacity: 0.8;
+  letter-spacing: 0.01em;
+}
+.catalog__photo .attr {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 8px 12px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  color: #e3dcc4;
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+.catalog__photo:hover .attr { opacity: 1; }
+.catalog__photo .attr a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 1px; }
+
+.catalog__panel-footer {
+  margin-top: 18px;
+  display: flex; gap: 24px; flex-wrap: wrap;
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+.catalog__panel-footer a {
+  color: var(--cream);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(219,208,179,0.3);
+  padding-bottom: 1px;
+}
+.catalog__panel-footer a:hover { color: var(--brass); border-color: var(--brass); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.colophon {
+  position: relative;
+  z-index: 2;
+  padding: 10vh 8vw 12vh;
+  text-align: center;
+  border-top: 1px solid rgba(36,72,128,0.4);
+}
+.colophon__mark {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 64px;
+  color: var(--paper);
+  margin-bottom: 0.4em;
+}
+.colophon__text {
+  max-width: 60ch;
+  margin: 0 auto 2em;
+  color: var(--cream);
+  font-size: 17px;
+}
+.colophon__meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  display: flex; justify-content: center; gap: 2.5em; flex-wrap: wrap;
+}
+.colophon__meta a { color: var(--brass); text-decoration: none; border-bottom: 1px solid rgba(184,139,61,0.4); }
+.colophon__meta a:hover { color: var(--paper); border-bottom-color: var(--paper); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 14vh 8vw 8vh;
+    gap: 4vh;
+  }
+  .shelf { transform: scale(0.85); transform-origin: left center; align-self: start; }
+  .intro__wrap { grid-template-columns: 1fr; }
+  .intro__lead { font-size: 24px; }
+}
+
+@media (max-width: 900px) {
+  .catalog__head,
+  .catalog__row { grid-template-columns: 1.4fr 1fr 80px; gap: 18px; }
+  .catalog__head .col-notes,
+  .catalog__cell--notes { display: none; }
+  .catalog__panel { grid-template-columns: 1fr; gap: 24px; }
+}
+
+@media (max-width: 600px) {
+  body { font-size: 17px; }
+  .hero__title { font-size: 64px; }
+  .hero__byline { font-size: 18px; }
+  .key { padding: 14px 5vw; }
+  .key__row { gap: 10px; }
+  .key__btn { padding: 7px 11px; font-size: 10px; }
+  .gallery { padding: 4vh 5vw 10vh; }
+  .catalog__head,
+  .catalog__row { grid-template-columns: 1.4fr 60px; gap: 12px; }
+  .catalog__head .col-modern,
+  .catalog__cell--modern { display: none; }
+  .catalog__cell--name { font-size: 17px; }
+  .catalog__section-title { font-size: 30px; }
+}
+
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <nav class="hero__menu" aria-label="Primary">
+    <a href="#shelf">Volumes</a>
+    <a href="#catalog">Catalog</a>
+    <a href="#about">About</a>
+  </nav>
+
+  <div class="hero__title-block">
+
+    <h1 class="hero__title">
+      <span class="line">Photographs</span>
+      <span class="line">of British</span>
+      <span class="line"><em>Algæ</em></span>
+      <span class="line small">Anna Atkins · 1799—1871</span>
+    </h1>
+
+    <p class="hero__byline">
+      The first book in history to be illustrated by photographs.<br>
+      Three hundred and ten <em>cyanotypes</em> printed on paper between 1843 and 1853 by
+      <em>Anna Atkins</em> — botanist, photographer, daughter of John George Children —
+      working from her home at Halstead Place in Kent.
+    </p>
+
+  </div>
+
+  <div class="shelf-wrap">
+    <div class="shelf" id="shelf" aria-label="The three volumes — click any book to open it">
+      <!-- three book covers injected here -->
+    </div>
+    <div class="shelf-hint">click a book to leaf through it</div>
+  </div>
+</header>
+
+<dialog class="reader" id="reader" aria-label="Flip-book reader">
+  <div class="reader__wrap">
+    <div class="reader__head">
+      <div class="vol" id="readerVol">Volume <em>I</em></div>
+      <form class="reader__jump-form" id="readerJumpForm">
+        <label for="readerJump">go to</label>
+        <input type="number" id="readerJump" min="1" placeholder="—" inputmode="numeric" />
+        <span class="reader__counter" id="readerCount">— / —</span>
+      </form>
+      <button class="reader__close" id="readerClose">close ✕</button>
+    </div>
+
+    <div class="reader__book" id="readerBook">
+      <div class="spread">
+        <div class="spread__page left"><img id="pageLeft" alt=""></div>
+        <div class="spread__page right"><img id="pageRight" alt=""></div>
+      </div>
+      <div class="reader__zone prev" id="zonePrev" aria-label="Previous page"></div>
+      <div class="reader__zone next" id="zoneNext" aria-label="Next page"></div>
+      <!-- flipper injected dynamically -->
+    </div>
+
+    <div>
+      <p class="reader__caption" id="readerCaption">&nbsp;</p>
+      <div class="reader__nav">
+        <button id="btnPrev">← previous spread</button>
+        <button id="btnNext" autofocus>next spread →</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<section class="intro" id="about">
+  <div class="intro__wrap">
+    <p class="intro__lead">
+      Anna Atkins laid each specimen of seaweed flat upon paper soaked in iron salts,
+      placed a sheet of glass over it, and let the sun print its shadow.
+    </p>
+    <div class="intro__body">
+      <p>
+        The process — <em>cyanotype</em>, invented in 1842 by her friend Sir John Herschel —
+        renders everything it touches in two notes: <strong>Prussian blue</strong>, and the
+        white ghost of the plant. There was no negative, no enlargement, no darkroom; only
+        sun, water, and the algae themselves, pressed to paper one by one.
+      </p>
+      <p>
+        Between October 1843 and 1853 she produced a complete photographic flora of the
+        British algae in three volumes, with hand-lettered titles printed by the same
+        cyanotype process. About a dozen sets survive. This page reproduces the New York
+        Public Library’s copy — Sir John Herschel’s own — and pairs each plate with the
+        species it depicts, its habitat, the words handwritten on the print, and, where
+        possible, a modern photograph of the same alga taken in the wild.
+      </p>
+    </div>
+  </div>
+</section>
+
+<nav class="key" aria-label="Filter by group">
+  <div class="key__row">
+    <span class="key__label">Filter:</span>
+    <button class="key__btn is-active" data-filter="all">All</button>
+    <button class="key__btn" data-filter="red">    <span class="swatch red"></span>    Red algæ</button>
+    <button class="key__btn" data-filter="brown">  <span class="swatch brown"></span>  Brown algæ</button>
+    <button class="key__btn" data-filter="green">  <span class="swatch green"></span>  Green algæ</button>
+    <button class="key__btn" data-filter="cyano">  <span class="swatch cyano"></span>  Cyanobacteria</button>
+    <button class="key__btn" data-filter="diatom"> <span class="swatch diatom"></span> Diatoms</button>
+    <button class="key__btn" data-filter="lichen"> <span class="swatch lichen"></span> Lichens</button>
+    <span class="key__count" id="keyCount">310 plates</span>
+  </div>
+</nav>
+
+<main class="gallery">
+  <div class="catalog" id="catalog">
+    <!-- catalog sections injected -->
+  </div>
+</main>
+
+<dialog class="lightbox" id="lightbox" aria-label="Image viewer">
+  <button class="lightbox__close" id="lightboxClose" aria-label="Close">close ✕</button>
+  <figure class="lightbox__figure">
+    <img id="lightboxImg" alt="" />
+    <figcaption id="lightboxCap"></figcaption>
+  </figure>
+</dialog>
+
+<footer class="colophon">
+  <div class="colophon__mark">~ finis ~</div>
+  <p class="colophon__text">
+    Cyanotypes from the New York Public Library, Spencer Collection (Sir John Herschel’s set,
+    digitised 2014–2015). Modern photographs are drawn from <em>iNaturalist</em> — the work
+    of many naturalists, each credited per image. The cyanotypes are in the public domain.
+  </p>
+  <div class="colophon__meta">
+    <a href="https://digitalcollections.nypl.org/collections/photographs-of-british-algae-cyanotype-impressions" target="_blank" rel="noopener">N.Y.P.L. source</a>
+    <span>·</span>
+    <a href="https://www.inaturalist.org" target="_blank" rel="noopener">iNaturalist</a>
+    <span>·</span>
+    <a href="https://www.c82.net/werner" target="_blank" rel="noopener">in the spirit of Werner’s Nomenclature</a>
+  </div>
+</footer>
+
+<script is:inline define:vars={{ plates: platesData, volumes: volumesData }}>
+window.__VOLUMES__ = volumes;
+window.__PLATES__ = plates;
+</script>
+<script is:inline>
+
+/* ============================================================
+   DATA + RENDER
+   ============================================================ */
+const $catalog = document.getElementById('catalog');
+const $count = document.getElementById('keyCount');
+
+const escapeHtml = (s='') => s
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+let PLATES = window.__PLATES__ || [];
+let CURRENT_FILTER = 'all';
+
+async function load() {
+  if (!PLATES.length) {
+    try {
+      const res = await fetch('/anna-atkins/plates.json');
+      PLATES = await res.json();
+    } catch (e) {
+      console.error('Could not load plates.json:', e);
+      return;
+    }
+  }
+  renderCatalog();
+  setupHero();
+  setupFilters();
+  setupCatalogInteraction();
+  setupLightbox();
+}
+
+/* ============================================================
+   LIGHTBOX — click a card image to view it large
+   ============================================================ */
+function setupLightbox() {
+  const box   = document.getElementById('lightbox');
+  const img   = document.getElementById('lightboxImg');
+  const cap   = document.getElementById('lightboxCap');
+  const close = document.getElementById('lightboxClose');
+  if (!box || !img) return;
+
+  const open = (src, alt, captionHtml) => {
+    img.classList.remove('loaded');
+    img.src = src;
+    img.alt = alt || '';
+    cap.innerHTML = captionHtml || '';
+    img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+    box.showModal();
+    document.body.style.overflow = 'hidden';
+  };
+  const close_ = () => {
+    if (box.open) box.close();
+    document.body.style.overflow = '';
+  };
+  close.addEventListener('click', close_);
+  img.addEventListener('click', close_);
+  // Click on the backdrop (outside .lightbox__figure) closes too
+  box.addEventListener('click', (e) => { if (e.target === box) close_(); });
+  document.addEventListener('keydown', (e) => {
+    if (box.open && e.key === 'Escape') { e.preventDefault(); close_(); }
+  });
+
+  // Delegate: clicking the cyanotype thumbnail or modern photo in an
+  // expanded catalog panel opens it full-screen. Cyanotypes use the
+  // perspective-corrected crop (same file as the panel thumbnail).
+  document.getElementById('catalog').addEventListener('click', (e) => {
+    const cy = e.target.closest('.catalog__panel-cyano');
+    if (cy) {
+      const idx = cy.dataset.idx;
+      const plate = PLATES.find(p => p.idx === idx);
+      if (plate) {
+        open('/anna-atkins/book/' + encodeURI(plate.localFile),
+             plate.binomial,
+             `<em>${escapeHtml(plate.binomial)}</em> · Plate ${plate.idx}`);
+      }
+      e.stopPropagation();
+      return;
+    }
+    const photo = e.target.closest('.catalog__photo');
+    if (photo) {
+      const photoImg = photo.querySelector('img');
+      if (photoImg && photoImg.src) {
+        const idx = photo.dataset.idx;
+        const plate = PLATES.find(p => p.idx === idx);
+        const credit = photo.querySelector('.attr');
+        open(photoImg.src,
+             plate ? plate.binomial : '',
+             credit ? credit.innerHTML : '');
+        e.stopPropagation();
+      }
+    }
+  });
+}
+
+function setupHero() {
+  setupShelf();
+  setupReader();
+}
+
+/* ============================================================
+   SHELF + FLIP-BOOK READER
+   ============================================================ */
+const VOLUMES = window.__VOLUMES__ || [];
+
+function setupShelf() {
+  const shelf = document.getElementById('shelf');
+  if (!shelf || !VOLUMES.length) return;
+  shelf.innerHTML = VOLUMES.map((v, i) => `
+    <div class="book" data-volume="${i}" tabindex="0" role="button" aria-label="Open ${escapeHtml(v.label)}">
+      <div class="book__front">
+        <img src="/anna-atkins/book/${encodeURI(v.coverFile)}" alt="${escapeHtml(v.coverTitle)}" />
+        <div class="book__plate">
+          <div class="roman">${escapeHtml(v.number)}</div>
+          <div class="word">Volume</div>
+        </div>
+      </div>
+      <div class="book__caption">
+        <strong>${escapeHtml(v.label)}</strong>
+        ${escapeHtml(v.dates)} · ${v.pageCount} pages
+      </div>
+    </div>
+  `).join('');
+  shelf.querySelectorAll('.book').forEach(el => {
+    const open = () => openReader(parseInt(el.dataset.volume, 10));
+    el.addEventListener('click', open);
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+  });
+}
+
+/* ----- Reader -----
+ *
+ *  Page indexing matches a real Western book:
+ *
+ *    rightIdx = 0  →  ∅  | pages[0]       (closed cover — only the recto is visible)
+ *    rightIdx = 2  →  pages[1] | pages[2]  (book is open; first true spread)
+ *    rightIdx = 4  →  pages[3] | pages[4]
+ *    rightIdx = 6  →  pages[5] | pages[6]
+ *      ...
+ *
+ *  Flipping forward advances rightIdx by 2; backward, by −2.  The reader
+ *  cannot flip beyond the chosen volume in either direction.
+ */
+const reader = {
+  el:         null,
+  volumeIdx:  0,
+  pages:      [],
+  rightIdx:   0,
+  isFlipping: false,
+};
+
+function setupReader() {
+  reader.el = document.getElementById('reader');
+  document.getElementById('readerClose').addEventListener('click', closeReader);
+  document.getElementById('btnPrev').addEventListener('click', () => flip('prev'));
+  document.getElementById('btnNext').addEventListener('click', () => flip('next'));
+  document.getElementById('zonePrev').addEventListener('click', () => flip('prev'));
+  document.getElementById('zoneNext').addEventListener('click', () => flip('next'));
+  document.getElementById('readerJumpForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const n = parseInt(document.getElementById('readerJump').value, 10);
+    if (!Number.isNaN(n)) jumpToRealPage(n);
+    document.getElementById('readerJump').blur();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!reader.el || !reader.el.open) return;
+    // Don't intercept arrows while user is typing in the jump input
+    const inInput = document.activeElement && document.activeElement.tagName === 'INPUT';
+    if (inInput) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ')   { e.preventDefault(); flip('next'); }
+    if (e.key === 'ArrowLeft'  || e.key === 'PageUp')                       { e.preventDefault(); flip('prev'); }
+    if (e.key === 'Escape')                                                 { closeReader(); }
+  });
+}
+
+function openReader(volIdx) {
+  const vol = VOLUMES[volIdx];
+  if (!vol) return;
+  reader.volumeIdx = volIdx;
+  reader.pages = vol.pages;
+  reader.realCount = realCount(vol.pages);
+  reader.rightIdx = 0;     // start closed: cover visible on the right
+  document.getElementById('readerVol').innerHTML = `Volume <em>${escapeHtml(vol.number)}</em> · ${escapeHtml(vol.dates)}`;
+  renderSpread();
+  reader.el.showModal();
+  document.documentElement.classList.add('reader-open');
+  // Move focus off the auto-focused jump input so arrow keys / space flip pages immediately.
+  requestAnimationFrame(() => {
+    const btn = document.getElementById('btnNext');
+    if (btn && !btn.disabled) btn.focus({ preventScroll: true });
+    else reader.el.focus({ preventScroll: true });
+  });
+}
+
+// Jump to a specific real-page (1-based count, skipping blanks).
+function jumpToRealPage(n) {
+  const pages = reader.pages;
+  n = Math.max(1, Math.min(reader.realCount, Math.round(n) || 1));
+  if (n === 1) { reader.rightIdx = 0; renderSpread(); return; }   // n=1 → cover view
+  // Find the virtual index of the n-th RECTO (content page); versos and synthetic blanks don't count.
+  let count = 0, virtualIdx = -1;
+  for (let i = 0; i < pages.length; i++) {
+    if (isRecto(pages[i])) {
+      count++;
+      if (count === n) { virtualIdx = i; break; }
+    }
+  }
+  if (virtualIdx < 0) return;
+  // Snap to a spread: rightIdx must land the recto on the RIGHT side.
+  reader.rightIdx = (virtualIdx % 2 === 0) ? virtualIdx : virtualIdx + 1;
+  renderSpread();
+}
+
+function closeReader() {
+  reader.el.close();
+  document.documentElement.classList.remove('reader-open');
+}
+
+// True if rightIdx represents a state we can actually display
+function canShow(r, N) { return (r - 1 >= 0) || (r >= 0 && r < N); }
+
+// True if we can advance past the current state
+function canFlipForward(r, N) {
+  // Next state is r+2.  Valid if at least one of its two slots holds a real page.
+  return (r + 1 < N) || (r + 2 < N);
+}
+
+function setPage(imgEl, p) {
+  const pageEl = imgEl.closest('.spread__page');
+  if (!p) {
+    // Off-end (book closed view) — hide the page slot entirely
+    imgEl.removeAttribute('src');
+    imgEl.alt = '';
+    imgEl.style.visibility = 'hidden';
+    if (pageEl) { pageEl.classList.add('empty'); pageEl.classList.remove('blank'); }
+    return;
+  }
+  if (p.blank) {
+    // Blank verso of a single-sided plate — show as ivory paper, no image
+    imgEl.removeAttribute('src');
+    imgEl.alt = '';
+    imgEl.style.visibility = 'hidden';
+    if (pageEl) { pageEl.classList.remove('empty'); pageEl.classList.add('blank'); }
+    return;
+  }
+  // All NYPL scans (rectos + versos) live flat in book/ in book-reading order.
+  const path = '/anna-atkins/book/' + p.file;
+  imgEl.src = encodeURI(path);
+  imgEl.alt = p.title;
+  imgEl.style.visibility = 'visible';
+  if (pageEl) { pageEl.classList.remove('empty'); pageEl.classList.remove('blank'); }
+}
+
+// "Real" = a recto (content page) — neither a synthetic blank nor an extra verso scan.
+function isRecto(p) { return p && !p.blank && !p.extra; }
+function realCount(pages) {
+  return pages.reduce((n, p) => n + (isRecto(p) ? 1 : 0), 0);
+}
+function realIndexAt(pages, virtualIdx) {
+  let n = 0;
+  for (let i = 0; i <= virtualIdx && i < pages.length; i++) if (isRecto(pages[i])) n++;
+  return n;
+}
+
+function renderSpread() {
+  const pages = reader.pages;
+  const r = reader.rightIdx;
+  const l = r - 1;
+  const left  = l >= 0 && l < pages.length ? pages[l] : null;
+  const right = r >= 0 && r < pages.length ? pages[r] : null;
+
+  const $l = document.getElementById('pageLeft');
+  const $r = document.getElementById('pageRight');
+  setPage($l, left);
+  setPage($r, right);
+
+  // Counter shows the page number of the RECTO in this spread (versos & synthetic blanks don't count).
+  const total = reader.realCount;
+  let label;
+  if (r === 0) {
+    label = `cover / ${total}`;
+  } else {
+    const recto = isRecto(right) ? right : (isRecto(left) ? left : null);
+    if (recto) {
+      const realIdx = realIndexAt(pages, pages.indexOf(recto));
+      label = `${realIdx} / ${total}`;
+    } else {
+      label = `— / ${total}`;
+    }
+  }
+  document.getElementById('readerCount').textContent = label;
+
+  // Caption: prefer the recto's title
+  const captionPage = isRecto(right) ? right : (isRecto(left) ? left : (right || left));
+  document.getElementById('readerCaption').textContent = captionPage && captionPage.title ? captionPage.title : '';
+
+  // Page-jump input — keep in sync with the current recto
+  const $jump = document.getElementById('readerJump');
+  if ($jump && document.activeElement !== $jump) {
+    const recto = isRecto(right) ? right : (isRecto(left) ? left : null);
+    $jump.value = recto ? realIndexAt(pages, pages.indexOf(recto)) : '';
+    $jump.max = total;
+  }
+
+  document.getElementById('btnPrev').disabled = (r === 0);
+  document.getElementById('btnNext').disabled = !canFlipForward(r, pages.length);
+}
+
+function flip(dir) {
+  if (reader.isFlipping) return;
+  const pages = reader.pages;
+  const r = reader.rightIdx;
+
+  if (dir === 'next' && !canFlipForward(r, pages.length)) return;
+  if (dir === 'prev' && r === 0) return;
+
+  reader.isFlipping = true;
+  const book = document.getElementById('readerBook');
+  const flipper = document.createElement('div');
+  flipper.className = 'flipper ' + (dir === 'next' ? 'right' : 'left');
+
+  let frontPage, backPage;
+  if (dir === 'next') {
+    frontPage = pages[r];        // current right page (lifting and turning left)
+    backPage  = pages[r + 1];    // back of the lifted page = new left after the flip
+  } else {
+    frontPage = pages[r - 1];    // current left page (lifting and turning right)
+    backPage  = pages[r - 2];    // back of the lifted page = new right after the flip
+  }
+  const faceHtml = (p) => {
+    if (!p) return '';                  // off the end of the volume
+    if (p.blank) return '';              // synthetic blank — ivory paper, no image
+    const path = '/anna-atkins/book/' + p.file;
+    return `<img src="${encodeURI(path)}">`;
+  };
+  flipper.innerHTML = `
+    <div class="flipper__face flipper__face--front ${frontPage && frontPage.blank ? 'blank' : ''}">${faceHtml(frontPage)}</div>
+    <div class="flipper__face flipper__face--back  ${backPage  && backPage.blank  ? 'blank' : ''}">${faceHtml(backPage)}</div>
+  `;
+  book.appendChild(flipper);
+
+  // Pre-load the static page that will be revealed behind the flipper as it
+  // rotates past the perpendicular, so the new spread is already in place.
+  if (dir === 'next') {
+    setPage(document.getElementById('pageRight'), pages[r + 2]);
+  } else {
+    setPage(document.getElementById('pageLeft'),  pages[r - 3]);
+  }
+
+  requestAnimationFrame(() => {
+    flipper.classList.add(dir === 'next' ? 'is-flipping-fwd' : 'is-flipping-bwd');
+  });
+
+  flipper.addEventListener('animationend', () => {
+    reader.rightIdx = r + (dir === 'next' ? 2 : -2);
+    flipper.remove();
+    renderSpread();
+    reader.isFlipping = false;
+  }, { once: true });
+}
+
+/* ============================================================
+   CATALOG — Werner-style table, sections by algal group
+   ============================================================ */
+// Group order mirrors how Atkins's parts were issued and how Harveyan
+// algae books arrange the kingdoms: browns first, reds, greens, then
+// the cyanobacteria, diatoms, and lichens at the back.
+const GROUP_ORDER = [
+  { key: 'brown',  label: 'Brown algæ' },
+  { key: 'red',    label: 'Red algæ' },
+  { key: 'green',  label: 'Green algæ' },
+  { key: 'cyano',  label: 'Cyanobacteria' },
+  { key: 'diatom', label: 'Diatoms' },
+  { key: 'lichen', label: 'Lichens' },
+];
+
+// Tiny abstract range-map placeholder. Same SVG for every row — real range
+// data isn't wired up yet, this is the slot Werner gives to "parts" of
+// the colour and we'll fill it later.
+const MAP_SVG = `
+<svg class="catalog__map" viewBox="0 0 60 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="1" y="1" width="58" height="34" rx="4" ry="4"
+        fill="rgba(15,34,71,0.6)" stroke="rgba(184,139,61,0.45)" stroke-width="0.8" />
+  <path d="M8 18 q4 -6 9 -4 q3 1 6 -2 q5 -4 9 1 q4 4 9 1 q3 -2 7 0"
+        fill="none" stroke="rgba(219,208,179,0.55)" stroke-width="1" stroke-linecap="round" />
+  <circle cx="20" cy="22" r="1.2" fill="rgba(184,139,61,0.7)" />
+  <circle cx="38" cy="14" r="1.2" fill="rgba(184,139,61,0.7)" />
+</svg>`;
+
+function catalogRow(p) {
+  const modern = p.modernName
+    ? `<em>${escapeHtml(p.modernName)}</em>`
+    : '<span aria-hidden="true">—</span>';
+  const modernCls = p.modernName ? '' : ' is-empty';
+  const notes = p.notes ? escapeHtml(p.notes) : '';
+
+  return `
+    <div class="catalog__row" data-idx="${p.idx}" data-group="${p.group}" role="button" tabindex="0" aria-expanded="false">
+      <div class="catalog__cell catalog__cell--thumb">
+        <img loading="lazy" decoding="async"
+             src="/anna-atkins/book/${encodeURI(p.localFile)}"
+             alt="Cyanotype of ${escapeHtml(p.binomial)}"
+             onload="this.classList.add('loaded')" />
+      </div>
+      <div class="catalog__cell catalog__cell--name">
+        <span class="plate-no">Pl. ${p.idx}</span><em>${escapeHtml(p.binomial)}</em>
+      </div>
+      <div class="catalog__cell catalog__cell--modern${modernCls}">${modern}</div>
+      <div class="catalog__cell catalog__cell--notes">${notes}</div>
+      <div class="catalog__cell catalog__cell--map">${MAP_SVG}</div>
+    </div>
+    <div class="catalog__panel" data-panel-for="${p.idx}" hidden></div>
+  `;
+}
+
+function catalogSection(group, plates) {
+  const sortedPlates = plates.slice().sort((a, b) => {
+    const ag = (a.genus || '').toLowerCase();
+    const bg = (b.genus || '').toLowerCase();
+    if (ag !== bg) return ag < bg ? -1 : 1;
+    const as = (a.species || '').toLowerCase();
+    const bs = (b.species || '').toLowerCase();
+    if (as !== bs) return as < bs ? -1 : 1;
+    return (a.idx || '').localeCompare(b.idx || '');
+  });
+
+  const count = sortedPlates.length;
+  return `
+    <section class="catalog__section" data-group="${group.key}">
+      <header class="catalog__section-head">
+        <span class="swatch ${group.key}"></span>
+        <h2 class="catalog__section-title">${escapeHtml(group.label)}</h2>
+        <span class="catalog__section-count">${count} plate${count === 1 ? '' : 's'}</span>
+      </header>
+      <div class="catalog__head" aria-hidden="true">
+        <span class="col-plate">Plate</span>
+        <span class="col-name">Anna's name</span>
+        <span class="col-modern">Current name</span>
+        <span class="col-notes">Notes</span>
+        <span class="col-map" style="text-align:right;">Range</span>
+      </div>
+      ${sortedPlates.map(catalogRow).join('')}
+    </section>
+  `;
+}
+
+function renderCatalog() {
+  // Index plates by group key
+  const byGroup = {};
+  PLATES.forEach(p => {
+    if (!byGroup[p.group]) byGroup[p.group] = [];
+    byGroup[p.group].push(p);
+  });
+
+  const html = GROUP_ORDER
+    .filter(g => byGroup[g.key] && byGroup[g.key].length)
+    .map(g => catalogSection(g, byGroup[g.key]))
+    .join('');
+
+  $catalog.innerHTML = html;
+  $count.textContent = PLATES.length + ' plates';
+}
+
+/* ----- Filtering ----- */
+function setupFilters() {
+  document.querySelectorAll('.key__btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.key__btn').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      CURRENT_FILTER = btn.dataset.filter;
+      let count = 0;
+      document.querySelectorAll('.catalog__section').forEach(sec => {
+        const show = CURRENT_FILTER === 'all' || sec.dataset.group === CURRENT_FILTER;
+        sec.hidden = !show;
+        if (show) count += sec.querySelectorAll('.catalog__row').length;
+      });
+      $count.textContent = count + ' plate' + (count === 1 ? '' : 's');
+    });
+  });
+}
+
+/* ----- Click-to-expand rows ----- */
+function setupCatalogInteraction() {
+  $catalog.addEventListener('click', (e) => {
+    // Clicks inside an open panel — links, cyanotype thumbnail, modern photo —
+    // should not toggle the row. The lightbox delegate handles thumbnail
+    // and photo clicks separately.
+    if (e.target.closest('.catalog__panel')) return;
+    const row = e.target.closest('.catalog__row');
+    if (!row) return;
+    toggleRow(row);
+  });
+  $catalog.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const row = e.target.closest('.catalog__row');
+    if (!row) return;
+    e.preventDefault();
+    toggleRow(row);
+  });
+}
+
+function toggleRow(row) {
+  const idx = row.dataset.idx;
+  const panel = row.parentElement.querySelector(`.catalog__panel[data-panel-for="${idx}"]`);
+  if (!panel) return;
+  const open = row.classList.toggle('is-open');
+  row.setAttribute('aria-expanded', open ? 'true' : 'false');
+  if (open) {
+    panel.removeAttribute('hidden');
+    panel.classList.add('is-open');
+    if (!panel.dataset.populated) {
+      panel.innerHTML = panelMarkup(idx);
+      panel.dataset.populated = '1';
+      const cy = panel.querySelector('.catalog__panel-cyano img');
+      if (cy) cy.addEventListener('load', () => cy.classList.add('loaded'), { once: true });
+      const photo = panel.querySelector('.catalog__photo');
+      if (photo) loadPhoto(photo);
+    }
+  } else {
+    panel.classList.remove('is-open');
+    panel.setAttribute('hidden', '');
+  }
+}
+
+function panelMarkup(idx) {
+  const p = PLATES.find(x => x.idx === idx);
+  if (!p) return '';
+  const notes = p.notes
+    ? `<div class="catalog__panel-section">Notes</div><p class="notes">${escapeHtml(p.notes)}</p>` : '';
+
+  return `
+    <figure class="catalog__panel-cyano" data-idx="${p.idx}" title="Click to enlarge">
+      <img src="/anna-atkins/book/${encodeURI(p.localFile)}" alt="Cyanotype of ${escapeHtml(p.binomial)}" />
+    </figure>
+    <div class="catalog__panel-body">
+      <div class="catalog__panel-section">Habitat</div>
+      <p>${escapeHtml(p.habitat)}</p>
+
+      <div class="catalog__panel-section">Where found</div>
+      <p class="range">${escapeHtml(p.range)}</p>
+
+      <div class="catalog__panel-section">Transcribed from the plate</div>
+      <p class="label">&ldquo;${escapeHtml(p.plateTitle)}&rdquo;</p>
+
+      ${notes}
+
+      <div class="catalog__panel-section">A modern photograph</div>
+      <figure class="catalog__photo placeholder"
+              data-idx="${p.idx}"
+              data-query="${escapeHtml(p.iNatQuery)}">
+        <img alt="" />
+        <figcaption class="attr"></figcaption>
+      </figure>
+
+      <div class="catalog__panel-footer">
+        <span>Plate ${escapeHtml(p.idx)} · Vol. ${escapeHtml(p.volume)} · ${escapeHtml(p.groupLabel)}</span>
+        <a href="https://digitalcollections.nypl.org/items/${encodeURIComponent(p.captureUUID)}" target="_blank" rel="noopener">N.Y.P.L. plate ↗</a>
+        <a href="https://www.inaturalist.org/taxa/search?q=${encodeURIComponent(p.iNatQuery)}" target="_blank" rel="noopener">iNat ↗</a>
+      </div>
+    </div>
+  `;
+}
+
+/* ----- iNaturalist photo loading ----- */
+// v2: bumped after switching to strict exact-species matching.  The previous
+// cache held loose fallbacks (genus / modernName) that we no longer want.
+const INAT_CACHE_KEY = 'inat:cache:v2';
+const inatCache = (() => {
+  try {
+    // Drop the old, looser cache so stale fallbacks don't reappear.
+    localStorage.removeItem('inat:cache');
+    return JSON.parse(localStorage.getItem(INAT_CACHE_KEY) || '{}');
+  } catch { return {}; }
+})();
+const saveCache = () => {
+  try { localStorage.setItem(INAT_CACHE_KEY, JSON.stringify(inatCache)); } catch {}
+};
+
+// Normalise a binomial for strict comparison: lowercase, single-spaced, no diacritics or extra punctuation.
+function normSpecies(s) {
+  return (s || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')   // strip diacritics
+    .replace(/[^a-z\s-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function fetchTaxon(query) {
+  if (inatCache[query] !== undefined) return inatCache[query];
+  try {
+    // Use the /taxa endpoint with rank=species — no fuzzy match, returns species-level hits only.
+    const url = `https://api.inaturalist.org/v1/taxa?q=${encodeURIComponent(query)}&rank=species&per_page=5`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('bad status');
+    const data = await res.json();
+    const qNorm = normSpecies(query);
+    // Pick the result whose canonical name matches the query exactly (so different species can't share a photo).
+    const t = (data.results || []).find(t => normSpecies(t.name) === qNorm);
+    if (!t || !t.default_photo) {
+      inatCache[query] = null;
+      saveCache();
+      return null;
+    }
+    const photo = t.default_photo;
+    const result = {
+      url: photo.medium_url || photo.url,
+      attribution: photo.attribution || '',
+      taxonName: t.name,
+      taxonId: t.id,
+    };
+    inatCache[query] = result;
+    saveCache();
+    return result;
+  } catch (err) {
+    inatCache[query] = null;
+    saveCache();
+    return null;
+  }
+}
+
+// loadPhoto is invoked when a catalog row is expanded — no
+// intersection observer; we only fetch what the reader actually opens.
+async function loadPhoto(figure) {
+  // Strict match only — different species must not share a photo.  If iNat
+  // doesn't have an exact-species photo we leave a labelled placeholder so
+  // the gap is visible.
+  const query = figure.dataset.query;
+  const res = await fetchTaxon(query);
+  const img = figure.querySelector('img');
+  const cap = figure.querySelector('.attr');
+  if (!res) {
+    figure.classList.remove('placeholder');
+    figure.classList.add('missing');
+    return;
+  }
+  img.src = res.url;
+  img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+  cap.innerHTML = `${res.attribution} · <a href="https://www.inaturalist.org/taxa/${res.taxonId}" target="_blank" rel="noopener">${escapeHtml(res.taxonName)}</a> on iNat`;
+  figure.classList.remove('placeholder');
+}
+
+load();
+</script>
+
+</body>
+</html>
