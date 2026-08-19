@@ -5,9 +5,12 @@ fixations. Each "obsession" lives in its own world inside the same static deploy
 
 - **`/`** — landing page (video background + obsession buttons)
 - **`/about/`** — about page
-- **`/tshirts/`** — 66 thousand tshirts product page (Shopify checkout via cart permalink)
 - **`/anna-atkins/`** — *Photographs of British Algæ* reader (Anna Atkins, 1843–1853):
   310 cyanotype plates, 3 volumes, flip-book reading view
+- **`/tshirts/`** — 66 thousand tshirts product page (Shopify checkout via cart permalink)
+
+Each obsession (`anna-atkins`, `tshirts`) is a self-contained "part" — its own route,
+its own assets — sharing only the umbrella landing/nav shell.
 
 Built with **Astro** (vanilla output, no client framework). Deploys to GitHub Pages.
 

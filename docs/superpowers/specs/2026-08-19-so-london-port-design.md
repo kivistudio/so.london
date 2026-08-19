@@ -19,7 +19,8 @@ pipeline behind in `studio-tools`.
 
 | Decision | Choice | Rationale |
 |---|---|---|
-| Topology | **One clean repo**, Anna Atkins as a route | Simplest mental model; one build, one deploy, one CNAME. |
+| Topology | **One clean repo**; each obsession is a self-contained "part" (route) | Simplest mental model; one build, one deploy, one CNAME. `anna-atkins` and `tshirts` are peer parts. |
+| tshirts | **Kept**, as a separate obsession part (`/tshirts/`) | Carried with its Shopify surface intact (cart-permalink JS, `PUBLIC_SHOPIFY_DOMAIN` env, `SHOPIFY_DOMAIN` GH secret). Treated as its own part like `anna-atkins`, not the messy tools. |
 | Route for the reader | `/anna-atkins/` (renamed from `/atkins/`) | Cleaner, human URL on the shared domain. |
 | Domain | `shortobsessions.com` root; reader at `shortobsessions.com/anna-atkins` | Single domain keeps link equity; no DNS/subdomain/cert work. |
 | Git history | **Fresh start** — new repo, new initial commit | History stays recoverable in `studio-tools`. Fresh start also means the ~970 MB `book/` folder is a one-time snapshot, not accumulated across history. |
@@ -37,12 +38,15 @@ remain open if that ever becomes painful. Not pre-solved (YAGNI).
 ## What moves vs. what stays
 
 ### Carried into `so.london`
-- `src/` — pages (`index`, `about`, `tshirts`, `anna-atkins`), `layouts/BaseLayout.astro`,
+- `src/` — pages (`index`, `about`, `anna-atkins`, `tshirts`), `layouts/BaseLayout.astro`,
   `components/*` (`BackgroundVideo`, `Nav`, `IntroDefinition`, `ObsessionButton`, `Wordmark`,
   `GridOverlay`), `styles/tokens.css`.
+- The **tshirts** part in full: `src/pages/tshirts/`, its Shopify cart-permalink JS, and the
+  `PUBLIC_SHOPIFY_DOMAIN` / `SHOPIFY_DOMAIN` env plumbing (kept in `.env` + the deploy workflow).
 - Build config: `astro.config.mjs`, `package.json`, `pnpm-lock.yaml`, `.nvmrc`, `mise.toml`,
-  `Makefile`, `.gitignore`.
-- Deploy: `.github/workflows/deploy.yml`, `public/CNAME`.
+  `Makefile`, `.gitignore`, `.env.example`.
+- Deploy: `.github/workflows/deploy.yml` (trimmed — drop only the `rm -rf src/pages/tools`
+  strip step, since `tools/` doesn't exist here; keep the `SHOPIFY_DOMAIN` injection), `public/CNAME`.
 - **Only the `assets/` referenced by `src/` imports** (landing video, `short-obsessions.jpg`,
   any svgs/colours actually imported). Verify by grep before copying.
 - Anna Atkins **generated artifacts**: `plates.json`, `volumes.json`, `book/` → under
@@ -81,9 +85,11 @@ Nav+theme is a later, independent task.
 De-risk by standing up a working clean site *before* dragging in the heavy reader.
 
 ### Phase 1 — clean umbrella (landing / about / tshirts)
-1. Copy the site skeleton (config, `src/` minus the atkins page, referenced assets, workflow, CNAME).
+1. Copy the site skeleton (config, `src/` minus the atkins page, referenced assets, workflow,
+   CNAME). Carry the tshirts part + Shopify plumbing. Trim only the `rm -rf src/pages/tools`
+   step from the deploy workflow.
 2. Pin dependencies to latest stable (repo principle) while the surface is small.
-3. `pnpm install && pnpm build && pnpm preview`; verify the three pages. Temporarily
+3. `pnpm install && pnpm build && pnpm preview`; verify landing + about + tshirts. Temporarily
    drop/forward the Anna Atkins button (route not present yet).
 4. Domain handover: a custom domain verifies on only one repo at a time. Move
    `shortobsessions.com` from `atkins-cyanotypes` Pages settings to `so.london`. Expect a
