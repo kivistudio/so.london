@@ -1,0 +1,45 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  disabled?: boolean;
+  external?: boolean;
+}
+const { href, label, disabled = false, external = false } = Astro.props;
+const rel = external ? 'noopener noreferrer' : undefined;
+const target = external ? '_blank' : undefined;
+---
+
+{disabled ? (
+  <span class="ob ob--disabled" aria-disabled="true">{label}</span>
+) : (
+  <a class="ob" href={href} rel={rel} target={target}>{label}</a>
+)}
+
+<style>
+  .ob {
+    display: inline-block;
+    padding: var(--s-5) var(--s-8);
+    border: 1px solid var(--accent);
+    background: var(--accent);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: 15px;
+    letter-spacing: var(--nav-tracking);
+    text-transform: uppercase;
+    transition: background 200ms ease, border-color 200ms ease;
+  }
+
+  .ob:hover,
+  .ob:focus-visible {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+  }
+
+  .ob--disabled {
+    color: var(--fg-dim);
+    background: transparent;
+    border-color: var(--hairline);
+    cursor: not-allowed;
+  }
+</style>

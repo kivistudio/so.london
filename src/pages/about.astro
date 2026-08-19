@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Wordmark from '../components/Wordmark.astro';
+---
+
+<BaseLayout title="About — Short Obsessions">
+  <Nav current="about" />
+  <Wordmark href="/" />
+
+  <main class="about">
+    <article class="about__prose">
+      <h1 class="about__title">About</h1>
+      <p>
+        Short Obsessions is a place for short, intense fixations &mdash; one
+        obsession at a time.
+      </p>
+      <p>
+        Each obsession lives in its own world. The current one: <a href="/tshirts/">66
+        thousand tshirts</a>.
+      </p>
+
+      <p class="about__credit">
+        The website colours are inspired by <a href="https://color-ville.com/" rel="noopener noreferrer" target="_blank">color-ville.com</a>.
+      </p>
+    </article>
+
+    <a href="/" class="about__back">&larr; Back</a>
+  </main>
+</BaseLayout>
+
+<style>
+  .about {
+    min-height: 100vh;
+    padding: calc(var(--page-pad-y) * 2) var(--page-pad-x);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-width: 60ch;
+    margin: 0 auto;
+  }
+
+  .about__title {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: var(--nav-tracking);
+    text-transform: uppercase;
+    margin-bottom: var(--s-6);
+    font-weight: 400;
+  }
+
+  .about__prose p {
+    margin-bottom: var(--s-4);
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  .about__prose a {
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .about__prose a:hover {
+    border-bottom-color: var(--fg);
+  }
+
+  .about__credit {
+    margin-top: var(--s-6);
+    color: var(--fg-dim);
+    font-size: 14px;
+  }
+
+  .about__back {
+    font-family: var(--font-mono);
+    font-size: var(--nav-size);
+    letter-spacing: var(--nav-tracking);
+    text-transform: uppercase;
+    margin-top: var(--s-8);
+    opacity: 0.7;
+  }
+
+  .about__back:hover {
+    opacity: 1;
+  }
+</style>

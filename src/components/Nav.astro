@@ -1,0 +1,42 @@
+---
+interface Props {
+  current?: 'about' | null;
+}
+const { current = null } = Astro.props;
+---
+
+<nav class="nav">
+  <a href="/about/" class="nav__link" aria-current={current === 'about' ? 'page' : null}>
+    About
+  </a>
+</nav>
+
+<style>
+  .nav {
+    position: fixed;
+    top: var(--page-pad-y);
+    right: var(--page-pad-x);
+    display: flex;
+    gap: 2.4em;
+    z-index: 10;
+  }
+
+  .nav__link {
+    font-family: var(--font-mono);
+    font-size: var(--nav-size);
+    letter-spacing: var(--nav-tracking);
+    text-transform: uppercase;
+    color: var(--fg);
+    padding: var(--s-1) var(--s-2);
+    transition: opacity 160ms ease;
+  }
+
+  .nav__link:hover,
+  .nav__link:focus-visible {
+    opacity: 0.7;
+  }
+
+  .nav__link[aria-current='page'] {
+    border-bottom: 1px solid var(--hairline);
+  }
+</style>

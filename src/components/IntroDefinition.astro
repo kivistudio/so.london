@@ -1,0 +1,41 @@
+---
+import { Image } from 'astro:assets';
+import intro from '../../assets/short-obsessions.jpg';
+---
+
+<figure class="intro" aria-label="Short Obsessions">
+  <Image
+    src={intro}
+    alt="Short-term obsessions are intense, temporary fixations on new hobbies, topics, or projects — such as knitting, coding, or learning a language — often lasting a few weeks before the novelty fades. Common with ADHD (hyperfocus), these fixations provide a rapid dopamine rush, allowing for high productivity and learning before interest drops off."
+    widths={[640, 960, 1280]}
+    sizes="(max-width: 800px) 80vw, 62vw"
+    loading="eager"
+    decoding="async"
+  />
+</figure>
+
+<style>
+  .intro {
+    position: fixed;
+    top: 50%;
+    left: var(--page-pad-x);
+    transform: translateY(-50%);
+    width: min(62vw, 800px);
+    z-index: 5;
+    margin: 0;
+  }
+
+  .intro img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  @media (max-width: 800px) {
+    .intro {
+      width: 80vw;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+</style>

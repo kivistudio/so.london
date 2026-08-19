@@ -1,0 +1,39 @@
+---
+interface Props {
+  as?: 'h1' | 'div';
+  href?: string | null;
+}
+const { as = 'div', href = null } = Astro.props;
+const Tag = as;
+---
+
+{href ? (
+  <a href={href} class="wordmark wordmark--link">
+    <Tag class="wordmark__text">Short Obsessions</Tag>
+  </a>
+) : (
+  <Tag class="wordmark wordmark__text">Short Obsessions</Tag>
+)}
+
+<style>
+  .wordmark {
+    position: fixed;
+    bottom: var(--page-pad-y);
+    left: var(--page-pad-x);
+    z-index: 10;
+  }
+
+  .wordmark__text {
+    font-family: var(--font-mono);
+    font-size: var(--nav-size);
+    letter-spacing: var(--nav-tracking);
+    text-transform: uppercase;
+    color: var(--fg);
+    font-weight: 400;
+  }
+
+  .wordmark--link:hover .wordmark__text,
+  .wordmark--link:focus-visible .wordmark__text {
+    opacity: 0.7;
+  }
+</style>

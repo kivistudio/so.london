@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BackgroundVideo from '../components/BackgroundVideo.astro';
+import Nav from '../components/Nav.astro';
+import IntroDefinition from '../components/IntroDefinition.astro';
+import ObsessionButton from '../components/ObsessionButton.astro';
+---
+
+<BaseLayout title="Short Obsessions" theme="dark">
+  <BackgroundVideo />
+  <Nav />
+  <IntroDefinition />
+
+  <main class="landing">
+    <div class="landing__buttons">
+      <ObsessionButton href="/atkins/" label="Anna Atkins" />
+      {/*
+        /tshirts/ is still built and reachable by URL — it's just no longer the
+        obsession we're leading with. Add it back as a second button here when
+        it's worth surfacing again:
+
+        <ObsessionButton href="/tshirts/" label="66 thousand tshirts" />
+      */}
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .landing {
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: var(--page-pad-y) var(--page-pad-x);
+    padding-bottom: calc(var(--page-pad-y) * 2.5);
+  }
+
+  .landing__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-4);
+    justify-content: center;
+  }
+</style>

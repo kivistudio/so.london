@@ -1,0 +1,191 @@
+---
+/**
+ * Joseph Müller-Brockmann-style grid overlay.
+ *
+ * Shows a column grid + baseline grid on top of the page, with a small
+ * corner toggle and a keyboard shortcut (default `g`). Toggle state
+ * persists in localStorage. Pointer-events on the overlay are disabled
+ * so it never blocks clicks underneath; only the toggle button is
+ * interactive.
+ *
+ * Usage (typically in a layout, once):
+ *   <GridOverlay />
+ *   <GridOverlay columns={8} gutter="20px" margin="6vw" baseline="6px" />
+ */
+
+interface Props {
+  columns?: number;
+  gutter?: string;
+  margin?: string;
+  baseline?: string;
+  /** key to toggle (single character, case-insensitive) */
+  shortcut?: string;
+  /** localStorage key — change to scope per-page if needed */
+  storageKey?: string;
+}
+
+const {
+  columns = 12,
+  gutter = '24px',
+  margin = 'var(--page-pad-x, 8vw)',
+  baseline = '8px',
+  shortcut = 'g',
+  storageKey = 'so:grid-overlay',
+} = Astro.props;
+---
+
+<button
+  type="button"
+  class="grid-toggle"
+  data-grid-toggle
+  aria-pressed="false"
+  aria-label={`Toggle grid overlay (${shortcut.toUpperCase()})`}
+  title={`Grid (press ${shortcut.toUpperCase()})`}
+>
+  <span aria-hidden="true">{shortcut.toUpperCase()}</span>
+</button>
+
+<div class="grid-overlay" data-grid-overlay aria-hidden="true">
+  <div class="grid-overlay__columns">
+    {Array.from({ length: columns }, (_, i) => (
+      <div class="grid-overlay__col" data-col={i + 1}></div>
+    ))}
+  </div>
+  <div class="grid-overlay__baseline" aria-hidden="true"></div>
+  <span class="grid-overlay__badge">
+    {columns}c · gutter {gutter} · baseline {baseline}
+  </span>
+</div>
+
+<style
+  define:vars={{
+    'grid-columns':  String(columns),
+    'grid-gutter':   gutter,
+    'grid-margin':   margin,
+    'grid-baseline': baseline,
+  }}
+>
+  /* ---- overlay ---- */
+  .grid-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    display: none;
+  }
+  .grid-overlay[data-active='true'] {
+    display: block;
+  }
+
+  /* column grid */
+  .grid-overlay__columns {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--grid-margin);
+    right: var(--grid-margin);
+    display: grid;
+    grid-template-columns: repeat(var(--grid-columns), 1fr);
+    gap: var(--grid-gutter);
+  }
+  .grid-overlay__col {
+    background: rgba(255, 0, 100, 0.06);
+    border-left:  1px solid rgba(255, 0, 100, 0.28);
+    border-right: 1px solid rgba(255, 0, 100, 0.28);
+  }
+
+  /* baseline grid */
+  .grid-overlay__baseline {
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent calc(var(--grid-baseline) - 1px),
+        rgba(255, 0, 100, 0.10) calc(var(--grid-baseline) - 1px),
+        rgba(255, 0, 100, 0.10) var(--grid-baseline)
+      );
+  }
+
+  /* status badge */
+  .grid-overlay__badge {
+    position: fixed;
+    bottom: var(--s-2, 8px);
+    left:   var(--s-2, 8px);
+    padding: 3px 8px;
+    background: rgba(20, 20, 20, 0.82);
+    color: #FFB7CE;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  /* ---- toggle button ---- */
+  .grid-toggle {
+    position: fixed;
+    right:  var(--s-3, 12px);
+    bottom: var(--s-3, 12px);
+    z-index: 9999;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 0, 100, 0.45);
+    background: rgba(20, 20, 20, 0.55);
+    color: rgba(255, 255, 255, 0.85);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    opacity: 0.45;
+    transition: opacity 160ms ease, background 160ms ease, color 160ms ease;
+  }
+  .grid-toggle:hover,
+  .grid-toggle:focus-visible {
+    opacity: 1;
+  }
+  .grid-toggle[aria-pressed='true'] {
+    background: #FF0064;
+    border-color: #FF0064;
+    color: #fff;
+    opacity: 1;
+  }
+</style>
+
+<script define:vars={{ storageKey, shortcut }}>
+  const SHORTCUT = shortcut.toLowerCase();
+  const overlay = document.querySelector('[data-grid-overlay]');
+  const toggle  = document.querySelector('[data-grid-toggle]');
+
+  if (overlay && toggle) {
+    const apply = (on) => {
+      overlay.setAttribute('data-active', on ? 'true' : 'false');
+      toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
+    };
+
+    // Restore previous state
+    apply(localStorage.getItem(storageKey) === '1');
+
+    const flip = () => {
+      const next = overlay.getAttribute('data-active') !== 'true';
+      apply(next);
+      localStorage.setItem(storageKey, next ? '1' : '0');
+    };
+
+    toggle.addEventListener('click', flip);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const t = e.target;
+      const tag = (t && t.tagName) ? t.tagName.toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea' || (t && t.isContentEditable)) return;
+      if (e.key.toLowerCase() === SHORTCUT) {
+        e.preventDefault();
+        flip();
+      }
+    });
+  }
+</script>
