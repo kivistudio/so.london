@@ -1,0 +1,239 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Wordmark from '../../components/Wordmark.astro';
+
+const SHOPIFY_DOMAIN = import.meta.env.PUBLIC_SHOPIFY_DOMAIN || 'TODO_SHOPIFY_DOMAIN';
+
+// One radio per size. Variant IDs are placeholders until the Shopify product
+// exists; find-and-replace TODO_VARIANT_ID_SIZE_* once the variant IDs are
+// known. The BUY link is disabled until at least one real variant is set.
+const sizes = [
+  { code: 'xs', label: 'XS', variantId: 'TODO_VARIANT_ID_SIZE_XS' },
+  { code: 's',  label: 'S',  variantId: 'TODO_VARIANT_ID_SIZE_S'  },
+  { code: 'm',  label: 'M',  variantId: 'TODO_VARIANT_ID_SIZE_M'  },
+  { code: 'l',  label: 'L',  variantId: 'TODO_VARIANT_ID_SIZE_L'  },
+  { code: 'xl', label: 'XL', variantId: 'TODO_VARIANT_ID_SIZE_XL' },
+];
+---
+
+<BaseLayout title="66 thousand tshirts — Short Obsessions">
+  <Nav />
+  <Wordmark href="/" />
+
+  <main class="tshirts">
+    <div class="tshirts__hero">
+      <div class="tshirts__placeholder" aria-label="T-shirt design — coming soon" />
+    </div>
+
+    <section class="tshirts__product">
+      <h1 class="tshirts__title">66 thousand tshirts</h1>
+
+      <p class="tshirts__copy">
+        A short obsession with t-shirts. More info coming with the drop.
+      </p>
+
+      <form class="tshirts__form" id="buy-form">
+        <fieldset class="tshirts__sizes">
+          <legend>Size</legend>
+          {sizes.map(({ code, label, variantId }, i) => (
+            <label class="tshirts__size">
+              <input
+                type="radio"
+                name="size"
+                value={code}
+                data-variant-id={variantId}
+                checked={i === 2 /* default to M */}
+              />
+              <span>{label}</span>
+            </label>
+          ))}
+        </fieldset>
+
+        <a id="buy" href="#" class="tshirts__buy" aria-disabled="true">Buy</a>
+        <p id="buy-note" class="tshirts__note">Drop coming soon. Variant IDs not yet wired.</p>
+      </form>
+    </section>
+  </main>
+</BaseLayout>
+
+<script define:vars={{ SHOPIFY_DOMAIN }}>
+  const buy  = document.getElementById('buy');
+  const note = document.getElementById('buy-note');
+
+  const update = () => {
+    const checked = document.querySelector('input[name="size"]:checked');
+    if (!checked) return;
+    const variantId = checked.dataset.variantId;
+    const live = variantId && !variantId.startsWith('TODO_') && SHOPIFY_DOMAIN && !SHOPIFY_DOMAIN.startsWith('TODO_');
+
+    if (live) {
+      buy.setAttribute('href', `https://${SHOPIFY_DOMAIN}/cart/${variantId}:1?return_to=/checkout`);
+      buy.removeAttribute('aria-disabled');
+      note.hidden = true;
+    } else {
+      buy.setAttribute('href', '#');
+      buy.setAttribute('aria-disabled', 'true');
+      note.hidden = false;
+    }
+  };
+
+  document.querySelectorAll('input[name="size"]').forEach(el =>
+    el.addEventListener('change', update)
+  );
+  update();
+
+  buy.addEventListener('click', e => {
+    if (buy.getAttribute('aria-disabled') === 'true') e.preventDefault();
+  });
+</script>
+
+<style>
+  .tshirts {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-8);
+    padding: calc(var(--page-pad-y) * 2) var(--page-pad-x);
+    align-items: center;
+  }
+
+  @media (max-width: 800px) {
+    .tshirts {
+      grid-template-columns: 1fr;
+      gap: var(--s-6);
+    }
+  }
+
+  .tshirts__hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--s-6);
+  }
+
+  .tshirts__placeholder {
+    aspect-ratio: 4 / 5;
+    width: 100%;
+    max-width: 420px;
+    border: 1px dashed var(--hairline);
+    background:
+      repeating-linear-gradient(
+        135deg,
+        rgba(244,241,234,0.03) 0 8px,
+        transparent 8px 24px
+      );
+  }
+
+  .tshirts__product { max-width: 38ch; }
+
+  .tshirts__title {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 500;
+    margin-bottom: var(--s-4);
+    line-height: 1.15;
+  }
+
+  .tshirts__copy {
+    color: var(--fg-dim);
+    margin-bottom: var(--s-6);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .tshirts__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+  }
+
+  .tshirts__sizes {
+    border: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+
+  .tshirts__sizes legend {
+    width: 100%;
+    margin-bottom: var(--s-2);
+    font-family: var(--font-mono);
+    font-size: var(--nav-size);
+    letter-spacing: var(--nav-tracking);
+    text-transform: uppercase;
+    color: var(--fg-dim);
+  }
+
+  .tshirts__size {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    height: 40px;
+    padding: 0 var(--s-3);
+    border: 1px solid var(--hairline);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    transition: border-color 160ms ease, background 160ms ease;
+  }
+
+  .tshirts__size:hover {
+    border-color: var(--fg);
+  }
+
+  .tshirts__size input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .tshirts__size:has(input:checked) {
+    background: var(--fg);
+    color: var(--bg);
+    border-color: var(--fg);
+  }
+
+  .tshirts__buy {
+    align-self: flex-start;
+    display: inline-block;
+    padding: var(--s-4) var(--s-7);
+    border: 1px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: var(--nav-tracking);
+    text-transform: uppercase;
+    transition: background 200ms ease, color 200ms ease;
+  }
+
+  .tshirts__buy:hover {
+    background: var(--accent);
+    color: var(--ink);
+  }
+
+  .tshirts__buy[aria-disabled='true'] {
+    background: transparent;
+    border-color: var(--hairline);
+    color: var(--fg-dim);
+    cursor: not-allowed;
+  }
+
+  .tshirts__buy[aria-disabled='true']:hover {
+    background: transparent;
+    border-color: var(--hairline);
+    color: var(--fg-dim);
+  }
+
+  .tshirts__note {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--fg-dim);
+    margin: 0;
+  }
+</style>
