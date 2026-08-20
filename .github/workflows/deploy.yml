@@ -22,28 +22,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
-        # version is pinned via package.json "packageManager"
-
-      - uses: actions/setup-node@v7
+      # Official Astro action: sets up Node + pnpm, runs `astro build`, and
+      # uploads dist/ as the Pages artifact. It auto-detects pnpm from the
+      # lockfile and honours the "packageManager" field in package.json.
+      - name: Build with Astro
+        uses: withastro/action@v6
         with:
-          node-version-file: .nvmrc
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build site
-        run: pnpm build
+          node-version: 24
         env:
           PUBLIC_SHOPIFY_DOMAIN: ${{ secrets.SHOPIFY_DOMAIN }}
-
-      - uses: actions/configure-pages@v6
-
-      - name: Upload dist/ as the Pages artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: ./dist
 
   deploy:
     runs-on: ubuntu-latest
