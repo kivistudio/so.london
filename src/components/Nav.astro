@@ -1,6 +1,6 @@
 ---
 interface Props {
-  current?: 'about' | null;
+  current?: 'about' | 'notes' | 'inspirations' | null;
 }
 const { current = null } = Astro.props;
 ---
@@ -8,6 +8,12 @@ const { current = null } = Astro.props;
 <nav class="nav">
   <a href="/about/" class="nav__link" aria-current={current === 'about' ? 'page' : null}>
     About
+  </a>
+  <a href="/notes/" class="nav__link" aria-current={current === 'notes' ? 'page' : null}>
+    Notes
+  </a>
+  <a href="/inspirations/" class="nav__link" aria-current={current === 'inspirations' ? 'page' : null}>
+    Inspirations
   </a>
 </nav>
 
@@ -17,13 +23,15 @@ const { current = null } = Astro.props;
     top: var(--page-pad-y);
     right: var(--page-pad-x);
     display: flex;
-    gap: 2.4em;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--s-2);
     z-index: 10;
   }
 
   .nav__link {
     font-family: var(--font-mono);
-    font-size: var(--nav-size);
+    font-size: var(--nav-link-size);
     letter-spacing: var(--nav-tracking);
     text-transform: uppercase;
     color: var(--fg);

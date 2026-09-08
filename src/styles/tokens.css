@@ -56,6 +56,10 @@
   --page-pad-y: 6vh;
 
   --nav-size:       11px;
+  /* The top nav is a small standing menu, not a quiet back-link, so it steps one
+     size up from --nav-size (the shared nav/back-link idiom) to read as primary
+     wayfinding while the "Back" links stay at 11px. */
+  --nav-link-size:  13px;
   --nav-tracking:   0.22em;
 }
 

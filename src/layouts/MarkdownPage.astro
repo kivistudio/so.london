@@ -20,10 +20,14 @@ import Wordmark from '../components/Wordmark.astro';
 
 const { frontmatter } = Astro.props;
 const { title } = frontmatter;
+
+// Markdown pages share one layout, so derive which nav item is active from the
+// page title (e.g. "Notes" → "notes") rather than hard-coding it per file.
+const current = title?.toLowerCase() ?? null;
 ---
 
 <BaseLayout title={`${title} — Short Obsessions`}>
-  <Nav />
+  <Nav current={current} />
 
   <main class="md">
     <Wordmark href="/" dock />
