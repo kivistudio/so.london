@@ -1,0 +1,271 @@
+---
+/**
+ * Layout for plain-markdown "dump" pages that live directly in src/pages/ as
+ * .md files. A markdown file becomes a route on its own; it just has no chrome
+ * or type styling, so it points here via frontmatter:
+ *
+ *   ---
+ *   layout: ../layouts/MarkdownPage.astro
+ *   title: Inspirations
+ *   ---
+ *
+ * The markdown body renders into <slot />. Because that HTML is bare
+ * (<h1>, <h2>, <p>, <ul>, <a> — no BEM classes), the styles below target
+ * elements directly. This mirrors the type scale in about.astro so markdown
+ * pages read the same, without touching about.astro itself.
+ */
+import BaseLayout from './BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Wordmark from '../components/Wordmark.astro';
+
+const { frontmatter } = Astro.props;
+const { title } = frontmatter;
+---
+
+<BaseLayout title={`${title} — Short Obsessions`}>
+  <Nav />
+
+  <main class="md">
+    <Wordmark href="/" dock />
+    <div class="md__inner">
+      <article class="md__prose">
+        <slot />
+      </article>
+
+      <a href="/" class="md__back">&larr; Back</a>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  /* Layout mirrors about.astro: measure on an inner column so the gutter isn't
+     subtracted inside the cap, prose + back-link share the same left edge. */
+  .md {
+    min-height: 100vh;
+    /* Top clears the docking wordmark (fixed at --page-pad-y, ~48px tall) plus a
+       masthead gap, so the prose sits just below it; the mark is out of flow,
+       so this padding is what reserves the space. */
+    padding: calc(var(--page-pad-y) + 48px + var(--s-7)) var(--page-pad-x) calc(var(--page-pad-y) * 2);
+  }
+
+  .md__inner {
+    max-width: 62ch;
+    margin: 0 auto;
+  }
+
+  /* h1 — the single display step. Lowercase-agnostic; Medium for presence. */
+  .md__prose :global(h1) {
+    font-family: var(--font-mono);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--fg);
+    margin: 0 0 var(--s-6);
+    letter-spacing: var(--nav-tracking);
+    text-transform: uppercase;
+  }
+
+  /* h2 — tracked small-caps kicker (nav idiom), full ink, not greyed. Space
+     ABOVE far exceeds space BELOW so each heading binds to the text it leads. */
+  .md__prose :global(h2) {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: var(--nav-tracking);
+    text-transform: uppercase;
+    color: var(--fg);
+    margin: var(--s-8) 0 var(--s-4);
+  }
+
+  .md__prose :global(h3) {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--fg);
+    margin: var(--s-6) 0 var(--s-3);
+  }
+
+  /* Heading anchors — rehype-autolink-headings wraps each heading's text in an
+     <a href="#id"> permalink. It must read as a plain heading (no body-link
+     underline), with a quiet affordance: a red "#" hangs into the left margin on
+     hover/focus, so the link-ability is discoverable without cluttering the
+     resting state. Explicit per-level selectors so they out-specify the generic
+     .md__prose a underline above. */
+  .md__prose :global(h1) a,
+  .md__prose :global(h2) a,
+  .md__prose :global(h3) a,
+  .md__prose :global(h4) a,
+  .md__prose :global(h5) a,
+  .md__prose :global(h6) a {
+    position: relative;
+    color: inherit;
+    border-bottom: 0;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .md__prose :global(h1) a::before,
+  .md__prose :global(h2) a::before,
+  .md__prose :global(h3) a::before,
+  .md__prose :global(h4) a::before,
+  .md__prose :global(h5) a::before,
+  .md__prose :global(h6) a::before {
+    content: "#";
+    position: absolute;
+    left: -0.9em;
+    color: var(--cv-red);
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.15s ease-out;
+  }
+  .md__prose :global(h1) a:hover::before,
+  .md__prose :global(h2) a:hover::before,
+  .md__prose :global(h3) a:hover::before,
+  .md__prose :global(h4) a:hover::before,
+  .md__prose :global(h5) a:hover::before,
+  .md__prose :global(h6) a:hover::before,
+  .md__prose :global(h1) a:focus-visible::before,
+  .md__prose :global(h2) a:focus-visible::before,
+  .md__prose :global(h3) a:focus-visible::before,
+  .md__prose :global(h4) a:focus-visible::before,
+  .md__prose :global(h5) a:focus-visible::before,
+  .md__prose :global(h6) a:focus-visible::before {
+    opacity: 1;
+  }
+
+  /* Body rhythm — paragraph gap ≈ 0.8× the leading (active whitespace). */
+  .md__prose :global(p) {
+    margin-bottom: var(--s-5);
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  .md__prose :global(ul),
+  .md__prose :global(ol) {
+    margin: 0 0 var(--s-5);
+    padding-left: var(--s-5);
+  }
+
+  .md__prose :global(li) {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: var(--s-3);
+  }
+
+  .md__prose :global(a) {
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .md__prose :global(a:hover) {
+    border-bottom-color: var(--fg);
+  }
+
+  /* Pull-quotes carry the brand green (--cv-teal, the "so.." divider rule) as the
+     left rule, matched to the logo divider's thickness (2px: the SVG path's
+     stroke-width, rendered 1:1 via non-scaling-stroke). Full-ink text so a quoted
+     definition reads with presence. */
+  .md__prose :global(blockquote) {
+    margin: var(--s-5) 0;
+    padding-left: var(--s-5);
+    border-left: 2px solid var(--cv-teal);
+    color: var(--fg);
+  }
+  .md__prose :global(blockquote p) {
+    margin-bottom: 0;
+  }
+
+  .md__prose :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--hairline);
+    margin: var(--s-7) 0;
+  }
+
+  .md__prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+
+  /* Images sit within the measure, never overflow it. Rounded + hairline so a
+     screenshot reads as a placed figure rather than a raw paste. */
+  .md__prose :global(img) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 0 var(--s-5);
+    border: 1px solid var(--hairline);
+    border-radius: 3px;
+  }
+
+  /* Tables — scrollable on narrow widths so the page body never scrolls. */
+  .md__prose :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 var(--s-5);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .md__prose :global(th),
+  .md__prose :global(td) {
+    text-align: left;
+    vertical-align: top;
+    padding: var(--s-3);
+    border-bottom: 1px solid var(--hairline);
+  }
+  /* Header row borrows the nav/kicker idiom: tracked small-caps, full ink,
+     a heavier rule under it than between body rows. */
+  .md__prose :global(th) {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: var(--nav-tracking);
+    text-transform: uppercase;
+    color: var(--fg);
+    border-bottom: 1px solid var(--fg);
+  }
+  .md__prose :global(tbody tr:last-child td) {
+    border-bottom: 0;
+  }
+
+  .md__prose :global(em),
+  .md__prose :global(i) {
+    font-style: italic;
+  }
+
+  /* Footer notes — asides the page could have covered but didn't. A quiet
+     endnote block set off by a top rule, echoing the about-page footnotes
+     (dim tone, smaller type); no markers, these aren't referenced from the
+     body. The label reads as a tracked small-caps kicker (nav idiom). */
+  .md__prose :global(.md-notes) {
+    margin-top: var(--s-8);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--hairline);
+    color: var(--fg-dim);
+  }
+  .md__prose :global(.md-notes strong) {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: var(--nav-tracking);
+    text-transform: uppercase;
+    color: var(--fg);
+    margin-bottom: var(--s-4);
+  }
+  .md__prose :global(.md-notes p),
+  .md__prose :global(.md-notes li) {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--fg-dim);
+  }
+
+  .md__back {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--nav-size);
+    letter-spacing: var(--nav-tracking);
+    text-transform: uppercase;
+    margin-top: var(--s-8);
+    opacity: 0.7;
+  }
+
+  .md__back:hover {
+    opacity: 1;
+  }
+</style>

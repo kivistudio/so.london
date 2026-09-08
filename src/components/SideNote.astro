@@ -1,0 +1,134 @@
+---
+/**
+ * Margin note (Tufte sidenote) for MDX prose pages. Sits inline in the source,
+ * next to the sentence it annotates. It is CLICK-TO-REVEAL: a red asterisk
+ * marker (the same idiom as <FootnoteRef> on the about page) toggles the note
+ * open. Revealed, the note floats into the right margin on wide viewports and
+ * drops to an inline aside where the margin runs out.
+ *
+ * Usage (MDX only — plain .md can't use components):
+ *
+ *   import SideNote from '../components/SideNote.astro';
+ *   …curiosity is aversive<SideNote>Loewenstein (1994), *Psych. Bulletin* 116(1):75.</SideNote> not…
+ *
+ * Pass a stable `id` to make the note referenceable from elsewhere with
+ * <SideNoteRef for="…" /> — a second marker that jumps to and flashes THIS note
+ * (footnote-style reuse: one note, many references). Without an id the note gets
+ * a random one and is a one-off.
+ *
+ * The note content is the <slot>, so markdown inside it (emphasis, links,
+ * images) is rendered by MDX. No JavaScript: a visually-hidden checkbox holds
+ * the open/closed state (its <label> is the asterisk, so the in-place toggle is
+ * keyboard-accessible for free), and the note ALSO reveals via :target so a
+ * remote <SideNoteRef> anchor can open + scroll to it. Every element is
+ * inline-valid so it can live inside a paragraph.
+ */
+const { id } = Astro.props;
+const uid = id ? `sn-${id}` : 'sn-' + Math.random().toString(36).slice(2, 9);
+const noteId = `${uid}-note`;
+---
+
+<span class="sidenote-wrap"
+  ><input type="checkbox" id={uid} class="sidenote__switch sr-only" /><label
+    for={uid}
+    class="sidenote__anchor"
+    ><span class="sr-only">Show note</span><span aria-hidden="true">*</span></label
+  ><small class="sidenote" id={noteId} role="note" style="scroll-margin-top: 2rem;"
+    ><span class="sidenote__marker" aria-hidden="true">*</span><slot /></small
+  ></span
+>
+
+<style>
+  /* The in-body marker: a small red asterisk that hugs the annotated word,
+     matching <FootnoteRef> (--cv-red, bold, superscript). It's a <label>, so
+     clicking (or keyboard-toggling its checkbox) reveals the note. */
+  .sidenote__anchor {
+    color: var(--cv-red, currentColor);
+    font-weight: 700;
+    font-size: 0.85em;
+    vertical-align: super;
+    line-height: 0;
+    cursor: pointer;
+    user-select: none;
+    margin-left: 1px;
+  }
+  .sidenote__anchor:hover {
+    text-decoration: underline;
+  }
+  /* The checkbox is visually hidden (sr-only), so surface its focus ring on the
+     visible asterisk instead, for keyboard users. */
+  .sidenote__switch:focus-visible + .sidenote__anchor {
+    outline: 2px solid var(--cv-red, currentColor);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Hidden until revealed — either by clicking this note's own marker (checkbox)
+     or by a remote <SideNoteRef> anchor targeting it (:target). */
+  .sidenote {
+    display: none;
+  }
+
+  /* Revealed — narrow / iPad portrait: the note drops into the flow as a quiet,
+     hairline-bordered aside, reusing MarkdownPage's blockquote language. Its own
+     leading marker is redundant inline, so it stays hidden here. On reveal, wash
+     the note in the accent briefly then fade out — the click-to-reveal analog of
+     the :target flash on the about-page footnotes (Footnotes.astro fn-flash).
+     Colour fade only, no motion, so it's safe for reduced-motion users. */
+  .sidenote__switch:checked ~ .sidenote,
+  .sidenote:target {
+    display: block;
+    margin: var(--s-3) 0 var(--s-4);
+    padding-left: var(--s-4);
+    border-left: 1px solid var(--hairline);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--fg-dim);
+    animation: sidenote-flash 1.8s ease-out;
+  }
+  @keyframes sidenote-flash {
+    from {
+      background: color-mix(in srgb, var(--cv-red) 22%, transparent);
+    }
+    to {
+      background: transparent;
+    }
+  }
+  .sidenote__marker {
+    display: none;
+  }
+
+  /* Links inside a note stay quiet until hovered, matching prose links. */
+  .sidenote :global(a) {
+    border-bottom: 1px solid var(--hairline);
+  }
+  .sidenote :global(a:hover) {
+    border-bottom-color: var(--fg);
+  }
+
+  /* Revealed — wide viewports (desktop, iPad landscape): float the note into the
+     right margin, aligned to its line. clear:right stacks successive notes; the
+     negative margin carries it past the 62ch measure into the gutter. */
+  @media (min-width: 1180px) {
+    .sidenote__switch:checked ~ .sidenote,
+    .sidenote:target {
+      float: right;
+      clear: right;
+      width: 180px;
+      margin: 0;
+      margin-right: calc(-1 * (180px + var(--s-5)));
+      padding-left: 0;
+      border-left: 0;
+      /* nudge the note's baseline to sit with the line it annotates */
+      position: relative;
+      top: 0.15em;
+    }
+    .sidenote__switch:checked ~ .sidenote .sidenote__marker,
+    .sidenote:target .sidenote__marker {
+      display: inline;
+      color: var(--cv-red, currentColor);
+      font-weight: 700;
+      margin-right: 0.35em;
+    }
+  }
+</style>

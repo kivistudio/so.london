@@ -18,6 +18,18 @@ import landingPoster from '../../assets/video/landing-poster.jpg';
   <div class="bg-video__veil" aria-hidden="true"></div>
 </div>
 
+<!-- Lives outside .bg-video: that container is z-index:-1, so a button inside
+     it would sit behind the page and never receive clicks. -->
+<button
+  type="button"
+  class="video-toggle"
+  data-video-toggle
+  aria-pressed="false"
+  aria-label="Pause background video"
+>
+  <span data-video-label aria-hidden="true">&#10074;&#10074; Pause</span>
+</button>
+
 <style>
   .bg-video {
     position: fixed;
@@ -52,6 +64,39 @@ import landingPoster from '../../assets/video/landing-poster.jpg';
     pointer-events: none;
   }
 
+  /* Pause/play control for the background video. Deliberately off-grid and
+     a touch askew — the landing goes for an unpolished look rather than a
+     tidy corner control. */
+  .video-toggle {
+    position: fixed;
+    top: 18%;
+    left: 5.5vw;
+    z-index: 40;
+    padding: var(--s-3) var(--s-5);
+    border: 1px solid var(--cv-red);
+    background: rgba(20, 20, 20, 0.55);
+    color: #fff;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 13px;
+    line-height: 1;
+    letter-spacing: var(--nav-tracking, 0.22em);
+    text-transform: uppercase;
+    cursor: pointer;
+    transform: rotate(-5deg);
+    transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+  }
+  .video-toggle:hover,
+  .video-toggle:focus-visible {
+    background: var(--cv-red);
+    color: #fff;
+  }
+  /* Paused state — filled so it reads as "stopped". */
+  .video-toggle[aria-pressed='true'] {
+    background: var(--cv-red);
+    border-color: var(--cv-red);
+    color: #fff;
+  }
+
   /* Honour reduced motion: hide the video, show the poster as a static
      background image. */
   @media (prefers-reduced-motion: reduce) {
@@ -63,6 +108,10 @@ import landingPoster from '../../assets/video/landing-poster.jpg';
       background-size: cover;
       background-position: center;
     }
+    /* Nothing is moving, so there is nothing to pause. */
+    .video-toggle {
+      display: none;
+    }
   }
 </style>
 
@@ -70,4 +119,41 @@ import landingPoster from '../../assets/video/landing-poster.jpg';
   // The poster URL is hashed by Vite, so we set --bg-poster from JS rather
   // than hardcoding a path in the CSS. Cheap, runs once.
   document.documentElement.style.setProperty('--bg-poster', `url(${poster})`);
+</script>
+
+<script>
+  // Pause/play the looping background video. Mirrors the GridOverlay toggle
+  // pattern: aria-pressed reflects state (pressed = paused) and the choice
+  // persists in localStorage.
+  const STORAGE_KEY = 'so:bg-paused';
+  const video  = document.querySelector('.bg-video__el');
+  const toggle = document.querySelector('[data-video-toggle]');
+  const label  = toggle && toggle.querySelector('[data-video-label]');
+
+  if (video && toggle && label) {
+    const apply = (paused) => {
+      if (paused) {
+        video.pause();
+      } else {
+        // play() rejects if the browser blocks it (e.g. before interaction);
+        // the video is muted+autoplay so this is unlikely, but swallow it.
+        video.play().catch(() => {});
+      }
+      toggle.setAttribute('aria-pressed', paused ? 'true' : 'false');
+      toggle.setAttribute(
+        'aria-label',
+        paused ? 'Play background video' : 'Pause background video',
+      );
+      label.textContent = paused ? '▶ Play' : '❚❚ Pause';
+    };
+
+    // Restore previous choice (defaults to playing).
+    apply(localStorage.getItem(STORAGE_KEY) === '1');
+
+    toggle.addEventListener('click', () => {
+      const next = toggle.getAttribute('aria-pressed') !== 'true';
+      apply(next);
+      localStorage.setItem(STORAGE_KEY, next ? '1' : '0');
+    });
+  }
 </script>

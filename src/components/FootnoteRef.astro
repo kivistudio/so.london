@@ -1,0 +1,61 @@
+---
+/**
+ * Inline footnote marker. Pass one entry from createFootnotes():
+ *
+ *   …power of AI<FootnoteRef note={notes[0]} /> as a way…
+ *
+ * Renders a superscript asterisk-marker that links to the matching note in
+ * <Footnotes />. The scroll-to-note behaviour lives here + in <Footnotes />,
+ * so it can later become a tooltip / sidenote / popover without touching pages.
+ */
+const { note } = Astro.props;
+---
+
+<sup class="footnote-ref" id={note.refId} style="scroll-margin-top: 2rem;">
+  <a href={`#${note.id}`} aria-label={`Footnote ${note.n}`}>{note.marker}</a>
+</sup>
+
+<style>
+  .footnote-ref {
+    font-size: 1em;
+    vertical-align: super;
+    line-height: 0;
+  }
+  /* `sup.footnote-ref a` (0,1,2) intentionally out-specifies a page's
+     `.about__prose a` (0,1,1) so the marker never picks up body-link
+     underlines. */
+  sup.footnote-ref a {
+    position: relative;
+    color: var(--cv-red, currentColor);
+    font-weight: 700;
+    border-bottom: none;
+    text-decoration: none;
+  }
+  sup.footnote-ref a:hover,
+  sup.footnote-ref a:focus-visible {
+    text-decoration: underline;
+  }
+
+  /* When you return from a note (#fn-N-ref), a circle twice the font size
+     pulses behind the marker so you can find your place again. Sized in em and
+     centred with a pseudo-element (behind the glyph), so the inline text never
+     shifts. Colour fade only — no motion — so reduced-motion users keep it. */
+  sup.footnote-ref:target a::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2em;
+    height: 2em;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--cv-red) 28%, transparent);
+    pointer-events: none;
+    z-index: -1;
+    animation: fn-ref-flash 1.8s ease-out forwards;
+  }
+  @keyframes fn-ref-flash {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+</style>

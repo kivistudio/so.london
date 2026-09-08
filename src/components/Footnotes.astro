@@ -1,0 +1,77 @@
+---
+/**
+ * Footnotes list — prints the note set built by createFootnotes(). Place once,
+ * near the bottom of the page. Each note carries a matching id so the inline
+ * <FootnoteRef> markers can scroll to it, plus a return link back up.
+ *
+ * See src/lib/footnotes.js for the authoring pattern.
+ */
+const { notes } = Astro.props;
+---
+
+{notes.length > 0 && (
+  <section class="footnotes" role="doc-endnotes" aria-label="Footnotes">
+    <ol class="footnotes__list">
+      {notes.map((f) => (
+        <li class="footnotes__item" id={f.id} style="scroll-margin-top: 2rem;">
+          <span class="footnotes__marker" aria-hidden="true">{f.marker}</span>
+          <span class="footnotes__body"><Fragment set:html={f.content} /></span>
+          <a
+            class="footnotes__back"
+            href={`#${f.refId}`}
+            aria-label={`Back to reference ${f.n}`}
+          >&#8617;</a>
+        </li>
+      ))}
+    </ol>
+  </section>
+)}
+
+<style>
+  .footnotes {
+    margin-top: var(--s-8);
+    padding-top: var(--s-5);
+    border-top: 1px solid var(--hairline);
+  }
+  .footnotes__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .footnotes__item {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--fg-dim);
+    margin-bottom: var(--s-4);
+    /* the flash paints inside these, so it hugs the note rather than the page */
+    padding: var(--s-2) var(--s-3);
+    margin-left: calc(var(--s-3) * -1);
+    margin-right: calc(var(--s-3) * -1);
+    border-radius: 2px;
+  }
+
+  /* When you jump to a note (#fn-N), wash it in the accent briefly so it's
+     obvious where you landed, then fade back out. Colour fade only — no motion,
+     so it's safe to keep for reduced-motion users too. */
+  .footnotes__item:target {
+    animation: fn-flash 1.8s ease-out;
+  }
+  @keyframes fn-flash {
+    from { background: color-mix(in srgb, var(--cv-red) 22%, transparent); }
+    to   { background: transparent; }
+  }
+  .footnotes__marker {
+    color: var(--cv-red, currentColor);
+    margin-right: 0.4em;
+  }
+  .footnotes__back {
+    margin-left: 0.4em;
+    color: var(--cv-red, currentColor);
+    text-decoration: none;
+    border-bottom: none;
+  }
+  .footnotes__back:hover,
+  .footnotes__back:focus-visible {
+    text-decoration: underline;
+  }
+</style>

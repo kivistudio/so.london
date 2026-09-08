@@ -2,57 +2,182 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Wordmark from '../components/Wordmark.astro';
+import FootnoteRef from '../components/FootnoteRef.astro';
+import Footnotes from '../components/Footnotes.astro';
+import { createFootnotes } from '../lib/footnotes.js';
+
+// Notes in order of appearance; markers (*, **, …) are derived from position.
+const notes = createFootnotes([
+  `I use Claude for building it. I'll share my process as openly as I can, but
+   I want to be honest about what that actually means right now: Claude is a
+   powerful accelerator if you already know how to build things, not yet a tool
+   that hands that ability to someone starting from zero. It also means that building is fast, and hence it's tempting to build unnecessary things, instead of living.`,
+]);
 ---
 
 <BaseLayout title="About — Short Obsessions">
   <Nav current="about" />
-  <Wordmark href="/" />
 
   <main class="about">
-    <article class="about__prose">
-      <h1 class="about__title">About</h1>
-      <p>
-        Short Obsessions is a place for short, intense fixations &mdash; one
-        obsession at a time.
-      </p>
-      <p>
-        Each obsession lives in its own world. The current one: <a href="/tshirts/">66
-        thousand tshirts</a>.
-      </p>
+    <Wordmark href="/" dock />
+    <div class="about__inner">
+      <article class="about__prose">
+      <h1 class="sr-only">About</h1>
 
-      <p class="about__credit">
-        The website colours are inspired by <a href="https://color-ville.com/" rel="noopener noreferrer" target="_blank">color-ville.com</a>.
+      <p>
+        I created <i class="about__name">short obsessions</i> because I had a
+        thousand ideas but they rarely became anything.
       </p>
-    </article>
+      <p>
+        It's not a blog, nor it is a shop. It's a collection of rabbit holes where you will learn, have fun and
+        perhaps shop. But do not expect typical "Collections", "About", "Blog"
+        sections. Expect to be confused...
+      </p>
+      <p>
+        You're always welcome to reach out to me with: "The video on your main
+        page is driving me crazy", "ooo... I didn't know about the Indie Web.
+        Thanks!". Or anything else... how you collaborate with the website will
+        ultimately drive what the website becomes.
+      </p>
+      <p>
+        This is a place built for exploration. As today's web is created more
+        with AI which uses "templates" and "safe" decisions, here I harness the
+        power of AI<FootnoteRef note={notes[0]} /> as a way to accelerate
+        deployment of ideas before they become unexciting in my mind.
+      </p>
+      
 
-    <a href="/" class="about__back">&larr; Back</a>
+      <section class="about__section">
+        <h2 class="about__h2">Experiments</h2>
+      <p>
+        I have a naive idea that in the age of AI agents scanning the internet,
+        authenticity and "human creativity" might actually be able to surface
+        above the companies which spend millions feeding us generic advertising.
+        At least for a little while.. perhaps..
+      </p>
+      <p>
+        Since agents are using the same search engines as us, but at the same
+        time have the capacity to open every link to see if it answers our
+        questions, perhaps the "weird", "different" places will surface? The traditional SEO meta tags will no longer be sufficient when "clicking through" is done by bots.
+      </p>
+      <p>
+        The alternative is unfortunately what I call the "shallow web". That is,
+        an internet where great things exist but we are unable to find them. If
+        you are curious about "the other", wholesome internet, I suggest starting
+        at <a href="https://www.marginalia-search.com" rel="noopener noreferrer" target="_blank">www.marginalia-search.com</a>
+      </p>
+      </section>
+
+      <section class="about__section">
+        <h2 class="about__h2">Design</h2>
+      <p>
+        I don't have the courage to call myself a designer. In fact,
+        <i class="about__name">short obsessions</i>' main goal is for me to
+        release things before the self-doubt
+        kills them. At the same time, I am sad that the free, open source
+        internet does not care enough about design or about "non-technical"
+        people. There exist countless free tools, resources, and software that
+        are unfortunately inaccessible to anyone who is not "a programmer" or who
+        is allergic to the aesthetics of Windows 98. Hence, wherever possible, I
+        will try to share what I have learned in my countless "internet
+        adventures".
+      </p>
+      </section>
+
+      <section class="about__section">
+        <h2 class="about__h2">Everything is because of something</h2>
+      <p>
+        Creating <i class="about__name">short obsessions</i> is a personal journey across the "small web".
+        Every decision (e.g. where to host the website, what font to use, what
+        colours) is backed by an internet research adventure. Unfortunately, this
+        means that the website becomes what it is very slowly. But perhaps that,
+        in itself, is not the point.
+      </p>
+      </section>
+
+      <section class="about__section">
+        <h2 class="about__h2">Some questions I want to explore</h2>
+      <ul class="about__questions">
+        <li>
+          Can we create websites that are "discovered" without compromising
+          authenticity?
+        </li>
+        <li>What if shops were about learning?</li>
+        <li>
+          What could a future online shop look like when "building" is cheap?
+          Perhaps we can free ourselves from "templates" and "categories".
+        </li>
+      </ul>
+      </section>
+
+      <Footnotes notes={notes} />
+
+      <footer class="about__footer">
+        <p class="about__signoff">so..| Ela</p>
+      </footer>
+      </article>
+
+      <a href="/" class="about__back">&larr; Back</a>
+    </div>
   </main>
 </BaseLayout>
 
 <style>
   .about {
     min-height: 100vh;
-    padding: calc(var(--page-pad-y) * 2) var(--page-pad-x);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    max-width: 60ch;
+    /* Top clears the docking wordmark (fixed at --page-pad-y, ~48px tall) plus a
+       masthead gap, so the first paragraph sits just below it; the mark is out
+       of flow, so this padding is what reserves the space. */
+    padding: calc(var(--page-pad-y) + 48px + var(--s-7)) var(--page-pad-x) calc(var(--page-pad-y) * 2);
+  }
+
+  /* Measure lives on the inner column, not the padded box — otherwise the 8vw
+     gutter is subtracted *inside* the cap (border-box) and the line length
+     both shrinks on wide screens and swings with viewport width. The wrapper
+     holds the prose and the back-link so they share the same left edge. */
+  .about__inner {
+    max-width: 62ch;
     margin: 0 auto;
   }
 
-  .about__title {
+  /* ── Type scale (Jost) ────────────────────────────────────────────────
+     28  page title   (Medium, lowercase — the one display step)
+     18  body / questions / footnotes
+     15  section label (Medium, uppercase, tracked — the "kicker" device)
+     13  meta          (credit, sign-off)
+     11  back link     (nav idiom)
+     Hierarchy comes from size + weight + space, never from greying text
+     (Müller-Brockmann). Ink for all structure & content; the dim tone is
+     reserved for genuinely secondary/meta text. ──────────────────────── */
+
+  /* Page title — the single display step. Lowercase (brand) and Medium for
+     presence; generous space below seats it above the reading column. */
+  /* Section markers — tracked small-caps kicker (same idiom as the nav),
+     full ink + Medium weight, NOT greyed. Space ABOVE (64) far exceeds space
+     BELOW (16) so each heading binds to the text it introduces (proximity). */
+  .about__h2 {
     font-family: var(--font-mono);
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 500;
     letter-spacing: var(--nav-tracking);
     text-transform: uppercase;
-    margin-bottom: var(--s-6);
-    font-weight: 400;
+    color: var(--fg);
+    margin-top: var(--s-8);
+    margin-bottom: var(--s-4);
   }
 
+  /* Body rhythm — paragraph gap ≈ 0.8× the ~31px leading, so blocks separate
+     cleanly without breaking the vertical column (active whitespace, Ruder). */
   .about__prose p {
-    margin-bottom: var(--s-4);
+    margin-bottom: var(--s-5);
     font-size: 18px;
     line-height: 1.7;
+  }
+
+  /* The name set off in body text — italic, so it reads as a title/name
+     rather than the common phrase. Same font as the wordmark by design. */
+  .about__name {
+    font-style: italic;
   }
 
   .about__prose a {
@@ -63,13 +188,37 @@ import Wordmark from '../components/Wordmark.astro';
     border-bottom-color: var(--fg);
   }
 
+  .about__questions {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--s-4);
+  }
+
+  .about__questions li {
+    font-size: 18px;
+    line-height: 1.6;
+    padding-left: var(--s-4);
+    border-left: 1px solid var(--hairline);
+    margin-bottom: var(--s-4);
+  }
+
+  /* Sign-off + colophon credit — quiet meta in the dim tone, set apart from
+     the body but sharing the same left edge. */
+  .about__signoff {
+    margin-top: var(--s-7);
+    color: var(--fg-dim);
+    font-size: 13px;
+  }
+
   .about__credit {
     margin-top: var(--s-6);
     color: var(--fg-dim);
-    font-size: 14px;
+    font-size: 13px;
+    line-height: 1.6;
   }
 
   .about__back {
+    display: inline-block;
     font-family: var(--font-mono);
     font-size: var(--nav-size);
     letter-spacing: var(--nav-tracking);

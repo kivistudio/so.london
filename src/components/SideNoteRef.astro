@@ -1,0 +1,43 @@
+---
+/**
+ * A second reference to an existing <SideNote>. Renders a red asterisk that, when
+ * clicked, jumps to and flashes the original note (footnote-style reuse — one
+ * note, many references), so a source cited once can be pointed at again without
+ * repeating its text.
+ *
+ * Pair with a <SideNote id="…"> somewhere on the page:
+ *
+ *   …the paper<SideNote id="paper">Ashinoff & Abu-Akel (2021)…</SideNote> is readable…
+ *   …_Table 2._<SideNoteRef for="paper" />
+ *
+ * It's a plain in-page anchor to the note's id, so :target reveals + flashes the
+ * note (see SideNote.astro) and the browser scrolls to it — no JavaScript. The
+ * `for` value must match the target <SideNote>'s `id`.
+ */
+const { for: forId } = Astro.props;
+const target = `sn-${forId}-note`;
+---
+
+<a href={`#${target}`} class="sidenote-ref"
+  ><span class="sr-only">See note</span><span aria-hidden="true">*</span></a
+>
+
+<style>
+  /* Same asterisk idiom as <SideNote>'s marker (--cv-red, bold, superscript),
+     but an anchor rather than a checkbox label — it references, it doesn't own. */
+  .sidenote-ref {
+    color: var(--cv-red, currentColor);
+    font-weight: 700;
+    font-size: 0.85em;
+    vertical-align: super;
+    line-height: 0;
+    margin-left: 1px;
+    border-bottom: 0;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .sidenote-ref:hover,
+  .sidenote-ref:focus-visible {
+    text-decoration: underline;
+  }
+</style>

@@ -1,6 +1,8 @@
 ---
 import '../styles/tokens.css';
 import GridOverlay from '../components/GridOverlay.astro';
+import favicon from '../../assets/logos/favicon.png';
+import appleTouchIcon from '../../assets/logos/180x180.png';
 
 interface Props {
   title?: string;
@@ -23,11 +25,16 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" href={favicon.src} />
+    <link rel="apple-touch-icon" href={appleTouchIcon.src} />
+
+    <link rel="preconnect" href="https://indestructibletype.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&family=DM+Mono:wght@400&display=swap"
+      href="https://indestructibletype.com/fonts/Jost.css"
+      type="text/css"
+      charset="utf-8"
     />
   </head>
   <body data-theme={theme}>

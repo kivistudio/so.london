@@ -1,6 +1,9 @@
 ---
 import platesData from '../../../public/anna-atkins/plates.json';
 import volumesData from '../../../public/anna-atkins/volumes.json';
+import Wordmark from '../../components/Wordmark.astro';
+import favicon from '../../../assets/logos/favicon.png';
+import appleTouchIcon from '../../../assets/logos/180x180.png';
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -9,6 +12,10 @@ import volumesData from '../../../public/anna-atkins/volumes.json';
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Photographs of British Algae — Anna Atkins, 1843–1853</title>
 <meta name="description" content="A complete reading of Anna Atkins's Photographs of British Algae: 310 cyanotype plates, each paired with the species depicted, its habitat, the photographic label, and a modern photograph of the same alga." />
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" type="image/png" href={favicon.src} />
+<link rel="apple-touch-icon" href={appleTouchIcon.src} />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1171,6 +1178,7 @@ html.reader-open body {
 </style>
 </head>
 <body>
+<Wordmark href="/" light />
 
 <header class="hero">
   <nav class="hero__menu" aria-label="Primary">
@@ -1298,11 +1306,11 @@ html.reader-open body {
     of many naturalists, each credited per image. The cyanotypes are in the public domain.
   </p>
   <div class="colophon__meta">
-    <a href="https://digitalcollections.nypl.org/collections/photographs-of-british-algae-cyanotype-impressions" target="_blank" rel="noopener">N.Y.P.L. source</a>
+    <a href="https://digitalcollections.nypl.org/collections/photographs-of-british-algae-cyanotype-impressions" target="_blank" rel="noopener noreferrer">N.Y.P.L. source</a>
     <span>·</span>
-    <a href="https://www.inaturalist.org" target="_blank" rel="noopener">iNaturalist</a>
+    <a href="https://www.inaturalist.org" target="_blank" rel="noopener noreferrer">iNaturalist</a>
     <span>·</span>
-    <a href="https://www.c82.net/werner" target="_blank" rel="noopener">in the spirit of Werner’s Nomenclature</a>
+    <a href="https://www.c82.net/werner" target="_blank" rel="noopener noreferrer">in the spirit of Werner’s Nomenclature</a>
   </div>
 </footer>
 
@@ -1866,8 +1874,8 @@ function panelMarkup(idx) {
 
       <div class="catalog__panel-footer">
         <span>Plate ${escapeHtml(p.idx)} · Vol. ${escapeHtml(p.volume)} · ${escapeHtml(p.groupLabel)}</span>
-        <a href="https://digitalcollections.nypl.org/items/${encodeURIComponent(p.captureUUID)}" target="_blank" rel="noopener">N.Y.P.L. plate ↗</a>
-        <a href="https://www.inaturalist.org/taxa/search?q=${encodeURIComponent(p.iNatQuery)}" target="_blank" rel="noopener">iNat ↗</a>
+        <a href="https://digitalcollections.nypl.org/items/${encodeURIComponent(p.captureUUID)}" target="_blank" rel="noopener noreferrer">N.Y.P.L. plate ↗</a>
+        <a href="https://www.inaturalist.org/taxa/search?q=${encodeURIComponent(p.iNatQuery)}" target="_blank" rel="noopener noreferrer">iNat ↗</a>
       </div>
     </div>
   `;
@@ -1948,7 +1956,7 @@ async function loadPhoto(figure) {
   }
   img.src = res.url;
   img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
-  cap.innerHTML = `${res.attribution} · <a href="https://www.inaturalist.org/taxa/${res.taxonId}" target="_blank" rel="noopener">${escapeHtml(res.taxonName)}</a> on iNat`;
+  cap.innerHTML = `${res.attribution} · <a href="https://www.inaturalist.org/taxa/${res.taxonId}" target="_blank" rel="noopener noreferrer">${escapeHtml(res.taxonName)}</a> on iNat`;
   figure.classList.remove('placeholder');
 }
 

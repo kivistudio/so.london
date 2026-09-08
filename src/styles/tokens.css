@@ -5,8 +5,7 @@
    ============================================================ */
 
 :root {
-  /* Brand palette — pixel-sampled from Color-ville's poster series
-     (assets/colours/black.jpg + colours.jpg). */
+  /* Brand palette — pixel-sampled from Color-ville's poster series */
   --paper:           #E5E0D9;
   --paper-dim:       rgba(229, 224, 217, 0.65);
   --paper-hairline:  rgba(229, 224, 217, 0.28);
@@ -22,21 +21,25 @@
   --cv-red:          #C23832;
   --cv-blue:         #93AED9;
   --cv-orange:       #D86333;
+  --cv-teal:         #6FB5A8;  /* the "so.." logo divider rule */
 
   --accent:          var(--cv-orange);
   --accent-hover:    #C0552B;
 
-  /* Default surface: paper bg + ink fg (about, tshirts, future pages).
+  /* Default surface: warm-soft off-white bg + ink fg (about, notes, inspirations,
+     future pages). ~98% light, barely-warm — reads white but softens pure-white glare
+     without the muddiness of the old --paper greige.
+     (--paper stays the light-ink used for text on dark surfaces.)
      The landing flips this via [data-theme="dark"] because the video is
      dark and chrome reads as paper-on-video. */
-  --bg:           var(--paper);
+  --bg:           #FBF9F5;
   --fg:           var(--ink);
   --fg-dim:       var(--ink-dim);
   --hairline:     var(--ink-hairline);
 
   /* Type */
-  --font-display: 'EB Garamond', Georgia, serif;
-  --font-mono:    'DM Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-display: 'Jost', system-ui, sans-serif;
+  --font-mono:    'Jost', system-ui, sans-serif;
 
   /* Spacing — 8-pt scale */
   --s-1:  4px;
@@ -65,10 +68,30 @@ body[data-theme='dark'] {
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Visually hidden but available to screen readers / the document outline. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Animate in-page anchor jumps (e.g. footnote markers) so the eye can follow
+   where it's scrolling to. Motion-sensitive users keep instant jumps. */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
 html, body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-display);
+  font-weight: 400; /* Jost "Book" — the default body weight, set explicitly */
   font-size: 18px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;

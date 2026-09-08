@@ -2,11 +2,10 @@
 /**
  * Joseph Müller-Brockmann-style grid overlay.
  *
- * Shows a column grid + baseline grid on top of the page, with a small
- * corner toggle and a keyboard shortcut (default `g`). Toggle state
- * persists in localStorage. Pointer-events on the overlay are disabled
- * so it never blocks clicks underneath; only the toggle button is
- * interactive.
+ * Shows a column grid + baseline grid on top of the page, toggled with a
+ * keyboard shortcut (default `g`). Toggle state persists in localStorage.
+ * Pointer-events on the overlay are disabled so it never blocks clicks
+ * underneath (it's a keyboard-only dev aid — no visible button).
  *
  * Usage (typically in a layout, once):
  *   <GridOverlay />
@@ -33,17 +32,6 @@ const {
   storageKey = 'so:grid-overlay',
 } = Astro.props;
 ---
-
-<button
-  type="button"
-  class="grid-toggle"
-  data-grid-toggle
-  aria-pressed="false"
-  aria-label={`Toggle grid overlay (${shortcut.toUpperCase()})`}
-  title={`Grid (press ${shortcut.toUpperCase()})`}
->
-  <span aria-hidden="true">{shortcut.toUpperCase()}</span>
-</button>
 
 <div class="grid-overlay" data-grid-overlay aria-hidden="true">
   <div class="grid-overlay__columns">
@@ -122,48 +110,15 @@ const {
     text-transform: uppercase;
     pointer-events: none;
   }
-
-  /* ---- toggle button ---- */
-  .grid-toggle {
-    position: fixed;
-    right:  var(--s-3, 12px);
-    bottom: var(--s-3, 12px);
-    z-index: 9999;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 0, 100, 0.45);
-    background: rgba(20, 20, 20, 0.55);
-    color: rgba(255, 255, 255, 0.85);
-    font-family: var(--font-mono, ui-monospace, monospace);
-    font-size: 11px;
-    line-height: 1;
-    letter-spacing: 0.06em;
-    cursor: pointer;
-    opacity: 0.45;
-    transition: opacity 160ms ease, background 160ms ease, color 160ms ease;
-  }
-  .grid-toggle:hover,
-  .grid-toggle:focus-visible {
-    opacity: 1;
-  }
-  .grid-toggle[aria-pressed='true'] {
-    background: #FF0064;
-    border-color: #FF0064;
-    color: #fff;
-    opacity: 1;
-  }
 </style>
 
 <script define:vars={{ storageKey, shortcut }}>
   const SHORTCUT = shortcut.toLowerCase();
   const overlay = document.querySelector('[data-grid-overlay]');
-  const toggle  = document.querySelector('[data-grid-toggle]');
 
-  if (overlay && toggle) {
+  if (overlay) {
     const apply = (on) => {
       overlay.setAttribute('data-active', on ? 'true' : 'false');
-      toggle.setAttribute('aria-pressed', on ? 'true' : 'false');
     };
 
     // Restore previous state
@@ -174,8 +129,6 @@ const {
       apply(next);
       localStorage.setItem(storageKey, next ? '1' : '0');
     };
-
-    toggle.addEventListener('click', flip);
 
     document.addEventListener('keydown', (e) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;

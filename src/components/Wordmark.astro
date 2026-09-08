@@ -1,39 +1,169 @@
 ---
+/**
+ * The "so.." wordmark — the permanent Short Obsessions brand mark.
+ *
+ * Inlines the outlined-path logo (assets/logos/logo-in-black.svg) so the "so.."
+ * can inherit `currentColor` and adapt to the theme — ink on light pages, paper
+ * on the dark landing/reader — while the teal rule keeps its own colour on both.
+ *
+ * Fixed to the top-left as the header mark.
+ *   href  — makes it a home link.
+ *   light — force the light (paper) colour on a dark page that isn't themed via
+ *           `body[data-theme="dark"]` (e.g. the self-contained Anna Atkins page).
+ *   hero  — render it huge + very faint, layered above the text and anchored to
+ *           the top of the page so it's present at the top and scrolls away as
+ *           you read. Decorative only (needs a positioned ancestor to anchor to).
+ *   dock  — still fixed, but it starts lower (as a masthead, at the page's left
+ *           gutter) and slides up to the top-left corner the moment the reader
+ *           starts scrolling, instead of scrolling out of view. The page needs
+ *           to reserve room at the top for the masthead start position — see
+ *           about.astro. Reusable on any long page (e.g. Markdown pages).
+ */
+import logoSvg from '../../assets/logos/logo-in-black.svg?raw';
+
 interface Props {
-  as?: 'h1' | 'div';
   href?: string | null;
+  light?: boolean;
+  hero?: boolean;
+  dock?: boolean;
 }
-const { as = 'div', href = null } = Astro.props;
-const Tag = as;
+const { href = null, light = false, hero = false, dock = false } = Astro.props;
+const cls = `wordmark${light ? ' wordmark--light' : ''}${hero ? ' wordmark--hero' : ''}${dock ? ' wordmark--dock' : ''}`;
 ---
 
-{href ? (
-  <a href={href} class="wordmark wordmark--link">
-    <Tag class="wordmark__text">Short Obsessions</Tag>
+{hero ? (
+  <div class={cls} aria-hidden="true">
+    <span class="wordmark__logo" set:html={logoSvg} />
+  </div>
+) : href ? (
+  <a href={href} class={`${cls} wordmark--link`} aria-label="Short Obsessions — home">
+    <span class="wordmark__logo" aria-hidden="true" set:html={logoSvg} />
   </a>
 ) : (
-  <Tag class="wordmark wordmark__text">Short Obsessions</Tag>
+  <div class={cls}>
+    <span class="wordmark__logo" aria-hidden="true" set:html={logoSvg} />
+    <span class="sr-only">Short Obsessions</span>
+  </div>
 )}
 
 <style>
   .wordmark {
     position: fixed;
-    bottom: var(--page-pad-y);
-    left: var(--page-pad-x);
+    /* Fallbacks so the mark also works on the self-contained Anna Atkins page,
+       which doesn't load tokens.css. */
+    top: var(--page-pad-y, 6vh);
+    left: var(--page-pad-x, 8vw);
     z-index: 10;
+    display: inline-flex;
+    /* The "so.." inherits this; the teal rule keeps its own colour. */
+    color: var(--fg, #35363a);
   }
 
-  .wordmark__text {
-    font-family: var(--font-mono);
-    font-size: var(--nav-size);
-    letter-spacing: var(--nav-tracking);
-    text-transform: uppercase;
-    color: var(--fg);
-    font-weight: 400;
+  /* Force paper/white on a dark page without theme tokens (Anna Atkins). */
+  .wordmark--light {
+    color: var(--paper, #fff);
   }
 
-  .wordmark--link:hover .wordmark__text,
-  .wordmark--link:focus-visible .wordmark__text {
+  .wordmark__logo {
+    display: inline-flex;
+  }
+
+  .wordmark__logo :global(svg) {
+    display: block;
+    height: 48px;
+    width: auto;
+  }
+
+  /* Colour the "so.." glyph with currentColor. The teal rule is a separate path
+     with an inline `fill:none` + teal stroke, so it's untouched by this. */
+  .wordmark__logo :global(svg path) {
+    fill: currentColor;
+  }
+
+  /* The teal rule reads as a text caret — blink it like one. It's the last
+     <path> in the mark; a hard on/off (step-end) gives a terminal-cursor feel. */
+  .wordmark__logo :global(svg path:last-of-type) {
+    /* Stop the caret's stroke shrinking with the SVG so it renders as a crisp
+       ~2px line at any logo size, instead of a sub-pixel hairline. */
+    vector-effect: non-scaling-stroke;
+    animation: wordmark-caret-blink 1.1s step-end infinite;
+  }
+  @keyframes wordmark-caret-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wordmark__logo :global(svg path:last-of-type) {
+      animation: none;
+    }
+  }
+
+  .wordmark--link:hover .wordmark__logo,
+  .wordmark--link:focus-visible .wordmark__logo {
     opacity: 0.7;
   }
+
+  /* Hero: a big, very faint watermark anchored to the top of the page. Above
+     the text (z-index) but faint + non-interactive, so the text reads through
+     it. Absolute, so it sits at the top and scrolls away as you read. */
+  .wordmark--hero {
+    position: absolute;
+    top: var(--page-pad-y, 6vh);
+    left: var(--page-pad-x, 8vw);
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0.06;
+  }
+
+  .wordmark--hero .wordmark__logo :global(svg) {
+    height: min(58vh, 520px);
+  }
+
+  /* Dock: a masthead over the reading column that slides into the corner. It's
+     fixed at the corner's height and starts horizontally *above the text*,
+     aligned to the reading column's left edge. That column is 62ch, centred
+     inside the 8vw gutters, so its left edge is exactly `50vw − 31ch` (floored
+     at the gutter on narrow screens where the column already fills the width).
+     The mark inherits the same 18px font as the column, so `ch` matches — no
+     measurement needed. On the first scroll it slides left to the gutter — the
+     same corner the mark holds on every other page. Only the horizontal
+     position changes; the vertical stays put. The page reserves top room for it
+     (it's out of flow) — see about.astro / MarkdownPage.astro. */
+  .wordmark--dock {
+    top: var(--page-pad-y, 6vh);
+    /* Start over the reading column, minus a small optical nudge: the glyph is
+       already flush to the SVG's left edge, but the round "s" reads as inset
+       next to the text's straight margin, so shift it left to align optically.
+       --dock-lead is the single tuning knob. The docked corner drops the nudge
+       so it lands on the exact gutter, matching every other page. */
+    left: calc(max(var(--page-pad-x, 8vw), calc(50vw - 31ch)) - var(--dock-lead, 0.4ch));
+    transition: left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .wordmark--dock.is-docked {
+    left: var(--page-pad-x, 8vw);
+  }
+
+  /* Once docked in the corner, the mark reads as a fixed header rather than a
+     live cursor — so still the caret's blink there. It keeps blinking at the
+     top, where it sits over the reading column like a prompt. */
+  .wordmark--dock.is-docked .wordmark__logo :global(svg path:last-of-type) {
+    animation: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wordmark--dock { transition: none; }
+  }
 </style>
+
+<script>
+  // On the first scroll, slide the masthead mark left from above the text into
+  // the corner (`.is-docked`); at the top it slides back over the text. The
+  // vertical never changes. No-op on pages without the docking variant.
+  const mark = document.querySelector('.wordmark--dock');
+  if (mark) {
+    const sync = () => mark.classList.toggle('is-docked', window.scrollY > 4);
+    sync();
+    addEventListener('scroll', sync, { passive: true });
+  }
+</script>

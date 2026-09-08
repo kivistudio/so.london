@@ -9,10 +9,10 @@ static site: an umbrella shell plus self-contained obsession "parts", each its o
 
 - **`/`** — landing page (video background + obsession buttons).
 - **`/about/`** — about page.
-- **`/tshirts/`** — 66 thousand tshirts product page; hands off to Shopify-hosted checkout
-  via a cart permalink.
-- **`/anna-atkins/`** — *Photographs of British Algæ* reader (Anna Atkins, 1843–1853):
+- **`/anna-atkins/`** — _Photographs of British Algæ_ reader (Anna Atkins, 1843–1853):
   310 plates, 3 volumes, flip-book reading view.
+- **`/notes/`** — running notes on hyperfocus / short obsessions (MDX, with side/footnotes).
+- **`/inspirations/`** — a running list of influences (Markdown).
 
 Built with **Astro** (vanilla output, no React, no client framework). The Anna Atkins reader
 is a single-file vanilla HTML/CSS/JS page (`src/pages/anna-atkins/index.astro`) that imports
@@ -31,7 +31,7 @@ These are load-bearing across every change. They override habits.
   and use it. If a major version dropped recently, read its migration notes.
 - **Code for maintainability.** The next person to open a file should understand it without a
   tour. Clear naming, small focused files, intentional structure. If you're writing a comment
-  to explain *what* code does, rename the thing instead. Reserve comments for *why*.
+  to explain _what_ code does, rename the thing instead. Reserve comments for _why_.
 - **Best software engineering practices, applied honestly.** Boring conventions over clever
   ones. One way to do each thing. Don't add abstraction until the second concrete use case
   exists. Don't introduce a framework or build tool unless its absence is actively painful.
@@ -54,6 +54,7 @@ make clean                   # nuke dist/, node_modules, .astro
 ```
 
 Browser testing — Playwright via uvx:
+
 ```sh
 uvx --from playwright python your_test.py
 ```
@@ -86,13 +87,13 @@ copied here. To regenerate, run the pipeline there and copy the outputs over.
   spread, hero shelf cover, catalog row thumbnail, expand-panel preview, lightbox — all read
   the same file per capture.
 - **Reader rules:**
-    * The flip-book uses CSS `rotateY` 3D transforms with `backface-visibility: hidden`.
-    * `<html>` gets the class `reader-open` while the reader is open — that locks body scroll
-      so the 3D-flipping leaf doesn't trigger a scrollbar flash.
-    * Counter and page-jump input count **rectos only**: `isRecto(p)` is true when the page is
-      neither `blank: true` nor `extra: true`.
-    * Spread indexing: `rightIdx = 0` is the closed cover; `rightIdx = 2` is the first open
-      spread; flips advance/retreat by 2.
+  - The flip-book uses CSS `rotateY` 3D transforms with `backface-visibility: hidden`.
+  - `<html>` gets the class `reader-open` while the reader is open — that locks body scroll
+    so the 3D-flipping leaf doesn't trigger a scrollbar flash.
+  - Counter and page-jump input count **rectos only**: `isRecto(p)` is true when the page is
+    neither `blank: true` nor `extra: true`.
+  - Spread indexing: `rightIdx = 0` is the closed cover; `rightIdx = 2` is the first open
+    spread; flips advance/retreat by 2.
 - **iNaturalist photo lookup is strict.** Only an exact species-name match counts; no genus or
   modern-name fallback. Cards without a match show a striped placeholder.
 - **Catalog vs reader order.** The page below the hero is a Werner-style catalog table (one
@@ -104,20 +105,66 @@ copied here. To regenerate, run the pipeline there and copy the outputs over.
 
 ## Conventions to keep (site-wide)
 
-- **Astro, vanilla output, no React.** `<script>` blocks for small interactivity (the tshirts
-  cart permalink). No CSS framework — design tokens in `src/styles/tokens.css` + scoped
+- **Astro, vanilla output, no React.** `<script>` blocks for small interactivity (the Anna
+  Atkins reader). No CSS framework — design tokens in `src/styles/tokens.css` + scoped
   component styles.
+- **Semantic HTML first.** Use the element that means what you intend, not a styled `<div>`.
+  Landmarks (`<main>`, `<nav>`, `<header>`, `<footer>`); one `<h1>` per page (an `.sr-only`
+  one is fine when the visible mark is a logo) and no skipped heading levels; a `<section>`
+  with a heading for each thematic block; real lists (`<ul>`/`<ol>`/`<li>`) for lists;
+  `<button>` for actions vs `<a>` for navigation; `<figure>`/`<figcaption>` for media; notes
+  as an endnotes `<section>` (`role="doc-endnotes"`), never a page `<footer>`. Every
+  `target="_blank"` link carries `rel="noopener noreferrer"`. Reach for `<div>`/`<span>` only
+  when no semantic element fits (e.g. a pure layout wrapper).
 - **`assets/` at the repo root is the shared asset library** for non-source files (encoded
   video, the intro image). Astro consumes from here via Vite `import`; Vite hashes the URLs in
   `dist/_astro/`.
 - **`public/` is for files that need a fixed public URL** — `CNAME` and the `anna-atkins/`
   subtree (data + images).
-- **Cart permalinks only for Shopify.** The tshirts BUY anchor is a plain `<a>` whose `href` is
-  rewritten by ~15 lines of inline vanilla JS from the selected variant radio. Variant IDs are
-  find-and-replace targets (`TODO_VARIANT_ID_SIZE_M`); `PUBLIC_SHOPIFY_DOMAIN` comes from
-  `.env` locally or the GH Actions `SHOPIFY_DOMAIN` secret. Placeholders keep the button
-  disabled and show a "drop coming soon" line.
 - **Custom domain via `public/CNAME`.** GitHub Pages reads it on every deploy.
+
+## Design system — tokens are the source of truth
+
+`src/styles/tokens.css` is the single source for colour, spacing, and type.
+**Use the tokens; don't invent values.** No ad-hoc hex, no off-scale `px`, no
+one-off spacing in a component. If you genuinely need a value that doesn't
+exist ask before adding a token to `tokens.css` (and document the _why_).
+
+**Colour roles** — each tone maps to exactly one job; keep it that way:
+
+- `--fg` (ink) — all structure & content: titles, section headings, body, the
+  set-off name. Headings are full-ink, never greyed.
+- `--fg-dim` — _only_ secondary/meta text: footnotes, sign-off, colophon.
+  Never used to manufacture heading hierarchy.
+- `--cv-red` — the single functional accent, reserved for footnote markers.
+- Backgrounds come from `--bg` (light pages `#FBF9F5`, dark pages `--ink`).
+  `--paper` is the light-_ink_ for text on dark surfaces (landing chrome, the
+  Anna Atkins reader) — it is not a background.
+
+**Type scale** (Jost) — hierarchy comes from size + weight + space, never from
+greying a heading down:
+
+| Size | Weight                                   | Role                      |
+| ---- | ---------------------------------------- | ------------------------- |
+| 28px | 500 Medium, lowercase                    | page title                |
+| 18px | 400 Book                                 | body, lists, footnotes    |
+| 15px | 500 Medium, UPPERCASE + `--nav-tracking` | section label / kicker    |
+| 13px | 400                                      | meta (sign-off, colophon) |
+| 11px | 400, tracked caps                        | nav / back link           |
+
+**Spacing** — every gap is a step on the 8-pt `--s-*` scale; nothing ad-hoc.
+Vertical-rhythm rule: **space above a heading ≫ space below it** (`--s-8` above,
+`--s-4` below ≈ 4:1) so each heading groups with the text it introduces.
+Paragraph gap `--s-5`.
+
+These follow the Swiss / International Typographic Style (Müller-Brockmann,
+Ruder): objective hierarchy through a small rational scale and active
+whitespace; black + one accent; flush-left, ragged-right; restraint over
+decoration.
+
+> The type-scale sizes currently live inline in `about.astro`. Promoting them
+> to named tokens in `tokens.css` (e.g. `--text-title`, `--text-label`) is a
+> good follow-up so future pages reuse the scale instead of re-typing it.
 
 ## Build hygiene
 

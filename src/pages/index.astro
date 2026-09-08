@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BackgroundVideo from '../components/BackgroundVideo.astro';
 import Nav from '../components/Nav.astro';
+import Wordmark from '../components/Wordmark.astro';
 import IntroDefinition from '../components/IntroDefinition.astro';
 import ObsessionButton from '../components/ObsessionButton.astro';
 ---
@@ -9,18 +10,12 @@ import ObsessionButton from '../components/ObsessionButton.astro';
 <BaseLayout title="Short Obsessions" theme="dark">
   <BackgroundVideo />
   <Nav />
+  <Wordmark />
   <IntroDefinition />
 
   <main class="landing">
     <div class="landing__buttons">
       <ObsessionButton href="/anna-atkins/" label="Anna Atkins" />
-      {/*
-        /tshirts/ is still built and reachable by URL — it's just no longer the
-        obsession we're leading with. Add it back as a second button here when
-        it's worth surfacing again:
-
-        <ObsessionButton href="/tshirts/" label="66 thousand tshirts" />
-      */}
     </div>
   </main>
 </BaseLayout>
