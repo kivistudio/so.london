@@ -4,6 +4,14 @@ import volumesData from '../../../public/anna-atkins/volumes.json';
 import Wordmark from '../../components/Wordmark.astro';
 import favicon from '../../../assets/logos/favicon.png';
 import appleTouchIcon from '../../../assets/logos/180x180.png';
+
+// BUY sends people to the print's product page on Shopify (published there by
+// Creative Hub), where they choose size/framing and check out. Stays disabled
+// until both the store domain and the product handle are real.
+const SHOPIFY_DOMAIN = import.meta.env.PUBLIC_SHOPIFY_DOMAIN || 'shortobsessions.myshopify.com';
+const PRINT_HANDLE = 'products-2026-09-17-09-04-11-alaria-esculenta'; // Alaria esculenta
+const buyLive = !SHOPIFY_DOMAIN.startsWith('TODO_') && !PRINT_HANDLE.startsWith('TODO_');
+const buyHref = `https://${SHOPIFY_DOMAIN}/products/${PRINT_HANDLE}`;
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -127,6 +135,7 @@ body::after {
   transition: opacity 220ms ease, transform 320ms cubic-bezier(.16,.84,.44,1);
 }
 .hero__menu a:hover::after { opacity: 0.9; transform: scaleX(1); }
+.hero__menu-off { color: #fff; opacity: 0.45; cursor: default; padding-bottom: 4px; }
 
 .hero__title-block { max-width: 56ch; }
 
@@ -1182,6 +1191,9 @@ html.reader-open body {
 
 <header class="hero">
   <nav class="hero__menu" aria-label="Primary">
+    {buyLive
+      ? <a href={buyHref}>Buy</a>
+      : <span class="hero__menu-off" title="Prints coming soon">Buy</span>}
     <a href="#shelf">Volumes</a>
     <a href="#catalog">Catalog</a>
     <a href="#about">About</a>
