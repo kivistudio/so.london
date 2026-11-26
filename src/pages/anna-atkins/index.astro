@@ -27,7 +27,7 @@ const buyHref = `https://${SHOPIFY_DOMAIN}/products/${PRINT_HANDLE}`;
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300..700&display=swap" rel="stylesheet">
 <style is:global is:inline>
 
 /* ============================================================
@@ -54,6 +54,8 @@ const buyHref = `https://${SHOPIFY_DOMAIN}/products/${PRINT_HANDLE}`;
   --group-cyano:  #1F3A6B;
   --group-diatom: #886820;
   --group-lichen: #2A2A26;
+
+  --sans: 'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -61,9 +63,9 @@ const buyHref = `https://${SHOPIFY_DOMAIN}/products/${PRINT_HANDLE}`;
 html, body {
   background: var(--night);
   color: var(--cream);
-  font-family: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+  font-family: var(--sans);
   font-size: 18px;
-  line-height: 1.6;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -110,9 +112,9 @@ body::after {
   position: absolute;
   top: 4vh; right: 8vw;
   display: flex; gap: 2.6em;
-  font-family: 'DM Mono', monospace;
+  font-family: var(--sans);
   font-size: 11px;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   z-index: 3;
 }
@@ -140,29 +142,30 @@ body::after {
 .hero__title-block { max-width: 56ch; }
 
 .hero__title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--sans);
   font-weight: 300;
-  font-size: clamp(54px, 9.2vw, 156px);
-  line-height: 0.95;
+  font-size: clamp(48px, 7.4vw, 124px);
+  line-height: 1;
   letter-spacing: -0.02em;
   color: var(--paper);
   margin-bottom: 0.5em;
 }
 .hero__title em {
-  font-style: italic;
+  font-style: normal;
   font-weight: 400;
   color: var(--paper-warm);
 }
 .hero__title .ampersand {
-  font-family: 'EB Garamond', serif;
-  font-style: italic;
+  font-family: var(--sans);
+  font-style: normal;
   font-weight: 400;
   color: var(--brass);
 }
 .hero__title .small {
   display: block;
-  font-size: 0.36em;
-  letter-spacing: 0.16em;
+  font-size: 0.22em;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
   text-transform: uppercase;
   font-weight: 400;
   color: var(--cream-dim);
@@ -180,9 +183,10 @@ body::after {
 .hero__title > span.line:nth-child(4) { animation-delay: 0.8s; }
 
 .hero__byline {
-  font-family: 'EB Garamond', serif;
-  font-style: italic;
+  font-family: var(--sans);
+  font-style: normal;
   font-size: 22px;
+  line-height: 1.4;
   color: var(--cream);
   max-width: 40ch;
   margin-top: 2em;
@@ -198,7 +202,7 @@ body::after {
 .hero__byline a:hover { color: var(--paper); border-bottom-color: var(--paper); }
 
 /* ============================================================
-   SHELF — three books standing in the hero
+   SHELF — one book per NYPL container (14), standing in the hero
    ============================================================ */
 .shelf-wrap {
   align-self: center;
@@ -211,11 +215,10 @@ body::after {
   animation: fadeUp 2s 0.7s forwards;
 }
 .shelf-hint {
-  font-family: 'EB Garamond', serif;
-  font-style: italic;
+  font-family: var(--sans);
+  font-style: normal;
   font-size: 14px;
   color: var(--cream-dim);
-  letter-spacing: 0.04em;
 }
 .shelf-hint::before, .shelf-hint::after {
   content: '·'; margin: 0 0.6em; color: var(--brass);
@@ -223,10 +226,12 @@ body::after {
 
 .shelf {
   position: relative;
-  display: flex;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: repeat(7, clamp(64px, 5.4vw, 104px));
+  align-items: start;
   justify-content: center;
-  gap: 24px;
+  column-gap: clamp(12px, 1.2vw, 20px);
+  row-gap: 40px;
   perspective: 2000px;
 }
 .shelf::after {
@@ -241,17 +246,15 @@ body::after {
 
 .book {
   position: relative;
-  width: clamp(200px, 17vw, 260px);
-  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
   cursor: pointer;
   transform-style: preserve-3d;
   transition: transform 600ms cubic-bezier(.16,.84,.44,1);
 }
-.book:nth-child(1) { transform: rotateY(10deg) translateY(4px); }
-.book:nth-child(2) { transform: rotateY(0deg);   width: clamp(232px, 20vw, 304px); }
-.book:nth-child(3) { transform: rotateY(-10deg) translateY(4px); }
-.book:hover {
-  transform: translateY(-14px) rotateY(0deg);
+.book:hover,
+.book:focus-visible {
+  transform: translateY(-10px);
 }
 
 .book__front {
@@ -286,10 +289,10 @@ body::after {
 
 .book__plate {
   position: absolute;
-  top: 28%; left: 24%;
-  width: 60%;
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  top: 28%; left: 14%;
+  width: 78%;
+  font-family: var(--sans);
+  font-style: normal;
   text-align: center;
   color: rgba(236,226,198,0.92);
   text-shadow: 0 1px 0 rgba(0,0,0,0.4);
@@ -297,36 +300,47 @@ body::after {
   z-index: 3;
 }
 .book__plate .roman {
-  font-size: 36px;
+  font-size: clamp(18px, 1.8vw, 28px);
   font-weight: 500;
   letter-spacing: 0.02em;
   line-height: 1;
 }
 .book__plate .word {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--sans);
   font-style: normal;
-  font-size: 8px;
-  letter-spacing: 0.4em;
+  font-size: 6.5px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  margin-top: 6px;
+  margin-top: 5px;
   opacity: 0.7;
+}
+.book__plate .variant {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 6.5px;
+  margin-top: 3px;
+  opacity: 0.85;
 }
 
 .book__caption {
-  margin-top: 22px;
+  margin-top: 12px;
+  margin-inline: -10px;
   text-align: center;
-  font-family: 'DM Mono', monospace;
-  font-size: 9.5px;
-  letter-spacing: 0.26em;
+  font-family: var(--sans);
+  font-size: 8px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--cream-dim);
 }
 .book__caption strong {
   display: block;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--sans);
   font-weight: 400;
-  font-style: italic;
-  font-size: 17px;
+  font-style: normal;
+  font-size: 11.5px;
+  line-height: 1.15;
+  min-height: 1.15em;
+  white-space: nowrap;
   letter-spacing: 0;
   text-transform: none;
   color: var(--cream);
@@ -375,13 +389,12 @@ dialog.lightbox::backdrop {
 }
 .lightbox__figure img.loaded { opacity: 1; }
 .lightbox__figure figcaption {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-family: var(--sans);
+  font-style: normal;
   font-size: 18px;
   color: var(--cream);
-  text-align: center;
+  text-align: left;
   max-width: 80ch;
-  letter-spacing: 0.01em;
 }
 .lightbox__close {
   position: absolute;
@@ -391,9 +404,9 @@ dialog.lightbox::backdrop {
   color: var(--cream);
   padding: 9px 18px;
   cursor: pointer;
-  font-family: 'DM Mono', monospace;
+  font-family: var(--sans);
   font-size: 11px;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   border-radius: 999px;
   z-index: 2;
@@ -440,22 +453,31 @@ dialog.reader::backdrop {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-family: 'DM Mono', monospace;
+  font-family: var(--sans);
   font-size: 11px;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--cream-dim);
 }
 .reader__head .vol {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-family: var(--sans);
+  font-style: normal;
   font-size: 28px;
   letter-spacing: 0;
   text-transform: none;
   color: var(--paper);
   font-weight: 400;
 }
-.reader__head .vol em { color: var(--brass); font-style: italic; }
+.reader__head .vol em { color: var(--brass); font-style: normal; }
+.reader__head .vol__note {
+  display: block;
+  max-width: 60ch;
+  margin-top: 4px;
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.35;
+  color: var(--cream-dim);
+}
 .reader__counter { min-width: 9ch; text-align: left; color: var(--cream); }
 
 .reader__jump-form {
@@ -463,19 +485,19 @@ dialog.reader::backdrop {
   align-items: center;
   gap: 12px;
   font-family: inherit; font-size: 11px;
-  letter-spacing: 0.22em; text-transform: uppercase;
+  letter-spacing: 0.12em; text-transform: uppercase;
   color: var(--cream-dim);
 }
 .reader__jump-form label {
-  letter-spacing: 0.22em;
+  letter-spacing: 0.12em;
 }
 .reader__jump-form input[type="number"] {
   width: 7ch;
   background: transparent;
   border: 1px solid rgba(219,208,179,0.22);
   color: var(--paper);
-  font-family: 'EB Garamond', serif;
-  font-style: italic;
+  font-family: var(--sans);
+  font-style: normal;
   font-size: 16px;
   text-align: center;
   padding: 4px 6px;
@@ -509,7 +531,7 @@ dialog.reader::backdrop {
 .reader__close {
   background: transparent; border: 1px solid rgba(219,208,179,0.3); color: var(--cream);
   padding: 8px 18px; cursor: pointer;
-  font-family: inherit; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  font-family: inherit; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
   border-radius: 999px;
   transition: 200ms ease;
 }
@@ -640,28 +662,28 @@ html.reader-open body {
   align-items: center;
   justify-content: center;
   gap: 30px;
-  font-family: 'DM Mono', monospace;
+  font-family: var(--sans);
   font-size: 11px;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--cream-dim);
 }
 .reader__nav button {
   background: transparent; border: 1px solid rgba(219,208,179,0.3); color: var(--cream);
   padding: 10px 22px; cursor: pointer;
-  font-family: inherit; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  font-family: inherit; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
   border-radius: 999px; transition: 200ms ease;
 }
 .reader__nav button:hover:not(:disabled) { background: var(--paper); color: var(--ink); border-color: var(--paper); }
 .reader__nav button:disabled { opacity: 0.3; cursor: not-allowed; }
 
 .reader__caption {
-  text-align: center;
-  font-family: 'EB Garamond', serif;
-  font-style: italic;
+  text-align: left;
+  font-family: var(--sans);
+  font-style: normal;
   font-size: 15px;
   color: var(--cream);
-  max-width: 60ch;
+  width: min(94vw, calc(94vh - 100px) * (4/3));
   margin: 0 auto;
 }
 
@@ -691,28 +713,19 @@ html.reader-open body {
   align-items: start;
 }
 .intro__lead {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--sans);
   font-size: 28px;
   line-height: 1.35;
   font-weight: 300;
   color: var(--paper);
-  font-style: italic;
-}
-.intro__lead::first-letter {
-  font-family: 'Cormorant Garamond', serif;
   font-style: normal;
-  font-weight: 400;
-  font-size: 84px;
-  line-height: 0.85;
-  float: left;
-  margin: 0.08em 0.12em 0 -0.04em;
-  color: var(--brass);
 }
+
 .intro__body p {
   margin-bottom: 1.2em;
   color: var(--cream);
 }
-.intro__body em { color: var(--paper); font-style: italic; }
+.intro__body em { color: var(--paper); font-style: normal; }
 .intro__body strong { font-weight: 500; color: var(--paper); }
 .intro__body p:last-child { margin-bottom: 0; }
 
@@ -736,9 +749,9 @@ html.reader-open body {
   display: flex;
   align-items: center;
   gap: 18px;
-  font-family: 'DM Mono', monospace;
+  font-family: var(--sans);
   font-size: 11px;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   flex-wrap: wrap;
 }
@@ -752,7 +765,7 @@ html.reader-open body {
   border: 1px solid rgba(219,208,179,0.18);
   color: var(--cream);
   padding: 8px 14px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.12em;
   font-family: inherit;
   font-size: 10.5px;
   text-transform: uppercase;
@@ -817,18 +830,18 @@ html.reader-open body {
   align-self: center;
 }
 .catalog__section-title {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: var(--sans);
   font-weight: 300;
   font-size: clamp(32px, 4.4vw, 56px);
   letter-spacing: -0.01em;
   color: var(--paper);
   line-height: 1;
 }
-.catalog__section-title em { font-style: italic; color: var(--paper-warm); }
+.catalog__section-title em { font-style: normal; color: var(--paper-warm); }
 .catalog__section-count {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--sans);
   font-size: 10.5px;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--brass);
   margin-left: auto;
@@ -846,9 +859,9 @@ html.reader-open body {
 .catalog__head {
   padding: 12px 8px 10px;
   border-bottom: 1px solid rgba(219,208,179,0.12);
-  font-family: 'DM Mono', monospace;
+  font-family: var(--sans);
   font-size: 9.5px;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--cream-dim);
 }
@@ -876,31 +889,31 @@ html.reader-open body {
   line-height: 1.35;
 }
 .catalog__cell--name {
-  font-family: 'EB Garamond', serif;
-  font-style: italic;
+  font-family: var(--sans);
+  font-style: normal;
   font-size: 19px;
   color: var(--paper);
 }
 .catalog__cell--name .plate-no {
   display: inline-block;
-  font-family: 'DM Mono', monospace;
+  font-family: var(--sans);
   font-style: normal;
   font-size: 9.5px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.12em;
   color: var(--cream-dim);
   margin-right: 10px;
   vertical-align: 0.18em;
 }
 .catalog__cell--modern {
-  font-family: 'EB Garamond', serif;
-  font-style: italic;
+  font-family: var(--sans);
+  font-style: normal;
   font-size: 16px;
   color: var(--cream-dim);
 }
 .catalog__cell--modern.is-empty { color: rgba(156,142,114,0.55); font-style: normal; }
 .catalog__cell--notes {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-family: var(--sans);
+  font-style: normal;
   font-size: 15.5px;
   color: var(--cream-dim);
 }
@@ -985,9 +998,9 @@ html.reader-open body {
   content: '↗ enlarge';
   position: absolute;
   right: 12px; bottom: 12px;
-  font-family: 'DM Mono', monospace;
+  font-family: var(--sans);
   font-size: 9.5px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--cream-dim);
   background: rgba(7,20,43,0.7);
@@ -1001,9 +1014,9 @@ html.reader-open body {
 .catalog__panel-body { color: var(--cream); }
 
 .catalog__panel-section {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--sans);
   font-size: 9.5px;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--brass);
   margin: 14px 0 6px;
@@ -1017,21 +1030,21 @@ html.reader-open body {
 }
 
 .catalog__panel-body p {
-  font-family: 'EB Garamond', serif;
+  font-family: var(--sans);
   font-size: 16.5px;
   line-height: 1.55;
   color: var(--cream);
 }
-.catalog__panel-body .range { font-style: italic; color: var(--cream-dim); }
+.catalog__panel-body .range { font-style: normal; color: var(--cream-dim); }
 .catalog__panel-body .label {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-family: var(--sans);
+  font-style: normal;
   font-size: 18px;
   color: var(--paper-warm);
 }
 .catalog__panel-body .notes {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-family: var(--sans);
+  font-style: normal;
   font-size: 16px;
   color: var(--cream-dim);
   border-left: 2px solid var(--brass);
@@ -1056,7 +1069,7 @@ html.reader-open body {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
   text-align: center; padding: 0 18px;
-  font-family: 'EB Garamond', serif; font-style: italic; font-size: 14px;
+  font-family: var(--sans); font-style: normal; font-size: 14px;
   color: var(--cream-dim);
   opacity: 0.7;
 }
@@ -1075,8 +1088,8 @@ html.reader-open body {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
   text-align: center; padding: 0 22px;
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic; font-size: 17px;
+  font-family: var(--sans);
+  font-style: normal; font-size: 17px;
   color: var(--cream-dim);
   opacity: 0.8;
   letter-spacing: 0.01em;
@@ -1086,7 +1099,7 @@ html.reader-open body {
   padding: 8px 12px;
   background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
   color: #e3dcc4;
-  font-family: 'DM Mono', monospace;
+  font-family: var(--sans);
   font-size: 9.5px;
   letter-spacing: 0.06em;
   opacity: 0;
@@ -1098,9 +1111,9 @@ html.reader-open body {
 .catalog__panel-footer {
   margin-top: 18px;
   display: flex; gap: 24px; flex-wrap: wrap;
-  font-family: 'DM Mono', monospace;
+  font-family: var(--sans);
   font-size: 9.5px;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--cream-dim);
 }
@@ -1119,29 +1132,29 @@ html.reader-open body {
   position: relative;
   z-index: 2;
   padding: 10vh 8vw 12vh;
-  text-align: center;
+  text-align: left;
   border-top: 1px solid rgba(36,72,128,0.4);
 }
 .colophon__mark {
-  font-family: 'Cormorant Garamond', serif;
-  font-style: italic;
+  font-family: var(--sans);
+  font-style: normal;
   font-size: 64px;
   color: var(--paper);
   margin-bottom: 0.4em;
 }
 .colophon__text {
   max-width: 60ch;
-  margin: 0 auto 2em;
+  margin: 0 0 2em;
   color: var(--cream);
   font-size: 17px;
 }
 .colophon__meta {
-  font-family: 'DM Mono', monospace;
+  font-family: var(--sans);
   font-size: 10.5px;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--cream-dim);
-  display: flex; justify-content: center; gap: 2.5em; flex-wrap: wrap;
+  display: flex; justify-content: flex-start; gap: 2.5em; flex-wrap: wrap;
 }
 .colophon__meta a { color: var(--brass); text-decoration: none; border-bottom: 1px solid rgba(184,139,61,0.4); }
 .colophon__meta a:hover { color: var(--paper); border-bottom-color: var(--paper); }
@@ -1155,7 +1168,8 @@ html.reader-open body {
     padding: 14vh 8vw 8vh;
     gap: 4vh;
   }
-  .shelf { transform: scale(0.85); transform-origin: left center; align-self: start; }
+  .shelf-wrap { justify-self: stretch; }
+  .shelf { grid-template-columns: repeat(5, minmax(0, 88px)); }
   .intro__wrap { grid-template-columns: 1fr; }
   .intro__lead { font-size: 24px; }
 }
@@ -1172,6 +1186,7 @@ html.reader-open body {
   body { font-size: 17px; }
   .hero__title { font-size: 64px; }
   .hero__byline { font-size: 18px; }
+  .shelf { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 12px; }
   .key { padding: 14px 5vw; }
   .key__row { gap: 10px; }
   .key__btn { padding: 7px 11px; font-size: 10px; }
@@ -1184,6 +1199,10 @@ html.reader-open body {
   .catalog__section-title { font-size: 30px; }
 }
 
+
+/* Swiss typography: one family, hierarchy by size and weight. Italic is kept only for Latin species names. */
+em, i { font-style: normal; font-weight: 500; }
+em.sp { font-style: italic; font-weight: inherit; }
 </style>
 </head>
 <body>
@@ -1194,7 +1213,7 @@ html.reader-open body {
     {buyLive
       ? <a href={buyHref}>Buy</a>
       : <span class="hero__menu-off" title="Prints coming soon">Buy</span>}
-    <a href="#shelf">Volumes</a>
+    <a href="#shelf">Books</a>
     <a href="#catalog">Catalog</a>
     <a href="#about">About</a>
   </nav>
@@ -1210,16 +1229,16 @@ html.reader-open body {
 
     <p class="hero__byline">
       The first book in history to be illustrated by photographs.<br>
-      Three hundred and ten <em>cyanotypes</em> printed on paper between 1843 and 1853 by
-      <em>Anna Atkins</em> — botanist, photographer, daughter of John George Children —
+      Three hundred and ten <em>cyanotypes</em> printed on paper between 1843 and 1853
+      by <em>Anna Atkins</em> — botanist, photographer, daughter of John George Children —
       working from her home at Halstead Place in Kent.
     </p>
 
   </div>
 
   <div class="shelf-wrap">
-    <div class="shelf" id="shelf" aria-label="The three volumes — click any book to open it">
-      <!-- three book covers injected here -->
+    <div class="shelf" id="shelf" aria-label="The fourteen parts and volumes in the NYPL copy — click any book to open it">
+      <!-- one cover per NYPL container injected here -->
     </div>
     <div class="shelf-hint">click a book to leaf through it</div>
   </div>
@@ -1404,7 +1423,7 @@ function setupLightbox() {
       if (plate) {
         open('/anna-atkins/book/' + encodeURI(plate.localFile),
              plate.binomial,
-             `<em>${escapeHtml(plate.binomial)}</em> · Plate ${plate.idx}`);
+             `<em class="sp">${escapeHtml(plate.binomial)}</em> · Plate ${plate.idx}`);
       }
       e.stopPropagation();
       return;
@@ -1443,13 +1462,14 @@ function setupShelf() {
       <div class="book__front">
         <img src="/anna-atkins/book/${encodeURI(v.coverFile)}" alt="${escapeHtml(v.coverTitle)}" />
         <div class="book__plate">
-          <div class="roman">${escapeHtml(v.number)}</div>
-          <div class="word">Volume</div>
+          <div class="roman">${escapeHtml(v.numeral)}</div>
+          <div class="word">${escapeHtml(v.kind)}</div>
+          ${v.variant ? `<div class="variant">${escapeHtml(v.variant)}</div>` : ''}
         </div>
       </div>
-      <div class="book__caption">
+      <div class="book__caption" ${v.description ? `title="${escapeHtml(v.description)}"` : ''}>
         <strong>${escapeHtml(v.label)}</strong>
-        ${escapeHtml(v.dates)} · ${v.pageCount} pages
+        ${v.plateCount} plates
       </div>
     </div>
   `).join('');
@@ -1512,7 +1532,8 @@ function openReader(volIdx) {
   reader.pages = vol.pages;
   reader.realCount = realCount(vol.pages);
   reader.rightIdx = 0;     // start closed: cover visible on the right
-  document.getElementById('readerVol').innerHTML = `Volume <em>${escapeHtml(vol.number)}</em> · ${escapeHtml(vol.dates)}`;
+  document.getElementById('readerVol').innerHTML = `${escapeHtml(vol.kind)} <em>${escapeHtml(vol.numeral)}</em>${vol.variant ? ` · ${escapeHtml(vol.variant)}` : ''}`
+    + (vol.description ? `<span class="vol__note">${escapeHtml(vol.description)}</span>` : '');
   renderSpread();
   reader.el.showModal();
   document.documentElement.classList.add('reader-open');
@@ -1721,7 +1742,7 @@ const MAP_SVG = `
 
 function catalogRow(p) {
   const modern = p.modernName
-    ? `<em>${escapeHtml(p.modernName)}</em>`
+    ? `<em class="sp">${escapeHtml(p.modernName)}</em>`
     : '<span aria-hidden="true">—</span>';
   const modernCls = p.modernName ? '' : ' is-empty';
   const notes = p.notes ? escapeHtml(p.notes) : '';
@@ -1735,7 +1756,7 @@ function catalogRow(p) {
              onload="this.classList.add('loaded')" />
       </div>
       <div class="catalog__cell catalog__cell--name">
-        <span class="plate-no">Pl. ${p.idx}</span><em>${escapeHtml(p.binomial)}</em>
+        <span class="plate-no">Pl. ${p.idx}</span><em class="sp">${escapeHtml(p.binomial)}</em>
       </div>
       <div class="catalog__cell catalog__cell--modern${modernCls}">${modern}</div>
       <div class="catalog__cell catalog__cell--notes">${notes}</div>
@@ -1885,7 +1906,7 @@ function panelMarkup(idx) {
       </figure>
 
       <div class="catalog__panel-footer">
-        <span>Plate ${escapeHtml(p.idx)} · Vol. ${escapeHtml(p.volume)} · ${escapeHtml(p.groupLabel)}</span>
+        <span>Plate ${escapeHtml(p.idx)} · ${escapeHtml(p.containerLabel)} · ${escapeHtml(p.groupLabel)}</span>
         <a href="https://digitalcollections.nypl.org/items/${encodeURIComponent(p.captureUUID)}" target="_blank" rel="noopener noreferrer">N.Y.P.L. plate ↗</a>
         <a href="https://www.inaturalist.org/taxa/search?q=${encodeURIComponent(p.iNatQuery)}" target="_blank" rel="noopener noreferrer">iNat ↗</a>
       </div>
