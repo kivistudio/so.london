@@ -84,34 +84,17 @@ copied here. To regenerate, run the pipeline there and copy the outputs over.
 
 ## Anna Atkins reader conventions
 
-- **Single-file, self-contained.** The reader is one `.astro` page with inline global CSS +
-  scripts. It does not use `BaseLayout` or the shared components — that is deliberate, keep it.
-  (Breaking it into components is a possible future task, not a current invariant.)
-- **Single image folder.** Everything visual lives in `public/anna-atkins/book/`. Reader
-  spread, hero shelf cover, catalog row thumbnail, expand-panel preview, lightbox — all read
-  the same file per capture.
-- **Reader rules:**
-  - The flip-book uses CSS `rotateY` 3D transforms with `backface-visibility: hidden`.
-  - `<html>` gets the class `reader-open` while the reader is open — that locks body scroll
-    so the 3D-flipping leaf doesn't trigger a scrollbar flash.
-  - Counter and page-jump input count **rectos only**: `isRecto(p)` is true when the page is
-    not `extra: true` (a verso scan).
-  - Spread indexing: `rightIdx = 0` is the closed cover; `rightIdx = 2` is the first open
-    spread; flips advance/retreat by 2.
-- **iNaturalist photo lookup is strict.** Only an exact species-name match counts; no genus or
-  modern-name fallback. Cards without a match show a striped placeholder.
-- **Catalog vs reader order.** The page below the hero is a Werner-style catalog table (one
-  section per algal group) with click-to-expand rows, ordered alphabetically by genus then
-  species. The reader is the only place that follows the original NYPL book order.
-- **iNat photos are fetched on demand** — only when a catalog row is expanded, once per panel.
-- **Range-map column is a placeholder** — every row renders the same tiny abstract SVG. Real
-  range data replaces it later; don't wire up a world map yet.
+After changing the reader, open it in a desktop browser and flip through a Part. Check that:
+
+- each page turn looks clean: no mirrored or see-through page shows during the flip;
+- nothing behind the reader scrolls or flashes a scrollbar while it's open;
+- the closed cover shows on its own, and every open spread pairs the right left and right pages;
+- the page counter and page-jump box land on the page they say.
 
 ## Conventions to keep (site-wide)
 
 - **Astro, vanilla output, no React.** `<script>` blocks for small interactivity (the Anna
-  Atkins reader). No CSS framework — design tokens in `src/styles/tokens.css` + scoped
-  component styles.
+  Atkins reader).
 - **Semantic HTML first.** Use the element that means what you intend, not a styled `<div>`.
   Landmarks (`<main>`, `<nav>`, `<header>`, `<footer>`); one `<h1>` per page (an `.sr-only`
   one is fine when the visible mark is a logo) and no skipped heading levels; a `<section>`
