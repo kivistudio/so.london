@@ -45,8 +45,8 @@ These are load-bearing across every change. They override habits.
 
 ```sh
 # One-time
-mise install                 # installs the Node version pinned in mise.toml
-corepack enable              # lets package.json's "packageManager": "pnpm@…" auto-fetch
+mise trust                   # mise ignores this repo's [settings] until trusted
+mise install                 # Node from mise.toml; pnpm from package.json's "packageManager"
 make install                 # alias for `pnpm install`
 
 # Local dev
@@ -192,10 +192,10 @@ decoration.
 
 GitHub Pages, source = GitHub Actions, workflow at `.github/workflows/deploy.yml`:
 
-1. `pnpm/action-setup` + `actions/setup-node@v4` (reads `.nvmrc`).
-2. `pnpm install --frozen-lockfile`.
-3. `pnpm build` with `PUBLIC_SHOPIFY_DOMAIN=${{ secrets.SHOPIFY_DOMAIN }}` injected.
-4. Upload `./dist` as the Pages artifact and deploy.
+1. `withastro/action` sets up Node (`node-version: 24` in the workflow — keep in sync with
+   `mise.toml`) and pnpm (from `packageManager` in `package.json`), installs, and runs
+   `astro build` with `PUBLIC_SHOPIFY_DOMAIN=${{ secrets.SHOPIFY_DOMAIN }}` injected.
+2. Upload `./dist` as the Pages artifact and deploy.
 
 Custom domain `shortobsessions.com` is set via `public/CNAME`. Repo:
 `https://github.com/kivistudio/so.london`.
