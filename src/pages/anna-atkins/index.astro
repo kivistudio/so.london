@@ -1,6 +1,7 @@
 ---
 import volumesData from '../../../public/anna-atkins/volumes.json';
 import Wordmark from '../../components/Wordmark.astro';
+import SideNote from '../../components/SideNote.astro';
 import favicon from '../../../assets/logos/favicon.png';
 import appleTouchIcon from '../../../assets/logos/180x180.png';
 
@@ -47,10 +48,25 @@ const buyHref = `https://${SHOPIFY_DOMAIN}/products/${PRINT_HANDLE}`;
   --cream:        #DBD0B3;  /* text on dark */
   --cream-dim:    #9C8E72;
 
+  --cv-red:       #C23832;  /* Short Obsessions token, for the SideNote asterisk */
+
   --sans: 'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Visually hidden but available to screen readers (as in tokens.css). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 html, body {
   background: var(--night);
@@ -610,21 +626,62 @@ html.reader-open body {
   gap: 6vw;
   align-items: start;
 }
-.intro__lead {
-  font-family: var(--sans);
-  font-size: 28px;
-  line-height: 1.35;
+/* Talbot epigraph: blockquote + attribution, as on the Notes page, in the Atkins palette. */
+.intro__epigraph blockquote {
+  padding-left: 24px;
+  border-left: 2px solid var(--brass);
+  font-size: 24px;
+  line-height: 1.4;
   font-weight: 300;
   color: var(--paper);
-  font-style: normal;
+}
+.intro__epigraph figcaption {
+  margin-top: 1em;
+  padding-left: 26px;
+  font-size: 15px;
+  color: var(--cream-dim);
 }
 
 .intro__body p {
   margin-bottom: 1.2em;
   color: var(--cream);
 }
-.intro__body em { color: var(--paper); font-style: normal; }
-.intro__body strong { font-weight: 500; color: var(--paper); }
+.intro__body a { color: var(--brass); text-decoration: none; border-bottom: 1px solid rgba(184,139,61,0.4); }
+.intro__body a:hover { color: var(--paper); border-bottom-color: var(--paper); }
+.intro__email {
+  font: inherit;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid rgba(184,139,61,0.4);
+  color: var(--brass);
+  cursor: copy;
+  user-select: all;
+}
+.intro__email:hover { color: var(--paper); border-bottom-color: var(--paper); }
+/* The author's text italicises the book title and the species names. */
+.intro cite, .intro i { font-style: italic; font-weight: inherit; }
+
+/* SideNote, restyled for the dark Atkins page. Same click-to-reveal behaviour and
+   red asterisk; the note always drops in as an inline aside here, because the
+   two-column intro has no free right margin to float it into. #about outranks the
+   component's scoped selectors. */
+#about .sidenote__switch:checked ~ .sidenote,
+#about .sidenote:target {
+  display: block;
+  float: none;
+  width: auto;
+  position: static;
+  margin: 0.6em 0 1em;
+  padding-left: 16px;
+  border-left: 1px solid var(--night-line);
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--cream-dim);
+}
+#about .sidenote .sidenote__marker { display: none; }
+#about .sidenote a { color: var(--brass); border-bottom-color: rgba(184,139,61,0.4); }
+#about .sidenote a:hover { color: var(--paper); border-bottom-color: var(--paper); }
 .intro__body p:last-child { margin-bottom: 0; }
 
 /* ============================================================
@@ -665,7 +722,7 @@ html.reader-open body {
   .shelf-wrap { justify-self: stretch; }
   .shelf { grid-template-columns: repeat(5, minmax(0, 88px)); }
   .intro__wrap { grid-template-columns: 1fr; }
-  .intro__lead { font-size: 24px; }
+  .intro__epigraph blockquote { font-size: 21px; }
 }
 
 @media (max-width: 600px) {
@@ -764,29 +821,50 @@ em.sp { font-style: italic; font-weight: inherit; }
   </div>
 </dialog>
 
-<section class="intro" id="about">
+<section class="intro" id="about" aria-labelledby="about-heading">
+  <h2 id="about-heading" class="sr-only">About</h2>
   <div class="intro__wrap">
-    <p class="intro__lead">
-      Anna Atkins laid each specimen of seaweed flat upon paper soaked in iron salts,
-      placed a sheet of glass over it, and let the sun print its shadow.
-    </p>
+    <figure class="intro__epigraph">
+      <blockquote>
+        <p>“…a lady, some years ago, photographed the entire series of British sea-weeds, and most kindly and liberally distributed the copies to persons interested in botany and photography.”</p>
+      </blockquote>
+      <figcaption>— William Henry Fox Talbot, 1864<SideNote>W. H. F. Talbot, “On Photography Without the Use of Silver”, <cite>The British Journal of Photography</cite> XI, 9 December 1864, p. 495.</SideNote></figcaption>
+    </figure>
     <div class="intro__body">
       <p>
-        The process — <em>cyanotype</em>, invented in 1842 by her friend Sir John Herschel —
-        renders everything it touches in two notes: <strong>Prussian blue</strong>, and the
-        white ghost of the plant. There was no negative, no enlargement, no darkroom; only
-        sun, water, and the algae themselves, pressed to paper one by one.
+        That lady was Anna Atkins. Her <cite>Photographs of British Algae: Cyanotype Impressions</cite> is widely regarded as the first book made with the use of “photography” (although defining “photography” could be an obsession in itself). Anna “photographed” almost 400 algae, working on it for over a decade and sending out the last volume in 1853. Those “persons interested in botany and photography” included Herschel, who invented the process, and institutions such as the Royal Society and the British Museum. We don’t know how many copies she made, but around 20 have turned up so far, held in different libraries and museums.
       </p>
       <p>
-        Between October 1843 and 1853 she produced a complete photographic flora of the
-        British algae in three volumes, with hand-lettered titles printed by the same
-        cyanotype process. About a dozen sets survive. This page reproduces the New York
-        Public Library’s copy — Sir John Herschel’s own — every part and volume, page by
-        page, in the order it was bound.
+        Some of these institutions have digitised their copies and put them online, but because of the structure of the book and the sheer number of plates, it’s very hard to get a “feel” of the book digging through their online archives. This page is an attempt to make “browsing” Anna’s work more accessible.
+      </p>
+      <p>
+        At first it might be hard to understand why there are eleven parts (one of them twice) and two volumes. You might even have noticed that Volume II is missing. Anna sent out her work while it was still a “work in progress”: from 1843 to 1850 in twelve parts, each a set of loose plates sewn into a painted blue paper cover. From 1850 she switched to volumes, with title pages and new contents lists. As the New York Public Library’s catalogue puts it, “most of the previously issued images were meant to be incorporated with new images created for volumes I and II” (<a href="https://www.nypl.org/research/research-catalog/bib/b11861683#:~:text=most%20of%20the%20previously%20issued%20images%20were%20meant%20to%20be%20incorporated%20with%20new%20images%20created%20for%20volumes%20I%20and%20II%2C%20with%20volume%20tables%20of%20contents%20cancelling%20those%20in%20the%20parts%20and%20some%20cancellations%20of%20individual%20images%2C%20while%20most%20images%20in%20vol.%20III%20were%20newly%20created" target="_blank" rel="noopener">NYPL catalogue</a>). In a handwritten notice in Volume I she tells the owner: “Where there are two plates of the same plant, the latter one is from the best specimen. <i lang="la">Laminaria fascia</i>, in Part 2, &amp; <i lang="la">Laurencia pinnatifida</i> γ <i lang="la">angusta</i>, in Part 7, are incorrect, and should be cancelled.”<SideNote>Anna Atkins, handwritten notice in Volume I, New York Public Library, Spencer Collection (NYPL Digital Collections image ID <a href="https://digitalcollections.nypl.org/items/510d47d9-4af3-a3d9-e040-e00a18064a99" target="_blank" rel="noopener">419631</a>).</SideNote> The owners then had their copies bound, so no two surviving copies are alike.
+      </p>
+      <p>
+        The copy you’re viewing above is from the New York Public Library, and everything except Volume III belonged to Herschel. He never had his copy bound, so the parts are still in their blue covers, as they arrived. Part III is missing. Part IV was reissued in its entirety. If you compare the two versions, you will see that Anna replaced only a few specimens, with fuller or more typical ones. The rest of the pages are very similar or improved, so she must have gone back to the same specimens and printed them again. She also corrected the contents list, which now names all twelve species. Volume III came to the library separately, in 2016, and we don’t know who owned it before. Volume II is not present in this collection.
+      </p>
+      <p>
+        Let me know if you find any issues or inaccuracies: <button type="button" class="js-email intro__email" data-user="hello" data-domain="kivi.studio" title="Copy email address">hello [at] kivi [dot] studio</button>.
       </p>
     </div>
   </div>
 </section>
+
+<script is:inline>
+  // Assemble the address in the browser so it never appears in the HTML for scrapers.
+  // Click copies it to the clipboard (no mailto).
+  for (const el of document.querySelectorAll('.js-email')) {
+    const addr = el.dataset.user + '@' + el.dataset.domain;
+    el.textContent = addr;
+    el.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(addr);
+        el.textContent = 'copied ✓';
+        setTimeout(() => { el.textContent = addr; }, 1500);
+      } catch { /* clipboard blocked: the address is still selectable */ }
+    });
+  }
+</script>
 
 <footer class="colophon">
   <div class="colophon__mark">~ finis ~</div>

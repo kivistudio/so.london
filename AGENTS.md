@@ -101,7 +101,8 @@ After changing the reader, open it in a desktop browser and flip through a Part.
   with a heading for each thematic block; real lists (`<ul>`/`<ol>`/`<li>`) for lists;
   `<button>` for actions vs `<a>` for navigation; `<figure>`/`<figcaption>` for media; notes
   as an endnotes `<section>` (`role="doc-endnotes"`), never a page `<footer>`. Every
-  `target="_blank"` link carries `rel="noopener noreferrer"`. Reach for `<div>`/`<span>` only
+  `target="_blank"` link carries `rel="noopener"` — not `noreferrer`, because the author wants
+  the sites she links to (such as the NYPL) to see that visitors come from her site. Reach for `<div>`/`<span>` only
   when no semantic element fits (e.g. a pure layout wrapper).
 - **`assets/` at the repo root is the shared asset library** for non-source files (encoded
   video, the intro image). Astro consumes from here via Vite `import`; Vite hashes the URLs in
@@ -123,7 +124,11 @@ exist ask before adding a token to `tokens.css` (and document the _why_).
   set-off name. Headings are full-ink, never greyed.
 - `--fg-dim` — _only_ secondary/meta text: footnotes, sign-off, colophon.
   Never used to manufacture heading hierarchy.
-- `--cv-red` — the single functional accent, reserved for footnote markers.
+- `--cv-red` — the single functional accent, reserved for footnote markers. Every
+  footnote and side-note asterisk across Short Obsessions (`FootnoteRef`, `SideNote`,
+  `SideNoteRef`), the Anna Atkins page included, is `--cv-red`, never restyled per page.
+  The Atkins page doesn't load `tokens.css`, so it sets `--cv-red` in its own `:root`
+  with the same value. Keep the two in step.
 - Backgrounds come from `--bg` (light pages `#FBF9F5`, dark pages `--ink`).
   `--paper` is the light-_ink_ for text on dark surfaces (landing chrome, the
   Anna Atkins reader) — it is not a background.
