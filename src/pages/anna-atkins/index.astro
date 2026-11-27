@@ -515,19 +515,6 @@ dialog.reader::backdrop {
   background: rgba(255,255,255,0.04);
 }
 
-/* Blank verso of a single-sided plate
-   NYPL did not scan the blank versos of Atkins's plates (only content-bearing
-   surfaces were photographed).  We reconstruct them by reusing a real scan
-   of an end-paper from Volume III — same paper, same scanning bed — so the
-   verso visually matches the recto's framing instead of looking like a CSS
-   rectangle. */
-.spread__page.blank {
-  background-image: url("/anna-atkins/book/523_front-end-papers_id57321147.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-.spread__page.right.blank { transform: scaleX(-1); }   /* mirror so the binding edge of the scan reads as the spine */
 .reader__close {
   background: transparent; border: 1px solid rgba(219,208,179,0.3); color: var(--cream);
   padding: 8px 18px; cursor: pointer;
@@ -1224,14 +1211,11 @@ em.sp { font-style: italic; font-weight: inherit; }
       <span class="line">Photographs</span>
       <span class="line">of British</span>
       <span class="line"><em>Algæ</em></span>
-      <span class="line small">Anna Atkins · 1799—1871</span>
+      <span class="line small">Anna Atkins</span>
     </h1>
 
     <p class="hero__byline">
-      The first book in history to be illustrated by photographs.<br>
-      Three hundred and ten <em>cyanotypes</em> printed on paper between 1843 and 1853
-      by <em>Anna Atkins</em> — botanist, photographer, daughter of John George Children —
-      working from her home at Halstead Place in Kent.
+      Photographs of British Algae is considered the first photographic work by a woman. and the first book produced by photographic means.
     </p>
 
   </div>
@@ -1511,7 +1495,7 @@ function setupReader() {
   document.getElementById('readerJumpForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const n = parseInt(document.getElementById('readerJump').value, 10);
-    if (!Number.isNaN(n)) jumpToRealPage(n);
+    if (!Number.isNaN(n)) jumpToRecto(n);
     document.getElementById('readerJump').blur();
   });
   document.addEventListener('keydown', (e) => {
@@ -1530,7 +1514,7 @@ function openReader(volIdx) {
   if (!vol) return;
   reader.volumeIdx = volIdx;
   reader.pages = vol.pages;
-  reader.realCount = realCount(vol.pages);
+  reader.rectoCount = rectoCount(vol.pages);
   reader.rightIdx = 0;     // start closed: cover visible on the right
   document.getElementById('readerVol').innerHTML = `${escapeHtml(vol.kind)} <em>${escapeHtml(vol.numeral)}</em>${vol.variant ? ` · ${escapeHtml(vol.variant)}` : ''}`
     + (vol.description ? `<span class="vol__note">${escapeHtml(vol.description)}</span>` : '');
@@ -1545,12 +1529,12 @@ function openReader(volIdx) {
   });
 }
 
-// Jump to a specific real-page (1-based count, skipping blanks).
-function jumpToRealPage(n) {
+// Jump to a specific recto (1-based count, versos don't count).
+function jumpToRecto(n) {
   const pages = reader.pages;
-  n = Math.max(1, Math.min(reader.realCount, Math.round(n) || 1));
+  n = Math.max(1, Math.min(reader.rectoCount, Math.round(n) || 1));
   if (n === 1) { reader.rightIdx = 0; renderSpread(); return; }   // n=1 → cover view
-  // Find the virtual index of the n-th RECTO (content page); versos and synthetic blanks don't count.
+  // Find the index of the n-th RECTO (content page); versos don't count.
   let count = 0, virtualIdx = -1;
   for (let i = 0; i < pages.length; i++) {
     if (isRecto(pages[i])) {
@@ -1574,7 +1558,7 @@ function canShow(r, N) { return (r - 1 >= 0) || (r >= 0 && r < N); }
 
 // True if we can advance past the current state
 function canFlipForward(r, N) {
-  // Next state is r+2.  Valid if at least one of its two slots holds a real page.
+  // Next state is r+2.  Valid if at least one of its two slots holds a page.
   return (r + 1 < N) || (r + 2 < N);
 }
 
@@ -1585,15 +1569,7 @@ function setPage(imgEl, p) {
     imgEl.removeAttribute('src');
     imgEl.alt = '';
     imgEl.style.visibility = 'hidden';
-    if (pageEl) { pageEl.classList.add('empty'); pageEl.classList.remove('blank'); }
-    return;
-  }
-  if (p.blank) {
-    // Blank verso of a single-sided plate — show as ivory paper, no image
-    imgEl.removeAttribute('src');
-    imgEl.alt = '';
-    imgEl.style.visibility = 'hidden';
-    if (pageEl) { pageEl.classList.remove('empty'); pageEl.classList.add('blank'); }
+    if (pageEl) pageEl.classList.add('empty');
     return;
   }
   // All NYPL scans (rectos + versos) live flat in book/ in book-reading order.
@@ -1601,17 +1577,17 @@ function setPage(imgEl, p) {
   imgEl.src = encodeURI(path);
   imgEl.alt = p.title;
   imgEl.style.visibility = 'visible';
-  if (pageEl) { pageEl.classList.remove('empty'); pageEl.classList.remove('blank'); }
+  if (pageEl) pageEl.classList.remove('empty');
 }
 
-// "Real" = a recto (content page) — neither a synthetic blank nor an extra verso scan.
-function isRecto(p) { return p && !p.blank && !p.extra; }
-function realCount(pages) {
+// A recto is a content page; `extra` marks the verso scans that follow it.
+function isRecto(p) { return p && !p.extra; }
+function rectoCount(pages) {
   return pages.reduce((n, p) => n + (isRecto(p) ? 1 : 0), 0);
 }
-function realIndexAt(pages, virtualIdx) {
+function rectoIndexAt(pages, pageIdx) {
   let n = 0;
-  for (let i = 0; i <= virtualIdx && i < pages.length; i++) if (isRecto(pages[i])) n++;
+  for (let i = 0; i <= pageIdx && i < pages.length; i++) if (isRecto(pages[i])) n++;
   return n;
 }
 
@@ -1627,16 +1603,16 @@ function renderSpread() {
   setPage($l, left);
   setPage($r, right);
 
-  // Counter shows the page number of the RECTO in this spread (versos & synthetic blanks don't count).
-  const total = reader.realCount;
+  // Counter shows the page number of the RECTO in this spread (versos don't count).
+  const total = reader.rectoCount;
   let label;
   if (r === 0) {
     label = `cover / ${total}`;
   } else {
     const recto = isRecto(right) ? right : (isRecto(left) ? left : null);
     if (recto) {
-      const realIdx = realIndexAt(pages, pages.indexOf(recto));
-      label = `${realIdx} / ${total}`;
+      const rectoIdx = rectoIndexAt(pages, pages.indexOf(recto));
+      label = `${rectoIdx} / ${total}`;
     } else {
       label = `— / ${total}`;
     }
@@ -1651,7 +1627,7 @@ function renderSpread() {
   const $jump = document.getElementById('readerJump');
   if ($jump && document.activeElement !== $jump) {
     const recto = isRecto(right) ? right : (isRecto(left) ? left : null);
-    $jump.value = recto ? realIndexAt(pages, pages.indexOf(recto)) : '';
+    $jump.value = recto ? rectoIndexAt(pages, pages.indexOf(recto)) : '';
     $jump.max = total;
   }
 
@@ -1682,13 +1658,12 @@ function flip(dir) {
   }
   const faceHtml = (p) => {
     if (!p) return '';                  // off the end of the volume
-    if (p.blank) return '';              // synthetic blank — ivory paper, no image
     const path = '/anna-atkins/book/' + p.file;
     return `<img src="${encodeURI(path)}">`;
   };
   flipper.innerHTML = `
-    <div class="flipper__face flipper__face--front ${frontPage && frontPage.blank ? 'blank' : ''}">${faceHtml(frontPage)}</div>
-    <div class="flipper__face flipper__face--back  ${backPage  && backPage.blank  ? 'blank' : ''}">${faceHtml(backPage)}</div>
+    <div class="flipper__face flipper__face--front">${faceHtml(frontPage)}</div>
+    <div class="flipper__face flipper__face--back">${faceHtml(backPage)}</div>
   `;
   book.appendChild(flipper);
 

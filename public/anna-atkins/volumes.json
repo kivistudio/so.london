@@ -12,7 +12,6 @@
   "pageCount": 28,
   "rectoCount": 16,
   "versoCount": 12,
-  "syntheticBlankCount": 0,
   "pages": [
    {
     "idx": "0000",
@@ -237,7 +236,6 @@
   "pageCount": 30,
   "rectoCount": 17,
   "versoCount": 13,
-  "syntheticBlankCount": 0,
   "pages": [
    {
     "idx": "0016",
@@ -477,7 +475,6 @@
   "pageCount": 30,
   "rectoCount": 17,
   "versoCount": 13,
-  "syntheticBlankCount": 0,
   "pages": [
    {
     "idx": "0033",
@@ -717,7 +714,6 @@
   "pageCount": 30,
   "rectoCount": 17,
   "versoCount": 13,
-  "syntheticBlankCount": 0,
   "pages": [
    {
     "idx": "0050",
@@ -957,7 +953,6 @@
   "pageCount": 30,
   "rectoCount": 17,
   "versoCount": 13,
-  "syntheticBlankCount": 0,
   "pages": [
    {
     "idx": "0067",
@@ -1197,7 +1192,6 @@
   "pageCount": 30,
   "rectoCount": 17,
   "versoCount": 13,
-  "syntheticBlankCount": 0,
   "pages": [
    {
     "idx": "0084",
@@ -1437,7 +1431,6 @@
   "pageCount": 30,
   "rectoCount": 17,
   "versoCount": 13,
-  "syntheticBlankCount": 0,
   "pages": [
    {
     "idx": "0101",
@@ -1677,7 +1670,6 @@
   "pageCount": 30,
   "rectoCount": 17,
   "versoCount": 13,
-  "syntheticBlankCount": 0,
   "pages": [
    {
     "idx": "0118",
@@ -1917,7 +1909,6 @@
   "pageCount": 30,
   "rectoCount": 17,
   "versoCount": 13,
-  "syntheticBlankCount": 0,
   "pages": [
    {
     "idx": "0135",
@@ -2157,7 +2148,6 @@
   "pageCount": 30,
   "rectoCount": 17,
   "versoCount": 13,
-  "syntheticBlankCount": 0,
   "pages": [
    {
     "idx": "0152",
@@ -2397,7 +2387,6 @@
   "pageCount": 30,
   "rectoCount": 17,
   "versoCount": 13,
-  "syntheticBlankCount": 0,
   "pages": [
    {
     "idx": "0169",
@@ -2637,7 +2626,6 @@
   "pageCount": 30,
   "rectoCount": 17,
   "versoCount": 13,
-  "syntheticBlankCount": 0,
   "pages": [
    {
     "idx": "0186",
@@ -2874,10 +2862,9 @@
   "coverFile": "359_front-wrapper_id1229614.jpg",
   "coverTitle": "Front wrapper",
   "plateCount": 72,
-  "pageCount": 163,
+  "pageCount": 162,
   "rectoCount": 82,
   "versoCount": 80,
-  "syntheticBlankCount": 1,
   "pages": [
    {
     "idx": "0203",
@@ -4033,9 +4020,6 @@
     "file": "512_back-wrapper_id1229620.jpg"
    },
    {
-    "blank": true
-   },
-   {
     "idx": "0282",
     "imageID": "419527",
     "captureUUID": "510d47d9-4a5f-a3d9-e040-e00a18064a99",
@@ -4111,7 +4095,6 @@
   "pageCount": 221,
   "rectoCount": 107,
   "versoCount": 114,
-  "syntheticBlankCount": 0,
   "pages": [
    {
     "idx": "0285",

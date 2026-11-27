@@ -65,8 +65,8 @@ The reader imports two generated files and serves one image folder:
 
 - `public/anna-atkins/plates.json` — 310 plates (catalog view): taxonomy, habitat, range,
   and the exact species string for the iNaturalist photo lookup.
-- `public/anna-atkins/volumes.json` — 3 volumes, 742 pages in original book reading order
-  (recto + verso + front matter + synthetic blanks): drives the flip-book + shelf.
+- `public/anna-atkins/volumes.json` — 14 books (one per NYPL container), 741 pages in original
+  book reading order (each recto followed by its verso scans): drives the flip-book + shelf.
 - `public/anna-atkins/book/` — 741 NYPL `q`-size JPGs (~1600px long edge, ~970 MB committed).
   Every visual in the reader reads the same `{NNN}_{slug}_id{imageID}.jpg` per capture.
 
@@ -91,7 +91,7 @@ copied here. To regenerate, run the pipeline there and copy the outputs over.
   - `<html>` gets the class `reader-open` while the reader is open — that locks body scroll
     so the 3D-flipping leaf doesn't trigger a scrollbar flash.
   - Counter and page-jump input count **rectos only**: `isRecto(p)` is true when the page is
-    neither `blank: true` nor `extra: true`.
+    not `extra: true` (a verso scan).
   - Spread indexing: `rightIdx = 0` is the closed cover; `rightIdx = 2` is the first open
     spread; flips advance/retreat by 2.
 - **iNaturalist photo lookup is strict.** Only an exact species-name match counts; no genus or
