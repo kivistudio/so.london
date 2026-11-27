@@ -12,6 +12,8 @@ const SHOPIFY_DOMAIN = import.meta.env.PUBLIC_SHOPIFY_DOMAIN || 'shortobsessions
 const PRINT_HANDLE = 'products-2026-09-17-09-04-11-alaria-esculenta'; // Alaria esculenta
 const buyLive = !SHOPIFY_DOMAIN.startsWith('TODO_') && !PRINT_HANDLE.startsWith('TODO_');
 const buyHref = `https://${SHOPIFY_DOMAIN}/products/${PRINT_HANDLE}`;
+// Hidden for now; set to true to bring the Buy link back.
+const showBuy = false;
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -741,9 +743,9 @@ em.sp { font-style: italic; font-weight: inherit; }
 
 <header class="hero">
   <nav class="hero__menu" aria-label="Primary">
-    {buyLive
+    {showBuy && (buyLive
       ? <a href={buyHref}>Buy</a>
-      : <span class="hero__menu-off" title="Prints coming soon">Buy</span>}
+      : <span class="hero__menu-off" title="Prints coming soon">Buy</span>)}
     <a href="#shelf">Books</a>
     <a href="#about">About</a>
   </nav>
