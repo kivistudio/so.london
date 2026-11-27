@@ -35,6 +35,9 @@ These are load-bearing across every change. They override habits.
 - **Best software engineering practices, applied honestly.** Boring conventions over clever
   ones. One way to do each thing. Don't add abstraction until the second concrete use case
   exists. Don't introduce a framework or build tool unless its absence is actively painful.
+- **Remove unused code.** When a change leaves code, CSS rules, data fields, files or
+  comments that nothing uses any more, delete them in the same change — don't leave them
+  "just in case". Before deleting, search the repo to confirm nothing references them.
 - **Verify your own work.** Before claiming done, run the relevant smoke (`pnpm build`,
   `pnpm preview`, a Playwright screenshot). If you can't verify something, say so.
 
