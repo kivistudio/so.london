@@ -16,6 +16,7 @@
   },
   "packageManager": "pnpm@11.22.0",
   "dependencies": {
-    "@astrojs/mdx": "^7.0.8"
+    "@astrojs/mdx": "^7.0.8",
+    "posthog-js": "^1.455.4"
   }
 }

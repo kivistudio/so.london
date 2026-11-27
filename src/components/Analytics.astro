@@ -1,0 +1,19 @@
+---
+// PostHog web analytics (EU Cloud), cookieless: no cookies, localStorage or
+// sessionStorage; PostHog hashes visitor identity server-side. Requires
+// "Cookieless server hash mode" turned on in the PostHog project settings.
+// Untracked unless PUBLIC_POSTHOG_KEY is set at build (GH Actions secret
+// POSTHOG_KEY in deploy.yml), so local dev stays out of the data.
+---
+<script>
+  const key = import.meta.env.PUBLIC_POSTHOG_KEY;
+  if (key) {
+    import('posthog-js').then(({ default: posthog }) => {
+      posthog.init(key, {
+        api_host: 'https://eu.i.posthog.com',
+        cookieless_mode: 'always',
+        person_profiles: 'never',
+      });
+    });
+  }
+</script>

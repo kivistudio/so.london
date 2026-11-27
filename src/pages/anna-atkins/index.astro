@@ -1,6 +1,7 @@
 ---
 import volumesData from '../../../public/anna-atkins/volumes.json';
 import Wordmark from '../../components/Wordmark.astro';
+import Analytics from '../../components/Analytics.astro';
 import SideNote from '../../components/SideNote.astro';
 import favicon from '../../../assets/logos/favicon.png';
 import appleTouchIcon from '../../../assets/logos/180x180.png';
@@ -28,6 +29,7 @@ const showBuy = false;
 <link rel="apple-touch-icon" href={appleTouchIcon.src} />
 
 <link rel="stylesheet" href="https://indestructibletype.com/fonts/Jost.css" type="text/css" charset="utf-8" />
+<Analytics />
 <style is:global is:inline>
 
 /* ============================================================

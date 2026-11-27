@@ -1,5 +1,7 @@
 # esbuild and sharp ship platform binaries via postinstall; allow them to run.
+# core-js (via posthog-js) only prints a funding banner; skip it.
 allowBuilds:
+  core-js: false
   esbuild: true
   sharp: true
 

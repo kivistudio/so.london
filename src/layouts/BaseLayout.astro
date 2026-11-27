@@ -1,6 +1,7 @@
 ---
 import '../styles/tokens.css';
 import GridOverlay from '../components/GridOverlay.astro';
+import Analytics from '../components/Analytics.astro';
 import favicon from '../../assets/logos/favicon.png';
 import appleTouchIcon from '../../assets/logos/180x180.png';
 
@@ -36,6 +37,8 @@ const {
       type="text/css"
       charset="utf-8"
     />
+
+    <Analytics />
   </head>
   <body data-theme={theme}>
     <slot />
