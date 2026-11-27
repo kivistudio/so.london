@@ -643,16 +643,8 @@ html.reader-open body {
   color: var(--cream);
   font-size: 17px;
 }
-.colophon__meta {
-  font-family: var(--sans);
-  font-size: 10.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--cream-dim);
-  display: flex; justify-content: flex-start; gap: 2.5em; flex-wrap: wrap;
-}
-.colophon__text a, .colophon__meta a { color: var(--brass); text-decoration: none; border-bottom: 1px solid rgba(184,139,61,0.4); }
-.colophon__text a:hover, .colophon__meta a:hover { color: var(--paper); border-bottom-color: var(--paper); }
+.colophon__text a { color: var(--brass); text-decoration: none; border-bottom: 1px solid rgba(184,139,61,0.4); }
+.colophon__text a:hover { color: var(--paper); border-bottom-color: var(--paper); }
 
 /* ============================================================
    RESPONSIVE
@@ -795,9 +787,6 @@ em.sp { font-style: italic; font-weight: inherit; }
     They were downloaded from <a href="https://digitalcollections.nypl.org/collections/28d304b0-c612-012f-cd39-58d385a7bc34" target="_blank" rel="noopener noreferrer">NYPL Digital Collections</a> and arranged here
     for easy browsing.
   </p>
-  <div class="colophon__meta">
-    <a href="https://digitalcollections.nypl.org/collections/28d304b0-c612-012f-cd39-58d385a7bc34" target="_blank" rel="noopener noreferrer">N.Y.P.L. source</a>
-  </div>
 </footer>
 
 <script is:inline define:vars={{ volumes: volumesData }}>
