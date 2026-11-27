@@ -73,9 +73,10 @@ The reader imports two generated files and serves one image folder:
 - `public/anna-atkins/book/` — 741 NYPL `q`-size JPGs (~1600px long edge, ~970 MB committed).
   Every visual in the reader reads the same `{NNN}_{slug}_id{imageID}.jpg` per capture.
 
-`plates.json` and `volumes.json` are imported directly by
-`src/pages/anna-atkins/index.astro` and serialized into `window.__PLATES__` /
-`window.__VOLUMES__` via Astro's `define:vars`.
+`volumes.json` is imported by `src/pages/anna-atkins/index.astro`: the shelf is rendered at
+build time and the reader script receives it via Astro's `define:vars`. `plates.json` is
+imported only by `src/pages/anna-atkins/catalog.astro` — the unfinished catalogue, parked on
+its own unlinked, `noindex` page until it goes back on the main page.
 
 **There is no data pipeline in this repo.** These artifacts are generated in the
 `studio-tools` repo (from the NYPL API + a ~94 GB ProtonDrive archive of TIFF masters) and
