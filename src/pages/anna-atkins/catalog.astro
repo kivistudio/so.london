@@ -1,0 +1,1058 @@
+---
+import plates from '../../../public/anna-atkins/plates.json';
+import Wordmark from '../../components/Wordmark.astro';
+import favicon from '../../../assets/logos/favicon.png';
+import appleTouchIcon from '../../../assets/logos/180x180.png';
+
+// Unfinished: deliberately unlinked from /anna-atkins/ and kept out of search
+// engines until it is ready to go back on the page.
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Catalogue — Photographs of British Algae</title>
+<meta name="robots" content="noindex, nofollow" />
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" type="image/png" href={favicon.src} />
+<link rel="apple-touch-icon" href={appleTouchIcon.src} />
+
+<link rel="stylesheet" href="https://indestructibletype.com/fonts/Jost.css" type="text/css" charset="utf-8" />
+<style is:global is:inline>
+
+/* ============================================================
+   CYANOTYPE — Photographs of British Algae
+   A page in conversation with Anna Atkins (1799–1871)
+   ============================================================ */
+
+:root {
+  --night:        #07142B;  /* deepest cyanotype night */
+  --night-warm:   #0F2247;  /* the colour of the cyanotype itself */
+  --night-line:   #1B3568;  /* a subtle border in the dark */
+  --paper:        #ECE2C6;  /* aged ivory */
+  --paper-warm:   #E0D2AE;  /* deeper paper */
+  --ink:          #15110A;  /* warm black */
+  --ink-soft:     #4A3F2A;  /* faded ink */
+  --brass:        #B88B3D;  /* aged brass */
+  --brass-dim:    #6E5421;
+  --cream:        #DBD0B3;  /* text on dark */
+  --cream-dim:    #9C8E72;
+
+  --group-red:    #8B2D1E;
+  --group-brown:  #6E4823;
+  --group-green:  #3F6132;
+  --group-cyano:  #1F3A6B;
+  --group-diatom: #886820;
+  --group-lichen: #2A2A26;
+
+  --sans: 'Jost', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--night);
+  color: var(--cream);
+  font-family: var(--sans);
+  font-size: 18px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Film-grain noise & cyanotype texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.45'/></svg>");
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse at top, rgba(36,72,128,0.35), transparent 70%),
+    radial-gradient(ellipse at bottom, rgba(8,22,46,0.65), transparent 60%);
+}
+
+/* ============================================================
+   PAGE HEAD
+   ============================================================ */
+.page-head {
+  position: relative;
+  z-index: 2;
+  padding: 14vh 8vw 6vh;
+}
+.page-head__back {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  text-decoration: none;
+}
+.page-head__back:hover { color: var(--paper); }
+.page-head__title {
+  font-weight: 300;
+  font-size: clamp(40px, 5vw, 80px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  margin-top: 0.4em;
+}
+
+/* ============================================================
+   LIGHTBOX (image popup) — click any card image to enlarge
+   ============================================================ */
+dialog.lightbox {
+  border: none;
+  padding: 0;
+  background: transparent;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  color: var(--cream);
+}
+dialog.lightbox::backdrop {
+  background: rgba(4,8,18,0.96);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.lightbox__figure {
+  position: absolute;
+  inset: 4vh 4vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+.lightbox__figure img {
+  max-width: 100%;
+  max-height: calc(100% - 60px);
+  object-fit: contain;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.7);
+  cursor: zoom-out;
+  background: var(--night-warm);
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+.lightbox__figure img.loaded { opacity: 1; }
+.lightbox__figure figcaption {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 18px;
+  color: var(--cream);
+  text-align: left;
+  max-width: 80ch;
+}
+.lightbox__close {
+  position: absolute;
+  top: 3vh; right: 3vw;
+  background: transparent;
+  border: 1px solid rgba(219,208,179,0.3);
+  color: var(--cream);
+  padding: 9px 18px;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  z-index: 2;
+  transition: 200ms ease;
+}
+.lightbox__close:hover {
+  background: var(--paper); color: var(--ink); border-color: var(--paper);
+}
+
+/* ============================================================
+   STICKY KEY / FILTER BAR
+   ============================================================ */
+.key {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(7,20,43,0.86);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-top: 1px solid rgba(36,72,128,0.4);
+  border-bottom: 1px solid rgba(36,72,128,0.4);
+  padding: 18px 8vw;
+}
+.key__row {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  flex-wrap: wrap;
+}
+.key__label {
+  color: var(--cream-dim);
+  margin-right: 0.5em;
+}
+.key__btn {
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid rgba(219,208,179,0.18);
+  color: var(--cream);
+  padding: 8px 14px;
+  letter-spacing: 0.12em;
+  font-family: inherit;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  border-radius: 999px;
+  transition: 220ms cubic-bezier(.16,.84,.44,1);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.key__btn:hover { color: var(--paper); border-color: rgba(219,208,179,0.5); }
+.key__btn.is-active {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--paper);
+}
+.key__btn .swatch {
+  display: inline-block;
+  width: 8px; height: 8px; border-radius: 50%;
+}
+.swatch.red    { background: var(--group-red); }
+.swatch.brown  { background: var(--group-brown); }
+.swatch.green  { background: var(--group-green); }
+.swatch.cyano  { background: var(--group-cyano); }
+.swatch.diatom { background: var(--group-diatom); }
+.swatch.lichen { background: var(--group-lichen); }
+
+.key__count {
+  margin-left: auto;
+  color: var(--brass);
+  font-size: 10.5px;
+}
+
+/* ============================================================
+   CATALOG — Werner-style table, one section per algal group
+   ============================================================ */
+.gallery {
+  position: relative;
+  z-index: 2;
+  padding: 6vh 6vw 14vh;
+}
+.catalog {
+  max-width: 1200px;
+  margin: 0 auto;
+  color: var(--cream);
+}
+
+.catalog__section {
+  margin-bottom: 7vh;
+}
+.catalog__section[hidden] { display: none; }
+
+.catalog__section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(219,208,179,0.22);
+  margin-bottom: 6px;
+}
+.catalog__section-head .swatch {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  align-self: center;
+}
+.catalog__section-title {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: clamp(32px, 4.4vw, 56px);
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  line-height: 1;
+}
+.catalog__section-title em { font-style: normal; color: var(--paper-warm); }
+.catalog__section-count {
+  font-family: var(--sans);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-left: auto;
+}
+
+/* Column header strip — sits under each section title */
+.catalog__head,
+.catalog__row {
+  display: grid;
+  grid-template-columns: 64px 1.45fr 1.25fr 1fr 96px;
+  gap: 24px;
+  align-items: center;
+}
+
+.catalog__head {
+  padding: 12px 8px 10px;
+  border-bottom: 1px solid rgba(219,208,179,0.12);
+  font-family: var(--sans);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+
+.catalog__row {
+  padding: 14px 8px;
+  border-bottom: 1px solid rgba(219,208,179,0.08);
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease;
+  align-items: center;
+}
+.catalog__row:hover {
+  background: rgba(236,226,198,0.05);
+  border-left-color: var(--brass);
+}
+.catalog__row.is-open {
+  background: rgba(236,226,198,0.06);
+  border-left-color: var(--brass);
+  border-bottom-color: transparent;
+}
+
+.catalog__cell {
+  font-size: 16px;
+  line-height: 1.35;
+}
+.catalog__cell--name {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 19px;
+  color: var(--paper);
+}
+.catalog__cell--name .plate-no {
+  display: inline-block;
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  color: var(--cream-dim);
+  margin-right: 10px;
+  vertical-align: 0.18em;
+}
+.catalog__cell--modern {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 16px;
+  color: var(--cream-dim);
+}
+.catalog__cell--modern.is-empty { color: rgba(156,142,114,0.55); font-style: normal; }
+.catalog__cell--notes {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 15.5px;
+  color: var(--cream-dim);
+}
+.catalog__cell--map {
+  display: flex;
+  justify-content: flex-end;
+}
+.catalog__map {
+  width: 60px;
+  height: 36px;
+  display: block;
+  opacity: 0.55;
+}
+.catalog__row:hover .catalog__map { opacity: 0.85; }
+
+/* Cyanotype thumbnail at the start of each row */
+.catalog__cell--thumb {
+  width: 64px;
+  height: 84px;
+  background: var(--night-warm);
+  overflow: hidden;
+  display: block;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+.catalog__cell--thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+.catalog__cell--thumb img.loaded { opacity: 1; }
+.catalog__row:hover .catalog__cell--thumb {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.5);
+}
+
+/* Group-tinted left rule + map fill */
+.catalog__section[data-group="red"]    .catalog__row:hover,
+.catalog__section[data-group="red"]    .catalog__row.is-open    { border-left-color: var(--group-red); }
+.catalog__section[data-group="brown"]  .catalog__row:hover,
+.catalog__section[data-group="brown"]  .catalog__row.is-open    { border-left-color: var(--group-brown); }
+.catalog__section[data-group="green"]  .catalog__row:hover,
+.catalog__section[data-group="green"]  .catalog__row.is-open    { border-left-color: var(--group-green); }
+.catalog__section[data-group="cyano"]  .catalog__row:hover,
+.catalog__section[data-group="cyano"]  .catalog__row.is-open    { border-left-color: var(--group-cyano); }
+.catalog__section[data-group="diatom"] .catalog__row:hover,
+.catalog__section[data-group="diatom"] .catalog__row.is-open    { border-left-color: var(--group-diatom); }
+.catalog__section[data-group="lichen"] .catalog__row:hover,
+.catalog__section[data-group="lichen"] .catalog__row.is-open    { border-left-color: var(--group-lichen); }
+
+/* Expanded panel — appears directly below a row */
+.catalog__panel {
+  display: none;
+  padding: 24px 8px 34px;
+  border-bottom: 1px solid rgba(219,208,179,0.12);
+  background: rgba(7,20,43,0.4);
+}
+.catalog__panel.is-open { display: grid; }
+.catalog__panel {
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 36px;
+}
+
+.catalog__panel-cyano {
+  position: relative;
+  background: var(--night-warm);
+  padding: 14px;
+  cursor: zoom-in;
+}
+.catalog__panel-cyano img {
+  width: 100%;
+  height: auto;
+  display: block;
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+.catalog__panel-cyano img.loaded { opacity: 1; }
+.catalog__panel-cyano::after {
+  content: '↗ enlarge';
+  position: absolute;
+  right: 12px; bottom: 12px;
+  font-family: var(--sans);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  background: rgba(7,20,43,0.7);
+  padding: 4px 8px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.catalog__panel-cyano:hover::after { opacity: 1; }
+
+.catalog__panel-body { color: var(--cream); }
+
+.catalog__panel-section {
+  font-family: var(--sans);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin: 14px 0 6px;
+  display: flex; align-items: center; gap: 12px;
+}
+.catalog__panel-section:first-child { margin-top: 0; }
+.catalog__panel-section::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: rgba(184,139,61,0.25);
+}
+
+.catalog__panel-body p {
+  font-family: var(--sans);
+  font-size: 16.5px;
+  line-height: 1.55;
+  color: var(--cream);
+}
+.catalog__panel-body .range { font-style: normal; color: var(--cream-dim); }
+.catalog__panel-body .label {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 18px;
+  color: var(--paper-warm);
+}
+.catalog__panel-body .notes {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 16px;
+  color: var(--cream-dim);
+  border-left: 2px solid var(--brass);
+  padding-left: 12px;
+  margin-top: 6px;
+}
+
+.catalog__photo {
+  position: relative;
+  margin-top: 14px;
+  background: rgba(15,34,71,0.5);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.catalog__photo img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  opacity: 0; transition: opacity 600ms ease;
+}
+.catalog__photo img.loaded { opacity: 1; }
+.catalog__photo.placeholder::before {
+  content: 'searching iNaturalist…';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 0 18px;
+  font-family: var(--sans); font-style: normal; font-size: 14px;
+  color: var(--cream-dim);
+  opacity: 0.7;
+}
+.catalog__photo.missing {
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(219,208,179,0.06) 0,
+      rgba(219,208,179,0.06) 8px,
+      transparent 8px,
+      transparent 16px),
+    rgba(15,34,71,0.5);
+  border: 1px dashed rgba(219,208,179,0.18);
+}
+.catalog__photo.missing::before {
+  content: 'no exact-species photograph located';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; padding: 0 22px;
+  font-family: var(--sans);
+  font-style: normal; font-size: 17px;
+  color: var(--cream-dim);
+  opacity: 0.8;
+  letter-spacing: 0.01em;
+}
+.catalog__photo .attr {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 8px 12px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  color: #e3dcc4;
+  font-family: var(--sans);
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+.catalog__photo:hover .attr { opacity: 1; }
+.catalog__photo .attr a { color: inherit; text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 1px; }
+
+.catalog__panel-footer {
+  margin-top: 18px;
+  display: flex; gap: 24px; flex-wrap: wrap;
+  font-family: var(--sans);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+}
+.catalog__panel-footer a {
+  color: var(--cream);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(219,208,179,0.3);
+  padding-bottom: 1px;
+}
+.catalog__panel-footer a:hover { color: var(--brass); border-color: var(--brass); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.colophon {
+  position: relative;
+  z-index: 2;
+  padding: 10vh 8vw 12vh;
+  text-align: left;
+  border-top: 1px solid rgba(36,72,128,0.4);
+}
+.colophon__mark {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 64px;
+  color: var(--paper);
+  margin-bottom: 0.4em;
+}
+.colophon__text {
+  max-width: 60ch;
+  margin: 0 0 2em;
+  color: var(--cream);
+  font-size: 17px;
+}
+.colophon__meta {
+  font-family: var(--sans);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  display: flex; justify-content: flex-start; gap: 2.5em; flex-wrap: wrap;
+}
+.colophon__text a, .colophon__meta a { color: var(--brass); text-decoration: none; border-bottom: 1px solid rgba(184,139,61,0.4); }
+.colophon__text a:hover, .colophon__meta a:hover { color: var(--paper); border-bottom-color: var(--paper); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .catalog__head,
+  .catalog__row { grid-template-columns: 1.4fr 1fr 80px; gap: 18px; }
+  .catalog__head .col-notes,
+  .catalog__cell--notes { display: none; }
+  .catalog__panel { grid-template-columns: 1fr; gap: 24px; }
+}
+
+@media (max-width: 600px) {
+  body { font-size: 17px; }
+  .key { padding: 14px 5vw; }
+  .key__row { gap: 10px; }
+  .key__btn { padding: 7px 11px; font-size: 10px; }
+  .gallery { padding: 4vh 5vw 10vh; }
+  .catalog__head,
+  .catalog__row { grid-template-columns: 1.4fr 60px; gap: 12px; }
+  .catalog__head .col-modern,
+  .catalog__cell--modern { display: none; }
+  .catalog__cell--name { font-size: 17px; }
+  .catalog__section-title { font-size: 30px; }
+}
+
+
+/* Swiss typography: one family, hierarchy by size and weight. Italic is kept only for Latin species names. */
+em, i { font-style: normal; font-weight: 500; }
+em.sp { font-style: italic; font-weight: inherit; }
+</style>
+</head>
+<body>
+<Wordmark href="/" light />
+
+<header class="page-head">
+  <a class="page-head__back" href="/anna-atkins/">← Photographs of British Algæ</a>
+  <h1 class="page-head__title">Catalogue</h1>
+</header>
+
+<nav class="key" aria-label="Filter by group">
+  <div class="key__row">
+    <span class="key__label">Filter:</span>
+    <button class="key__btn is-active" data-filter="all">All</button>
+    <button class="key__btn" data-filter="red">    <span class="swatch red"></span>    Red algæ</button>
+    <button class="key__btn" data-filter="brown">  <span class="swatch brown"></span>  Brown algæ</button>
+    <button class="key__btn" data-filter="green">  <span class="swatch green"></span>  Green algæ</button>
+    <button class="key__btn" data-filter="cyano">  <span class="swatch cyano"></span>  Cyanobacteria</button>
+    <button class="key__btn" data-filter="diatom"> <span class="swatch diatom"></span> Diatoms</button>
+    <button class="key__btn" data-filter="lichen"> <span class="swatch lichen"></span> Lichens</button>
+    <span class="key__count" id="keyCount">310 plates</span>
+  </div>
+</nav>
+
+<main class="gallery">
+  <div class="catalog" id="catalog">
+    <!-- catalog sections injected -->
+  </div>
+</main>
+
+<dialog class="lightbox" id="lightbox" aria-label="Image viewer">
+  <button class="lightbox__close" id="lightboxClose" aria-label="Close">close ✕</button>
+  <figure class="lightbox__figure">
+    <img id="lightboxImg" alt="" />
+    <figcaption id="lightboxCap"></figcaption>
+  </figure>
+</dialog>
+
+<footer class="colophon">
+  <div class="colophon__mark">~ finis ~</div>
+  <p class="colophon__text">
+    The scans come from the <a href="https://digitalcollections.nypl.org/divisions/spencer-collection" target="_blank" rel="noopener noreferrer">New York Public Library’s Spencer Collection</a>.
+    They were downloaded from <a href="https://digitalcollections.nypl.org/collections/28d304b0-c612-012f-cd39-58d385a7bc34" target="_blank" rel="noopener noreferrer">NYPL Digital Collections</a> and arranged here
+    for easy browsing.
+    Modern photographs are drawn from <em>iNaturalist</em> — the work
+    of many naturalists, each credited per image.
+  </p>
+  <div class="colophon__meta">
+    <a href="https://www.inaturalist.org" target="_blank" rel="noopener noreferrer">iNaturalist</a>
+    <span>·</span>
+    <a href="https://www.c82.net/werner" target="_blank" rel="noopener noreferrer">in the spirit of Werner’s Nomenclature</a>
+  </div>
+</footer>
+
+<script is:inline define:vars={{ plates }}>
+
+const $catalog = document.getElementById('catalog');
+const $count = document.getElementById('keyCount');
+
+const escapeHtml = (s='') => s
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+  .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+let CURRENT_FILTER = 'all';
+
+function load() {
+  renderCatalog();
+  setupFilters();
+  setupCatalogInteraction();
+  setupLightbox();
+}
+
+/* ============================================================
+   LIGHTBOX — click a card image to view it large
+   ============================================================ */
+function setupLightbox() {
+  const box   = document.getElementById('lightbox');
+  const img   = document.getElementById('lightboxImg');
+  const cap   = document.getElementById('lightboxCap');
+  const close = document.getElementById('lightboxClose');
+  if (!box || !img) return;
+
+  const open = (src, alt, captionHtml) => {
+    img.classList.remove('loaded');
+    img.src = src;
+    img.alt = alt || '';
+    cap.innerHTML = captionHtml || '';
+    img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+    box.showModal();
+    document.body.style.overflow = 'hidden';
+  };
+  const close_ = () => {
+    if (box.open) box.close();
+    document.body.style.overflow = '';
+  };
+  close.addEventListener('click', close_);
+  img.addEventListener('click', close_);
+  // Click on the backdrop (outside .lightbox__figure) closes too
+  box.addEventListener('click', (e) => { if (e.target === box) close_(); });
+  document.addEventListener('keydown', (e) => {
+    if (box.open && e.key === 'Escape') { e.preventDefault(); close_(); }
+  });
+
+  // Delegate: clicking the cyanotype thumbnail or modern photo in an
+  // expanded catalog panel opens it full-screen. Cyanotypes use the
+  // perspective-corrected crop (same file as the panel thumbnail).
+  document.getElementById('catalog').addEventListener('click', (e) => {
+    const cy = e.target.closest('.catalog__panel-cyano');
+    if (cy) {
+      const idx = cy.dataset.idx;
+      const plate = plates.find(p => p.idx === idx);
+      if (plate) {
+        open('/anna-atkins/book/' + encodeURI(plate.localFile),
+             plate.binomial,
+             `<em class="sp">${escapeHtml(plate.binomial)}</em> · Plate ${plate.idx}`);
+      }
+      e.stopPropagation();
+      return;
+    }
+    const photo = e.target.closest('.catalog__photo');
+    if (photo) {
+      const photoImg = photo.querySelector('img');
+      if (photoImg && photoImg.src) {
+        const idx = photo.dataset.idx;
+        const plate = plates.find(p => p.idx === idx);
+        const credit = photo.querySelector('.attr');
+        open(photoImg.src,
+             plate ? plate.binomial : '',
+             credit ? credit.innerHTML : '');
+        e.stopPropagation();
+      }
+    }
+  });
+}
+
+/* ============================================================
+   CATALOG — Werner-style table, sections by algal group
+   ============================================================ */
+// Group order mirrors how Atkins's parts were issued and how Harveyan
+// algae books arrange the kingdoms: browns first, reds, greens, then
+// the cyanobacteria, diatoms, and lichens at the back.
+const GROUP_ORDER = [
+  { key: 'brown',  label: 'Brown algæ' },
+  { key: 'red',    label: 'Red algæ' },
+  { key: 'green',  label: 'Green algæ' },
+  { key: 'cyano',  label: 'Cyanobacteria' },
+  { key: 'diatom', label: 'Diatoms' },
+  { key: 'lichen', label: 'Lichens' },
+];
+
+// Tiny abstract range-map placeholder. Same SVG for every row — real range
+// data isn't wired up yet, this is the slot Werner gives to "parts" of
+// the colour and we'll fill it later.
+const MAP_SVG = `
+<svg class="catalog__map" viewBox="0 0 60 36" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <rect x="1" y="1" width="58" height="34" rx="4" ry="4"
+        fill="rgba(15,34,71,0.6)" stroke="rgba(184,139,61,0.45)" stroke-width="0.8" />
+  <path d="M8 18 q4 -6 9 -4 q3 1 6 -2 q5 -4 9 1 q4 4 9 1 q3 -2 7 0"
+        fill="none" stroke="rgba(219,208,179,0.55)" stroke-width="1" stroke-linecap="round" />
+  <circle cx="20" cy="22" r="1.2" fill="rgba(184,139,61,0.7)" />
+  <circle cx="38" cy="14" r="1.2" fill="rgba(184,139,61,0.7)" />
+</svg>`;
+
+function catalogRow(p) {
+  const modern = p.modernName
+    ? `<em class="sp">${escapeHtml(p.modernName)}</em>`
+    : '<span aria-hidden="true">—</span>';
+  const modernCls = p.modernName ? '' : ' is-empty';
+  const notes = p.notes ? escapeHtml(p.notes) : '';
+
+  return `
+    <div class="catalog__row" data-idx="${p.idx}" data-group="${p.group}" role="button" tabindex="0" aria-expanded="false">
+      <div class="catalog__cell catalog__cell--thumb">
+        <img loading="lazy" decoding="async"
+             src="/anna-atkins/book/${encodeURI(p.localFile)}"
+             alt="Cyanotype of ${escapeHtml(p.binomial)}"
+             onload="this.classList.add('loaded')" />
+      </div>
+      <div class="catalog__cell catalog__cell--name">
+        <span class="plate-no">Pl. ${p.idx}</span><em class="sp">${escapeHtml(p.binomial)}</em>
+      </div>
+      <div class="catalog__cell catalog__cell--modern${modernCls}">${modern}</div>
+      <div class="catalog__cell catalog__cell--notes">${notes}</div>
+      <div class="catalog__cell catalog__cell--map">${MAP_SVG}</div>
+    </div>
+    <div class="catalog__panel" data-panel-for="${p.idx}" hidden></div>
+  `;
+}
+
+function catalogSection(group, plates) {
+  const sortedPlates = plates.slice().sort((a, b) => {
+    const ag = (a.genus || '').toLowerCase();
+    const bg = (b.genus || '').toLowerCase();
+    if (ag !== bg) return ag < bg ? -1 : 1;
+    const as = (a.species || '').toLowerCase();
+    const bs = (b.species || '').toLowerCase();
+    if (as !== bs) return as < bs ? -1 : 1;
+    return (a.idx || '').localeCompare(b.idx || '');
+  });
+
+  const count = sortedPlates.length;
+  return `
+    <section class="catalog__section" data-group="${group.key}">
+      <header class="catalog__section-head">
+        <span class="swatch ${group.key}"></span>
+        <h2 class="catalog__section-title">${escapeHtml(group.label)}</h2>
+        <span class="catalog__section-count">${count} plate${count === 1 ? '' : 's'}</span>
+      </header>
+      <div class="catalog__head" aria-hidden="true">
+        <span class="col-plate">Plate</span>
+        <span class="col-name">Anna's name</span>
+        <span class="col-modern">Current name</span>
+        <span class="col-notes">Notes</span>
+        <span class="col-map" style="text-align:right;">Range</span>
+      </div>
+      ${sortedPlates.map(catalogRow).join('')}
+    </section>
+  `;
+}
+
+function renderCatalog() {
+  // Index plates by group key
+  const byGroup = {};
+  plates.forEach(p => {
+    if (!byGroup[p.group]) byGroup[p.group] = [];
+    byGroup[p.group].push(p);
+  });
+
+  const html = GROUP_ORDER
+    .filter(g => byGroup[g.key] && byGroup[g.key].length)
+    .map(g => catalogSection(g, byGroup[g.key]))
+    .join('');
+
+  $catalog.innerHTML = html;
+  $count.textContent = plates.length + ' plates';
+}
+
+/* ----- Filtering ----- */
+function setupFilters() {
+  document.querySelectorAll('.key__btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.key__btn').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      CURRENT_FILTER = btn.dataset.filter;
+      let count = 0;
+      document.querySelectorAll('.catalog__section').forEach(sec => {
+        const show = CURRENT_FILTER === 'all' || sec.dataset.group === CURRENT_FILTER;
+        sec.hidden = !show;
+        if (show) count += sec.querySelectorAll('.catalog__row').length;
+      });
+      $count.textContent = count + ' plate' + (count === 1 ? '' : 's');
+    });
+  });
+}
+
+/* ----- Click-to-expand rows ----- */
+function setupCatalogInteraction() {
+  $catalog.addEventListener('click', (e) => {
+    // Clicks inside an open panel — links, cyanotype thumbnail, modern photo —
+    // should not toggle the row. The lightbox delegate handles thumbnail
+    // and photo clicks separately.
+    if (e.target.closest('.catalog__panel')) return;
+    const row = e.target.closest('.catalog__row');
+    if (!row) return;
+    toggleRow(row);
+  });
+  $catalog.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const row = e.target.closest('.catalog__row');
+    if (!row) return;
+    e.preventDefault();
+    toggleRow(row);
+  });
+}
+
+function toggleRow(row) {
+  const idx = row.dataset.idx;
+  const panel = row.parentElement.querySelector(`.catalog__panel[data-panel-for="${idx}"]`);
+  if (!panel) return;
+  const open = row.classList.toggle('is-open');
+  row.setAttribute('aria-expanded', open ? 'true' : 'false');
+  if (open) {
+    panel.removeAttribute('hidden');
+    panel.classList.add('is-open');
+    if (!panel.dataset.populated) {
+      panel.innerHTML = panelMarkup(idx);
+      panel.dataset.populated = '1';
+      const cy = panel.querySelector('.catalog__panel-cyano img');
+      if (cy) cy.addEventListener('load', () => cy.classList.add('loaded'), { once: true });
+      const photo = panel.querySelector('.catalog__photo');
+      if (photo) loadPhoto(photo);
+    }
+  } else {
+    panel.classList.remove('is-open');
+    panel.setAttribute('hidden', '');
+  }
+}
+
+function panelMarkup(idx) {
+  const p = plates.find(x => x.idx === idx);
+  if (!p) return '';
+  const notes = p.notes
+    ? `<div class="catalog__panel-section">Notes</div><p class="notes">${escapeHtml(p.notes)}</p>` : '';
+
+  return `
+    <figure class="catalog__panel-cyano" data-idx="${p.idx}" title="Click to enlarge">
+      <img src="/anna-atkins/book/${encodeURI(p.localFile)}" alt="Cyanotype of ${escapeHtml(p.binomial)}" />
+    </figure>
+    <div class="catalog__panel-body">
+      <div class="catalog__panel-section">Habitat</div>
+      <p>${escapeHtml(p.habitat)}</p>
+
+      <div class="catalog__panel-section">Where found</div>
+      <p class="range">${escapeHtml(p.range)}</p>
+
+      <div class="catalog__panel-section">Transcribed from the plate</div>
+      <p class="label">&ldquo;${escapeHtml(p.plateTitle)}&rdquo;</p>
+
+      ${notes}
+
+      <div class="catalog__panel-section">A modern photograph</div>
+      <figure class="catalog__photo placeholder"
+              data-idx="${p.idx}"
+              data-query="${escapeHtml(p.iNatQuery)}">
+        <img alt="" />
+        <figcaption class="attr"></figcaption>
+      </figure>
+
+      <div class="catalog__panel-footer">
+        <span>Plate ${escapeHtml(p.idx)} · ${escapeHtml(p.containerLabel)} · ${escapeHtml(p.groupLabel)}</span>
+        <a href="https://digitalcollections.nypl.org/items/${encodeURIComponent(p.captureUUID)}" target="_blank" rel="noopener noreferrer">N.Y.P.L. plate ↗</a>
+        <a href="https://www.inaturalist.org/taxa/search?q=${encodeURIComponent(p.iNatQuery)}" target="_blank" rel="noopener noreferrer">iNat ↗</a>
+      </div>
+    </div>
+  `;
+}
+
+/* ----- iNaturalist photo loading ----- */
+// v2: bumped after switching to strict exact-species matching.  The previous
+// cache held loose fallbacks (genus / modernName) that we no longer want.
+const INAT_CACHE_KEY = 'inat:cache:v2';
+const inatCache = (() => {
+  try {
+    // Drop the old, looser cache so stale fallbacks don't reappear.
+    localStorage.removeItem('inat:cache');
+    return JSON.parse(localStorage.getItem(INAT_CACHE_KEY) || '{}');
+  } catch { return {}; }
+})();
+const saveCache = () => {
+  try { localStorage.setItem(INAT_CACHE_KEY, JSON.stringify(inatCache)); } catch {}
+};
+
+// Normalise a binomial for strict comparison: lowercase, single-spaced, no diacritics or extra punctuation.
+function normSpecies(s) {
+  return (s || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')   // strip diacritics
+    .replace(/[^a-z\s-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function fetchTaxon(query) {
+  if (inatCache[query] !== undefined) return inatCache[query];
+  try {
+    // Use the /taxa endpoint with rank=species — no fuzzy match, returns species-level hits only.
+    const url = `https://api.inaturalist.org/v1/taxa?q=${encodeURIComponent(query)}&rank=species&per_page=5`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('bad status');
+    const data = await res.json();
+    const qNorm = normSpecies(query);
+    // Pick the result whose canonical name matches the query exactly (so different species can't share a photo).
+    const t = (data.results || []).find(t => normSpecies(t.name) === qNorm);
+    if (!t || !t.default_photo) {
+      inatCache[query] = null;
+      saveCache();
+      return null;
+    }
+    const photo = t.default_photo;
+    const result = {
+      url: photo.medium_url || photo.url,
+      attribution: photo.attribution || '',
+      taxonName: t.name,
+      taxonId: t.id,
+    };
+    inatCache[query] = result;
+    saveCache();
+    return result;
+  } catch (err) {
+    inatCache[query] = null;
+    saveCache();
+    return null;
+  }
+}
+
+// loadPhoto is invoked when a catalog row is expanded — no
+// intersection observer; we only fetch what the reader actually opens.
+async function loadPhoto(figure) {
+  // Strict match only — different species must not share a photo.  If iNat
+  // doesn't have an exact-species photo we leave a labelled placeholder so
+  // the gap is visible.
+  const query = figure.dataset.query;
+  const res = await fetchTaxon(query);
+  const img = figure.querySelector('img');
+  const cap = figure.querySelector('.attr');
+  if (!res) {
+    figure.classList.remove('placeholder');
+    figure.classList.add('missing');
+    return;
+  }
+  img.src = res.url;
+  img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+  cap.innerHTML = `${res.attribution} · <a href="https://www.inaturalist.org/taxa/${res.taxonId}" target="_blank" rel="noopener noreferrer">${escapeHtml(res.taxonName)}</a> on iNat`;
+  figure.classList.remove('placeholder');
+}
+
+load();
+</script>
+
+</body>
+</html>

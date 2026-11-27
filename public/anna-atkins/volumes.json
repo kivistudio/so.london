@@ -1,15 +1,17 @@
 [
  {
-  "number": "I",
-  "label": "Volume I",
-  "dates": "1843–1844",
-  "description": "Parts I through XI, issued in pale-blue wrappers as Anna Atkins distributed them to her circle of botanical correspondents.",
+  "number": "1",
+  "label": "Part I",
+  "kind": "Part",
+  "numeral": "I",
+  "variant": "",
+  "description": "",
   "coverFile": "001_front-wrapper_id1229565.jpg",
   "coverTitle": "Front wrapper",
-  "pageCount": 358,
-  "rectoCount": 203,
-  "versoCount": 155,
-  "syntheticBlankCount": 0,
+  "plateCount": 8,
+  "pageCount": 28,
+  "rectoCount": 16,
+  "versoCount": 12,
   "pages": [
    {
     "idx": "0000",
@@ -218,7 +220,23 @@
     "captureUUID": "510d47df-8406-a3d9-e040-e00a18064a99",
     "title": "Back wrapper",
     "file": "028_back-wrapper_id1229568.jpg"
-   },
+   }
+  ]
+ },
+ {
+  "number": "2",
+  "label": "Part II",
+  "kind": "Part",
+  "numeral": "II",
+  "variant": "",
+  "description": "",
+  "coverFile": "029_front-wrapper_id1229569.jpg",
+  "coverTitle": "Front wrapper",
+  "plateCount": 12,
+  "pageCount": 30,
+  "rectoCount": 17,
+  "versoCount": 13,
+  "pages": [
    {
     "idx": "0016",
     "imageID": "1229569",
@@ -441,7 +459,23 @@
     "captureUUID": "510d47df-840b-a3d9-e040-e00a18064a99",
     "title": "Back wrapper",
     "file": "058_back-wrapper_id1229572.jpg"
-   },
+   }
+  ]
+ },
+ {
+  "number": "3",
+  "label": "Part IV, version 1",
+  "kind": "Part",
+  "numeral": "IV",
+  "variant": "version 1",
+  "description": "This copy has no Part III, and Part IV twice. This one’s contents list names eleven species and leaves out Ectocarpus brachiatus, though the plate is here.",
+  "coverFile": "059_front-wrapper_id1229577.jpg",
+  "coverTitle": "Front wrapper",
+  "plateCount": 12,
+  "pageCount": 30,
+  "rectoCount": 17,
+  "versoCount": 13,
+  "pages": [
    {
     "idx": "0033",
     "imageID": "1229577",
@@ -664,7 +698,23 @@
     "captureUUID": "510d47df-8413-a3d9-e040-e00a18064a99",
     "title": "Back wrapper",
     "file": "088_back-wrapper_id1229580.jpg"
-   },
+   }
+  ]
+ },
+ {
+  "number": "4",
+  "label": "Part IV, version 2",
+  "kind": "Part",
+  "numeral": "IV",
+  "variant": "version 2",
+  "description": "The second copy of Part IV in this set. Its contents list names all twelve species.",
+  "coverFile": "089_front-wrapper_id1229573.jpg",
+  "coverTitle": "Front wrapper",
+  "plateCount": 12,
+  "pageCount": 30,
+  "rectoCount": 17,
+  "versoCount": 13,
+  "pages": [
    {
     "idx": "0050",
     "imageID": "1229573",
@@ -887,7 +937,23 @@
     "captureUUID": "510d47df-840f-a3d9-e040-e00a18064a99",
     "title": "Back wrapper",
     "file": "118_back-wrapper_id1229576.jpg"
-   },
+   }
+  ]
+ },
+ {
+  "number": "5",
+  "label": "Part V",
+  "kind": "Part",
+  "numeral": "V",
+  "variant": "",
+  "description": "",
+  "coverFile": "119_front-wrapper_id1229581.jpg",
+  "coverTitle": "Front wrapper",
+  "plateCount": 12,
+  "pageCount": 30,
+  "rectoCount": 17,
+  "versoCount": 13,
+  "pages": [
    {
     "idx": "0067",
     "imageID": "1229581",
@@ -1110,7 +1176,23 @@
     "captureUUID": "510d47df-8417-a3d9-e040-e00a18064a99",
     "title": "Back wrapper",
     "file": "148_back-wrapper_id1229584.jpg"
-   },
+   }
+  ]
+ },
+ {
+  "number": "6",
+  "label": "Part VI",
+  "kind": "Part",
+  "numeral": "VI",
+  "variant": "",
+  "description": "",
+  "coverFile": "149_front-wrapper_id1229585.jpg",
+  "coverTitle": "Front wrapper",
+  "plateCount": 12,
+  "pageCount": 30,
+  "rectoCount": 17,
+  "versoCount": 13,
+  "pages": [
    {
     "idx": "0084",
     "imageID": "1229585",
@@ -1333,7 +1415,23 @@
     "captureUUID": "510d47df-841b-a3d9-e040-e00a18064a99",
     "title": "Back wrapper",
     "file": "178_back-wrapper_id1229588.jpg"
-   },
+   }
+  ]
+ },
+ {
+  "number": "7",
+  "label": "Part VII",
+  "kind": "Part",
+  "numeral": "VII",
+  "variant": "",
+  "description": "",
+  "coverFile": "179_front-wrapper_id1229589.jpg",
+  "coverTitle": "Front wrapper",
+  "plateCount": 12,
+  "pageCount": 30,
+  "rectoCount": 17,
+  "versoCount": 13,
+  "pages": [
    {
     "idx": "0101",
     "imageID": "1229589",
@@ -1556,7 +1654,23 @@
     "captureUUID": "510d47df-8420-a3d9-e040-e00a18064a99",
     "title": "Back wrapper",
     "file": "208_back-wrapper_id1229592.jpg"
-   },
+   }
+  ]
+ },
+ {
+  "number": "8",
+  "label": "Part VIII",
+  "kind": "Part",
+  "numeral": "VIII",
+  "variant": "",
+  "description": "",
+  "coverFile": "209_front-wrapper_id1229593.jpg",
+  "coverTitle": "Front wrapper",
+  "plateCount": 12,
+  "pageCount": 30,
+  "rectoCount": 17,
+  "versoCount": 13,
+  "pages": [
    {
     "idx": "0118",
     "imageID": "1229593",
@@ -1779,7 +1893,23 @@
     "captureUUID": "510d47df-8424-a3d9-e040-e00a18064a99",
     "title": "Back wrapper",
     "file": "238_back-wrapper_id1229596.jpg"
-   },
+   }
+  ]
+ },
+ {
+  "number": "9",
+  "label": "Part IX",
+  "kind": "Part",
+  "numeral": "IX",
+  "variant": "",
+  "description": "",
+  "coverFile": "239_front-wrapper_id1229597.jpg",
+  "coverTitle": "Front wrapper",
+  "plateCount": 12,
+  "pageCount": 30,
+  "rectoCount": 17,
+  "versoCount": 13,
+  "pages": [
    {
     "idx": "0135",
     "imageID": "1229597",
@@ -2002,7 +2132,23 @@
     "captureUUID": "510d47df-8428-a3d9-e040-e00a18064a99",
     "title": "Back wrapper",
     "file": "268_back-wrapper_id1229600.jpg"
-   },
+   }
+  ]
+ },
+ {
+  "number": "10",
+  "label": "Part X",
+  "kind": "Part",
+  "numeral": "X",
+  "variant": "",
+  "description": "",
+  "coverFile": "269_front-wrapper_id1229601.jpg",
+  "coverTitle": "Front wrapper",
+  "plateCount": 12,
+  "pageCount": 30,
+  "rectoCount": 17,
+  "versoCount": 13,
+  "pages": [
    {
     "idx": "0152",
     "imageID": "1229601",
@@ -2225,7 +2371,23 @@
     "captureUUID": "510d47df-842c-a3d9-e040-e00a18064a99",
     "title": "Back wrapper",
     "file": "298_back-wrapper_id1229604.jpg"
-   },
+   }
+  ]
+ },
+ {
+  "number": "11",
+  "label": "Part XI",
+  "kind": "Part",
+  "numeral": "XI",
+  "variant": "",
+  "description": "",
+  "coverFile": "299_front-wrapper_id1229605.jpg",
+  "coverTitle": "Front wrapper",
+  "plateCount": 12,
+  "pageCount": 30,
+  "rectoCount": 17,
+  "versoCount": 13,
+  "pages": [
    {
     "idx": "0169",
     "imageID": "1229605",
@@ -2448,7 +2610,23 @@
     "captureUUID": "510d47df-8430-a3d9-e040-e00a18064a99",
     "title": "Back wrapper",
     "file": "328_back-wrapper_id1229608.jpg"
-   },
+   }
+  ]
+ },
+ {
+  "number": "12",
+  "label": "Part XII",
+  "kind": "Part",
+  "numeral": "XII",
+  "variant": "",
+  "description": "",
+  "coverFile": "329_front-wrapper_id1229609.jpg",
+  "coverTitle": "Front wrapper",
+  "plateCount": 12,
+  "pageCount": 30,
+  "rectoCount": 17,
+  "versoCount": 13,
+  "pages": [
    {
     "idx": "0186",
     "imageID": "1229609",
@@ -2675,16 +2853,18 @@
   ]
  },
  {
-  "number": "II",
-  "label": "Volume II",
-  "dates": "1849",
-  "description": "The continuation, gathered six years later, with a fresh title page and a new contents list.",
+  "number": "13",
+  "label": "Volume I",
+  "kind": "Volume",
+  "numeral": "I",
+  "variant": "",
+  "description": "Opens with Atkins’s notice, a title page reading “British Algæ Vol. I” and a contents list for the volume.",
   "coverFile": "359_front-wrapper_id1229614.jpg",
   "coverTitle": "Front wrapper",
-  "pageCount": 163,
+  "plateCount": 72,
+  "pageCount": 162,
   "rectoCount": 82,
   "versoCount": 80,
-  "syntheticBlankCount": 1,
   "pages": [
    {
     "idx": "0203",
@@ -3840,9 +4020,6 @@
     "file": "512_back-wrapper_id1229620.jpg"
    },
    {
-    "blank": true
-   },
-   {
     "idx": "0282",
     "imageID": "419527",
     "captureUUID": "510d47d9-4a5f-a3d9-e040-e00a18064a99",
@@ -3906,16 +4083,18 @@
   ]
  },
  {
-  "number": "III",
+  "number": "14",
   "label": "Volume III",
-  "dates": "1853",
-  "description": "The final volume, completed a decade after the first part, with an appendix of further species and corrections.",
+  "kind": "Volume",
+  "numeral": "III",
+  "variant": "",
+  "description": "Bound copy, ending with errata and an appendix of further species.",
   "coverFile": "521_binding-front-cover_id57321145.jpg",
   "coverTitle": "Binding, front cover",
+  "plateCount": 98,
   "pageCount": 221,
   "rectoCount": 107,
   "versoCount": 114,
-  "syntheticBlankCount": 0,
   "pages": [
    {
     "idx": "0285",

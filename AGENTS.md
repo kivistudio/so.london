@@ -35,6 +35,9 @@ These are load-bearing across every change. They override habits.
 - **Best software engineering practices, applied honestly.** Boring conventions over clever
   ones. One way to do each thing. Don't add abstraction until the second concrete use case
   exists. Don't introduce a framework or build tool unless its absence is actively painful.
+- **Remove unused code.** When a change leaves code, CSS rules, data fields, files or
+  comments that nothing uses any more, delete them in the same change — don't leave them
+  "just in case". Before deleting, search the repo to confirm nothing references them.
 - **Verify your own work.** Before claiming done, run the relevant smoke (`pnpm build`,
   `pnpm preview`, a Playwright screenshot). If you can't verify something, say so.
 
@@ -42,8 +45,8 @@ These are load-bearing across every change. They override habits.
 
 ```sh
 # One-time
-mise install                 # installs the Node version pinned in mise.toml
-corepack enable              # lets package.json's "packageManager": "pnpm@…" auto-fetch
+mise trust                   # mise ignores this repo's [settings] until trusted
+mise install                 # Node from mise.toml; pnpm from package.json's "packageManager"
 make install                 # alias for `pnpm install`
 
 # Local dev
@@ -65,14 +68,15 @@ The reader imports two generated files and serves one image folder:
 
 - `public/anna-atkins/plates.json` — 310 plates (catalog view): taxonomy, habitat, range,
   and the exact species string for the iNaturalist photo lookup.
-- `public/anna-atkins/volumes.json` — 3 volumes, 742 pages in original book reading order
-  (recto + verso + front matter + synthetic blanks): drives the flip-book + shelf.
+- `public/anna-atkins/volumes.json` — 14 books (one per NYPL container), 741 pages in original
+  book reading order (each recto followed by its verso scans): drives the flip-book + shelf.
 - `public/anna-atkins/book/` — 741 NYPL `q`-size JPGs (~1600px long edge, ~970 MB committed).
   Every visual in the reader reads the same `{NNN}_{slug}_id{imageID}.jpg` per capture.
 
-`plates.json` and `volumes.json` are imported directly by
-`src/pages/anna-atkins/index.astro` and serialized into `window.__PLATES__` /
-`window.__VOLUMES__` via Astro's `define:vars`.
+`volumes.json` is imported by `src/pages/anna-atkins/index.astro`: the shelf is rendered at
+build time and the reader script receives it via Astro's `define:vars`. `plates.json` is
+imported only by `src/pages/anna-atkins/catalog.astro` — the unfinished catalogue, parked on
+its own unlinked, `noindex` page until it goes back on the main page.
 
 **There is no data pipeline in this repo.** These artifacts are generated in the
 `studio-tools` repo (from the NYPL API + a ~94 GB ProtonDrive archive of TIFF masters) and
@@ -80,41 +84,25 @@ copied here. To regenerate, run the pipeline there and copy the outputs over.
 
 ## Anna Atkins reader conventions
 
-- **Single-file, self-contained.** The reader is one `.astro` page with inline global CSS +
-  scripts. It does not use `BaseLayout` or the shared components — that is deliberate, keep it.
-  (Breaking it into components is a possible future task, not a current invariant.)
-- **Single image folder.** Everything visual lives in `public/anna-atkins/book/`. Reader
-  spread, hero shelf cover, catalog row thumbnail, expand-panel preview, lightbox — all read
-  the same file per capture.
-- **Reader rules:**
-  - The flip-book uses CSS `rotateY` 3D transforms with `backface-visibility: hidden`.
-  - `<html>` gets the class `reader-open` while the reader is open — that locks body scroll
-    so the 3D-flipping leaf doesn't trigger a scrollbar flash.
-  - Counter and page-jump input count **rectos only**: `isRecto(p)` is true when the page is
-    neither `blank: true` nor `extra: true`.
-  - Spread indexing: `rightIdx = 0` is the closed cover; `rightIdx = 2` is the first open
-    spread; flips advance/retreat by 2.
-- **iNaturalist photo lookup is strict.** Only an exact species-name match counts; no genus or
-  modern-name fallback. Cards without a match show a striped placeholder.
-- **Catalog vs reader order.** The page below the hero is a Werner-style catalog table (one
-  section per algal group) with click-to-expand rows, ordered alphabetically by genus then
-  species. The reader is the only place that follows the original NYPL book order.
-- **iNat photos are fetched on demand** — only when a catalog row is expanded, once per panel.
-- **Range-map column is a placeholder** — every row renders the same tiny abstract SVG. Real
-  range data replaces it later; don't wire up a world map yet.
+After changing the reader, open it in a desktop browser and flip through a Part. Check that:
+
+- each page turn looks clean: no mirrored or see-through page shows during the flip;
+- nothing behind the reader scrolls or flashes a scrollbar while it's open;
+- the closed cover shows on its own, and every open spread pairs the right left and right pages;
+- the page counter and page-jump box land on the page they say.
 
 ## Conventions to keep (site-wide)
 
 - **Astro, vanilla output, no React.** `<script>` blocks for small interactivity (the Anna
-  Atkins reader). No CSS framework — design tokens in `src/styles/tokens.css` + scoped
-  component styles.
+  Atkins reader).
 - **Semantic HTML first.** Use the element that means what you intend, not a styled `<div>`.
   Landmarks (`<main>`, `<nav>`, `<header>`, `<footer>`); one `<h1>` per page (an `.sr-only`
   one is fine when the visible mark is a logo) and no skipped heading levels; a `<section>`
   with a heading for each thematic block; real lists (`<ul>`/`<ol>`/`<li>`) for lists;
   `<button>` for actions vs `<a>` for navigation; `<figure>`/`<figcaption>` for media; notes
   as an endnotes `<section>` (`role="doc-endnotes"`), never a page `<footer>`. Every
-  `target="_blank"` link carries `rel="noopener noreferrer"`. Reach for `<div>`/`<span>` only
+  `target="_blank"` link carries `rel="noopener"` — not `noreferrer`, because the author wants
+  the sites she links to (such as the NYPL) to see that visitors come from her site. Reach for `<div>`/`<span>` only
   when no semantic element fits (e.g. a pure layout wrapper).
 - **`assets/` at the repo root is the shared asset library** for non-source files (encoded
   video, the intro image). Astro consumes from here via Vite `import`; Vite hashes the URLs in
@@ -136,7 +124,11 @@ exist ask before adding a token to `tokens.css` (and document the _why_).
   set-off name. Headings are full-ink, never greyed.
 - `--fg-dim` — _only_ secondary/meta text: footnotes, sign-off, colophon.
   Never used to manufacture heading hierarchy.
-- `--cv-red` — the single functional accent, reserved for footnote markers.
+- `--cv-red` — the single functional accent, reserved for footnote markers. Every
+  footnote and side-note asterisk across Short Obsessions (`FootnoteRef`, `SideNote`,
+  `SideNoteRef`), the Anna Atkins page included, is `--cv-red`, never restyled per page.
+  The Atkins page doesn't load `tokens.css`, so it sets `--cv-red` in its own `:root`
+  with the same value. Keep the two in step.
 - Backgrounds come from `--bg` (light pages `#FBF9F5`, dark pages `--ink`).
   `--paper` is the light-_ink_ for text on dark surfaces (landing chrome, the
   Anna Atkins reader) — it is not a background.
@@ -189,10 +181,10 @@ decoration.
 
 GitHub Pages, source = GitHub Actions, workflow at `.github/workflows/deploy.yml`:
 
-1. `pnpm/action-setup` + `actions/setup-node@v4` (reads `.nvmrc`).
-2. `pnpm install --frozen-lockfile`.
-3. `pnpm build` with `PUBLIC_SHOPIFY_DOMAIN=${{ secrets.SHOPIFY_DOMAIN }}` injected.
-4. Upload `./dist` as the Pages artifact and deploy.
+1. `withastro/action` sets up Node (`node-version: 24` in the workflow — keep in sync with
+   `mise.toml`) and pnpm (from `packageManager` in `package.json`), installs, and runs
+   `astro build` with `PUBLIC_SHOPIFY_DOMAIN=${{ secrets.SHOPIFY_DOMAIN }}` injected.
+2. Upload `./dist` as the Pages artifact and deploy.
 
 Custom domain `shortobsessions.com` is set via `public/CNAME`. Repo:
 `https://github.com/kivistudio/so.london`.
