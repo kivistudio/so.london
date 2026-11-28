@@ -184,6 +184,12 @@ decoration.
   the H.264 mp4 (`assets/video/landing.mp4`). Don't add a webm back unless you've verified it's
   actually smaller.
 
+## Committing
+
+When a small, well-defined task is finished (and the build passes), commit it without
+waiting to be asked: one commit per task, on the current feature branch, never on `main`.
+Don't push or open a PR unless asked. Leave unrelated untracked files out of the commit.
+
 ## Deployment
 
 GitHub Pages, source = GitHub Actions, workflow at `.github/workflows/deploy.yml`:
