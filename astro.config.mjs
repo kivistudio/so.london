@@ -13,13 +13,11 @@ export default defineConfig({
   integrations: [mdx()],
   markdown: {
     rehypePlugins: [
-      // Every external link in markdown/MDX opens in a new tab, with rel set for
-      // security (noopener) and privacy (noreferrer). Relative/internal links
-      // are left untouched. MDX inherits this via extendMarkdownConfig.
-      [
-        rehypeExternalLinks,
-        { target: '_blank', rel: ['noopener', 'noreferrer'] },
-      ],
+      // Every external link in markdown/MDX opens in a new tab with
+      // rel="noopener". No noreferrer: linked sites should see shortobsessions.com
+      // in their analytics (see AGENTS.md). Relative/internal links are left
+      // untouched. MDX inherits this via extendMarkdownConfig.
+      [rehypeExternalLinks, { target: '_blank', rel: ['noopener'] }],
       // Headings become self-linking anchors: rehypeSlug adds an id to each
       // heading, then rehypeAutolinkHeadings wraps the heading text in an
       // <a href="#id"> so every header is a permalink to itself. Order matters —

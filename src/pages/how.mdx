@@ -23,6 +23,11 @@ export const noreferrer = (
   says the referrer “works like asking a customer how he
   found out about a service”. With noreferrer, the visit shows up as "direct".
   <br />
+  Heads up: if your site is built with a web framework such as Astro, a plugin
+  or setting might be quietly adding noreferrer to every outgoing link. Mine
+  was. Removing it from your HTML is not enough, you will also need to update
+  the settings.
+  <br />
   Read more:
   <br />
   •{" "}
