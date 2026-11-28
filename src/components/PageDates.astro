@@ -1,17 +1,17 @@
 ---
 /**
- * "Published on … · Updated on …" line for an article or page of prose.
- * Dates are ISO strings (YYYY-MM-DD). Each content update appends a date to
- * `updated`; earlier ones stay, so the page keeps its own change history.
+ * "Published on … · Last updated on …" line for an article or page of prose.
+ * Dates are ISO strings (YYYY-MM-DD). On a content update, set `updated` to
+ * that day's date.
  *
- * Usage:  <PageDates published="2026-09-08" updated={['2026-11-28']} />
+ * Usage:  <PageDates published="2026-09-08" updated="2026-11-28" />
  */
 interface Props {
   published: string;
-  updated?: string[];
+  updated?: string;
 }
 
-const { published, updated = [] } = Astro.props;
+const { published, updated } = Astro.props;
 
 const format = (iso: string) =>
   new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', {
@@ -24,11 +24,11 @@ const format = (iso: string) =>
 
 <p class="page-dates">
   Published on <time datetime={published}>{format(published)}</time>
-  {updated.map((iso) => (
+  {updated && (
     <>
-      {' · '}Updated on <time datetime={iso}>{format(iso)}</time>
+      {' · '}Last updated on <time datetime={updated}>{format(updated)}</time>
     </>
-  ))}
+  )}
 </p>
 
 <style>

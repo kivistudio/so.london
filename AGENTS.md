@@ -109,10 +109,10 @@ After changing the reader, open it in a desktop browser and flip through a Part.
   phrase as a generic term or quoted search query ("short obsessions" in `/notes/`) is not the
   name and stays plain.
 - **Every article carries its dates.** Any page or post of prose (About, a `/notes/` or
-  `/how/` entry, a blog post) shows when it was published. When its content changes, add a
-  new "Updated on" date; keep the earlier ones. Pages use `<PageDates published="YYYY-MM-DD"
-  updated={[…]} />`; dated MDX entries (`## 8 September 2026`) add an "Updated on" line
-  under the heading. Fixing typos or markup alone isn't an update.
+  `/how/` entry, a blog post) shows when it was published. When its content changes, set
+  its "Last updated on" date to that day. Pages use `<PageDates published="YYYY-MM-DD"
+  updated="YYYY-MM-DD" />`; dated MDX entries (`## 8 September 2026`) add a "Last updated
+  on" line under the heading. Fixing typos or markup alone isn't an update.
 - **Outbound links never use `rel="noreferrer"`** (nor `referrerpolicy="no-referrer"` or a
   site-wide `<meta name="referrer">` that hides the origin). The author wants every site she
   links to (the NYPL, small blogs, tools) to see shortobsessions.com in its analytics.
