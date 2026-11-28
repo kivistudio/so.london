@@ -1,6 +1,7 @@
 ---
 import plates from '../../../public/anna-atkins/plates.json';
 import Wordmark from '../../components/Wordmark.astro';
+import Analytics from '../../components/Analytics.astro';
 import favicon from '../../../assets/logos/favicon.png';
 import appleTouchIcon from '../../../assets/logos/180x180.png';
 
@@ -20,6 +21,7 @@ import appleTouchIcon from '../../../assets/logos/180x180.png';
 <link rel="apple-touch-icon" href={appleTouchIcon.src} />
 
 <link rel="stylesheet" href="https://indestructibletype.com/fonts/Jost.css" type="text/css" charset="utf-8" />
+<Analytics />
 <style is:global is:inline>
 
 /* ============================================================
@@ -676,16 +678,16 @@ em.sp { font-style: italic; font-weight: inherit; }
 <footer class="colophon">
   <div class="colophon__mark">~ finis ~</div>
   <p class="colophon__text">
-    The scans come from the <a href="https://digitalcollections.nypl.org/divisions/spencer-collection" target="_blank" rel="noopener noreferrer">New York Public Library’s Spencer Collection</a>.
-    They were downloaded from <a href="https://digitalcollections.nypl.org/collections/28d304b0-c612-012f-cd39-58d385a7bc34" target="_blank" rel="noopener noreferrer">NYPL Digital Collections</a> and arranged here
+    The scans come from the <a href="https://digitalcollections.nypl.org/divisions/spencer-collection" target="_blank" rel="noopener">New York Public Library’s Spencer Collection</a>.
+    They were downloaded from <a href="https://digitalcollections.nypl.org/collections/28d304b0-c612-012f-cd39-58d385a7bc34" target="_blank" rel="noopener">NYPL Digital Collections</a> and arranged here
     for easy browsing.
     Modern photographs are drawn from <em>iNaturalist</em> — the work
     of many naturalists, each credited per image.
   </p>
   <div class="colophon__meta">
-    <a href="https://www.inaturalist.org" target="_blank" rel="noopener noreferrer">iNaturalist</a>
+    <a href="https://www.inaturalist.org" target="_blank" rel="noopener">iNaturalist</a>
     <span>·</span>
-    <a href="https://www.c82.net/werner" target="_blank" rel="noopener noreferrer">in the spirit of Werner’s Nomenclature</a>
+    <a href="https://www.c82.net/werner" target="_blank" rel="noopener">in the spirit of Werner’s Nomenclature</a>
   </div>
 </footer>
 
@@ -965,8 +967,8 @@ function panelMarkup(idx) {
 
       <div class="catalog__panel-footer">
         <span>Plate ${escapeHtml(p.idx)} · ${escapeHtml(p.containerLabel)} · ${escapeHtml(p.groupLabel)}</span>
-        <a href="https://digitalcollections.nypl.org/items/${encodeURIComponent(p.captureUUID)}" target="_blank" rel="noopener noreferrer">N.Y.P.L. plate ↗</a>
-        <a href="https://www.inaturalist.org/taxa/search?q=${encodeURIComponent(p.iNatQuery)}" target="_blank" rel="noopener noreferrer">iNat ↗</a>
+        <a href="https://digitalcollections.nypl.org/items/${encodeURIComponent(p.captureUUID)}" target="_blank" rel="noopener">N.Y.P.L. plate ↗</a>
+        <a href="https://www.inaturalist.org/taxa/search?q=${encodeURIComponent(p.iNatQuery)}" target="_blank" rel="noopener">iNat ↗</a>
       </div>
     </div>
   `;
@@ -1047,7 +1049,7 @@ async function loadPhoto(figure) {
   }
   img.src = res.url;
   img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
-  cap.innerHTML = `${res.attribution} · <a href="https://www.inaturalist.org/taxa/${res.taxonId}" target="_blank" rel="noopener noreferrer">${escapeHtml(res.taxonName)}</a> on iNat`;
+  cap.innerHTML = `${res.attribution} · <a href="https://www.inaturalist.org/taxa/${res.taxonId}" target="_blank" rel="noopener">${escapeHtml(res.taxonName)}</a> on iNat`;
   figure.classList.remove('placeholder');
 }
 

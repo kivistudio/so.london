@@ -1,6 +1,7 @@
 ---
 import volumesData from '../../../public/anna-atkins/volumes.json';
 import Wordmark from '../../components/Wordmark.astro';
+import Analytics from '../../components/Analytics.astro';
 import SideNote from '../../components/SideNote.astro';
 import favicon from '../../../assets/logos/favicon.png';
 import appleTouchIcon from '../../../assets/logos/180x180.png';
@@ -28,6 +29,7 @@ const showBuy = false;
 <link rel="apple-touch-icon" href={appleTouchIcon.src} />
 
 <link rel="stylesheet" href="https://indestructibletype.com/fonts/Jost.css" type="text/css" charset="utf-8" />
+<Analytics />
 <style is:global is:inline>
 
 /* ============================================================
@@ -747,6 +749,7 @@ em.sp { font-style: italic; font-weight: inherit; }
       ? <a href={buyHref}>Buy</a>
       : <span class="hero__menu-off" title="Prints coming soon">Buy</span>)}
     <a href="#about">About</a>
+    <a href="/how/">How?</a>
   </nav>
 
   <div class="hero__title-block">
@@ -868,8 +871,8 @@ em.sp { font-style: italic; font-weight: inherit; }
 <footer class="colophon">
   <div class="colophon__mark">~ finis ~</div>
   <p class="colophon__text">
-    The scans come from the <a href="https://digitalcollections.nypl.org/divisions/spencer-collection" target="_blank" rel="noopener noreferrer">New York Public Library’s Spencer Collection</a>.
-    They were downloaded from <a href="https://digitalcollections.nypl.org/collections/28d304b0-c612-012f-cd39-58d385a7bc34" target="_blank" rel="noopener noreferrer">NYPL Digital Collections</a> and arranged here
+    The scans come from the <a href="https://digitalcollections.nypl.org/divisions/spencer-collection" target="_blank" rel="noopener">New York Public Library’s Spencer Collection</a>.
+    They were downloaded from <a href="https://digitalcollections.nypl.org/collections/28d304b0-c612-012f-cd39-58d385a7bc34" target="_blank" rel="noopener">NYPL Digital Collections</a> and arranged here
     for easy browsing.
   </p>
 </footer>

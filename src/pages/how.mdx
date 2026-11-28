@@ -1,0 +1,89 @@
+---
+layout: ../layouts/MarkdownPage.astro
+title: How?
+---
+
+import SideNote from "../components/SideNote.astro";
+import SideNoteRef from "../components/SideNoteRef.astro";
+
+export const noreferrer = (
+
+<>
+  <strong>What is rel="noreferrer"?</strong>
+  <br />
+  When you click a link, your browser usually tells the next site where you came
+  from. That is how a small site's dashboard can show "3 visitors from
+  shortobsessions.com".
+  <br />
+  Adding rel="noreferrer" tells the browser, in MDN's words, “to omit the Referer
+  header and otherwise leak no referrer information”. Elisabeth Leonhardt in{" "}
+  <a href="https://dev.to/frontenddeveli/a-down-to-earth-explication-of-the-noopener-noreferrer-attributes-92n">
+    this dev.to article
+  </a>{" "}
+  says the referrer “works like asking a customer how he
+  found out about a service”. With noreferrer, the visit shows up as "direct".
+  <br />
+  Heads up: if your site is built with a web framework such as Astro, a plugin
+  or setting might be quietly adding noreferrer to every outgoing link. Mine
+  was. Removing it from your HTML is not enough, you will also need to update
+  the settings.
+  <br />
+  Read more:
+  <br />
+  •{" "}
+  <a href="https://dev.to/frontenddeveli/a-down-to-earth-explication-of-the-noopener-noreferrer-attributes-92n">
+    A down-to-earth explication of the noopener noreferrer attributes
+  </a>
+  , Elisabeth Leonhardt, dev.to
+  <br />
+  •{" "}
+  <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel/noreferrer">
+    rel="noreferrer"
+  </a>
+  , MDN
+</>
+);
+
+# How?
+
+## 28 November 2026
+
+### Codifying values and choosing tools
+
+As soon as you have a page up you want to know if anyone visits it and so you will need web analytics. If you're using a website builder, likely you get a ready made dashboard out-of-the box. It does come with the annoying "This site uses cookies..." banner for your every guest. If you're building your page from scratch, like my dad (not because you're tech savvy, but because you're cheap), you will type something like "how do i know how many people visit my page?". Within the next 30 seconds the agent will either instruct you how or add something to your code directly. Most likely that something will be a short Google Analytics snippet. You will then log into the console with your existing Google account and voilà, you have beautiful user reports. For free. So why not? If you are writing your first website you should go ahead. There will be another 100 things to add to the page today.
+
+If you set up your AI Assistant "efficiently", your other 100 things will be added to your website without you ever having to make a decision. Not to mention that you will create yet another page that looks like every other page, some of these decisions will impact someone else's web analytics, that is their user count. And if you're lucky and your page makes it eventually you'll pay them some money or pay with your visitors' data.
+
+I won't advocate for you to go manual or to intentionally make each one of these 100 decisions, as that will mean you never release. But there is a simple way that you can guide your AI to make decisions that align with your values.
+
+I asked Claude: "how do you know I prefer EU and open source?" and it returned the following "memories":
+
+> Consistent preference for simple, well-maintained libraries; avoids tools that feel over-commercial or inauthentic
+
+> consistent stated priorities around UK-first provenance, European data sovereignty, avoiding US-jurisdiction cloud providers, and environmental values (B Corp, renewable energy)
+
+It's easy to add your values to any AI assistant, just ask yours how. And the good thing is that you can always tell it to ignore them or add a clause such as "I have ADHD, stop me going down rabbit holes".
+
+Very often you will still end up using the metaphorical Google Analytics<SideNote>Although I have tried using Mistral AI for several months, unfortunately for now Claude is miles away. You need to pick your battles.</SideNote>, when other solutions prove to be more complicated or cost money. But a handful of times you will find a tool, library or blog made by a person. And one day that person will wake up, open their laptop, log into their analytics dashboard and see you there. And that will make their day. And maybe one day, on that dashboard they will find enough users to quit their Google job and devote themselves full time to their own slice of the internet.
+
+But you don't have to be an altruist. Your website's URL will show up in their dashboard<SideNote id="noreferrer">{noreferrer}</SideNote>, amongst their handful of users. And wouldn't you click on that link to see who that was?
+
+### Web analytics
+
+On top of the above values saved in the memory of Claude, when I was looking for a web analytics provider I needed it:
+
+1. To be free
+2. To have the ability in the future to understand the traffic coming from AI bots. As my whole experiment is: "can I get to people without the use of online marketing?", my bet is that some AI bot will find my website useful, present it to their masters and that person will happen to be a curious one and click on the reference link.
+3. To not have to self-host it. I am not ready for that.
+
+As I was writing the section on "Codifying values and choosing tools" I had already decided to go with PostHog. A San Francisco company with funding of about $182M and at some point valued at $1.4 billion. That makes a company in the business of making ugly user dashboards one of only a few thousand billion-dollar companies worldwide. The code was ready to ship. They lured me in with their 90s aesthetics and playful, honest language. And it fulfilled all of the above needs.
+
+However, writing the above paragraphs somehow got to me and I decided to give it one more try:
+
+> "can you make a proper research for smaller web analytics providers. there cannot be only 10 out there in the world"
+
+and turned on Research tool.
+
+Two hours later I ran out of AI tokens and had to admit defeat. Every reasonable alternative either had no free tier (Plausible, Overtracking) or ran on Amazon Web Services (HitKeep Cloud, Cabin). If the money goes to Amazon anyway, why bother?
+
+But... if you are reading these words, thanks to some venture capital money I will know that you're here<SideNoteRef for="noreferrer" />. For free. And if you are an AI crawler I'm coming for you soon.
