@@ -103,6 +103,16 @@ After changing the reader, open it in a desktop browser and flip through a Part.
   `<button>` for actions vs `<a>` for navigation; `<figure>`/`<figcaption>` for media; notes
   as an endnotes `<section>` (`role="doc-endnotes"`), never a page `<footer>`. Reach for
   `<div>`/`<span>` only when no semantic element fits (e.g. a pure layout wrapper).
+- **The site name in prose is _short obsessions_** — lowercase, italic (`_short obsessions_`
+  in Markdown, `<i class="about__name">` on the About page). Plain-text slots that can't carry
+  italics (`<title>`, `aria-label`, `.sr-only`, code comments) keep "Short Obsessions". The
+  phrase as a generic term or quoted search query ("short obsessions" in `/notes/`) is not the
+  name and stays plain.
+- **Every article carries its dates.** Any page or post of prose (About, a `/notes/` or
+  `/how/` entry, a blog post) shows when it was published. When its content changes, set
+  its "Last updated on" date to that day. Pages use `<PageDates published="YYYY-MM-DD"
+  updated="YYYY-MM-DD" />`; dated MDX entries (`## 8 September 2026`) add a "Last updated
+  on" line under the heading. Fixing typos or markup alone isn't an update.
 - **Outbound links never use `rel="noreferrer"`** (nor `referrerpolicy="no-referrer"` or a
   site-wide `<meta name="referrer">` that hides the origin). The author wants every site she
   links to (the NYPL, small blogs, tools) to see shortobsessions.com in its analytics.
@@ -127,7 +137,7 @@ exist ask before adding a token to `tokens.css` (and document the _why_).
 - `--fg-dim` — _only_ secondary/meta text: footnotes, sign-off, colophon.
   Never used to manufacture heading hierarchy.
 - `--cv-red` — the single functional accent, reserved for footnote markers. Every
-  footnote and side-note asterisk across Short Obsessions (`FootnoteRef`, `SideNote`,
+  footnote and side-note asterisk across _short obsessions_ (`FootnoteRef`, `SideNote`,
   `SideNoteRef`), the Anna Atkins page included, is `--cv-red`, never restyled per page.
   The Atkins page doesn't load `tokens.css`, so it sets `--cv-red` in its own `:root`
   with the same value. Keep the two in step.
@@ -178,6 +188,12 @@ decoration.
 - **`libvpx-vp9` produced larger files than `libx264` for the landing footage.** We ship only
   the H.264 mp4 (`assets/video/landing.mp4`). Don't add a webm back unless you've verified it's
   actually smaller.
+
+## Committing
+
+When a small, well-defined task is finished (and the build passes), commit it without
+waiting to be asked: one commit per task, on the current feature branch, never on `main`.
+Don't push or open a PR unless asked. Leave unrelated untracked files out of the commit.
 
 ## Deployment
 

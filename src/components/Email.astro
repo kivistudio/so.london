@@ -1,0 +1,53 @@
+---
+/**
+ * The contact email address, protected from scrapers: the HTML only carries the
+ * obfuscated "hello [at] kivi [dot] studio"; the browser assembles the real
+ * address. Clicking copies it to the clipboard (no mailto).
+ *
+ * Usage:  Let me know: <Email />.
+ *
+ * Base styles sit inside :where() (zero specificity), so a page restyles it by
+ * passing a class, e.g. <Email class="intro__email" />.
+ */
+const { user = 'hello', domain = 'kivi.studio', class: className } = Astro.props;
+const obfuscated = `${user} [at] ${domain.replaceAll('.', ' [dot] ')}`;
+---
+
+<button
+  type="button"
+  class:list={['email', className]}
+  data-user={user}
+  data-domain={domain}
+  title="Copy email address">{obfuscated}</button
+>
+
+<script>
+  for (const el of document.querySelectorAll<HTMLElement>('.email')) {
+    const addr = `${el.dataset.user}@${el.dataset.domain}`;
+    el.textContent = addr;
+    el.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(addr);
+        el.textContent = 'copied ✓';
+        setTimeout(() => { el.textContent = addr; }, 1500);
+      } catch { /* clipboard blocked: the address is still selectable */ }
+    });
+  }
+</script>
+
+<style>
+  :where(.email) {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--hairline, currentColor);
+    padding: 0;
+    cursor: copy;
+    user-select: all;
+  }
+
+  :where(.email:hover) {
+    border-bottom-color: var(--fg, currentColor);
+  }
+</style>
