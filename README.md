@@ -9,6 +9,7 @@ fixations. Each "obsession" lives in its own world inside the same static deploy
   310 cyanotype plates, 3 volumes, flip-book reading view
 - **`/notes/`** — running notes on hyperfocus / short obsessions (MDX, with sidenotes)
 - **`/inspirations/`** — a running list of influences
+- **`/how/`** — dated posts on the decisions and tools behind the site
 
 The `anna-atkins` obsession is a self-contained "part" — its own route, its own
 assets — sharing only the umbrella landing/nav shell.
