@@ -5,6 +5,7 @@ import Wordmark from '../components/Wordmark.astro';
 import FootnoteRef from '../components/FootnoteRef.astro';
 import Footnotes from '../components/Footnotes.astro';
 import Email from '../components/Email.astro';
+import PageDates from '../components/PageDates.astro';
 import { createFootnotes } from '../lib/footnotes.js';
 
 // Notes in order of appearance; markers (*, **, …) are derived from position.
@@ -114,6 +115,7 @@ const notes = createFootnotes([
 
       <footer class="about__footer">
         <p class="about__signoff">so..| Ela</p>
+        <PageDates published="2026-09-08" updated={['2026-11-28']} />
       </footer>
       </article>
 
