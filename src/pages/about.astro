@@ -4,6 +4,7 @@ import Nav from '../components/Nav.astro';
 import Wordmark from '../components/Wordmark.astro';
 import FootnoteRef from '../components/FootnoteRef.astro';
 import Footnotes from '../components/Footnotes.astro';
+import Email from '../components/Email.astro';
 import { createFootnotes } from '../lib/footnotes.js';
 
 // Notes in order of appearance; markers (*, **, …) are derived from position.
@@ -30,11 +31,10 @@ const notes = createFootnotes([
       </p>
       <p>
         It's not a blog, nor it is a shop. It's a collection of rabbit holes where you will learn, have fun and
-        perhaps shop. But do not expect typical "Collections", "About", "Blog"
-        sections. Expect to be confused...
+        perhaps shop. Expect to be confused...
       </p>
       <p>
-        You're always welcome to reach out to me with: "The video on your main
+        You're always welcome to reach out to me at <Email /> with: "The video on your main
         page is driving me crazy", "ooo... I didn't know about the Indie Web.
         Thanks!". Or anything else... how you collaborate with the website will
         ultimately drive what the website becomes.
