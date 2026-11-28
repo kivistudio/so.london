@@ -13,6 +13,7 @@ static site: an umbrella shell plus self-contained obsession "parts", each its o
   310 plates, 3 volumes, flip-book reading view.
 - **`/notes/`** — running notes on hyperfocus / short obsessions (MDX, with side/footnotes).
 - **`/inspirations/`** — a running list of influences (Markdown).
+- **`/how/`** — dated posts on the decisions and tools behind the site (MDX, with side notes).
 
 Built with **Astro** (vanilla output, no React, no client framework). The Anna Atkins reader
 is a single-file vanilla HTML/CSS/JS page (`src/pages/anna-atkins/index.astro`) that imports
@@ -100,10 +101,11 @@ After changing the reader, open it in a desktop browser and flip through a Part.
   one is fine when the visible mark is a logo) and no skipped heading levels; a `<section>`
   with a heading for each thematic block; real lists (`<ul>`/`<ol>`/`<li>`) for lists;
   `<button>` for actions vs `<a>` for navigation; `<figure>`/`<figcaption>` for media; notes
-  as an endnotes `<section>` (`role="doc-endnotes"`), never a page `<footer>`. Every
-  `target="_blank"` link carries `rel="noopener"` — not `noreferrer`, because the author wants
-  the sites she links to (such as the NYPL) to see that visitors come from her site. Reach for `<div>`/`<span>` only
-  when no semantic element fits (e.g. a pure layout wrapper).
+  as an endnotes `<section>` (`role="doc-endnotes"`), never a page `<footer>`. Reach for
+  `<div>`/`<span>` only when no semantic element fits (e.g. a pure layout wrapper).
+- **Outbound links never use `rel="noreferrer"`** (nor `referrerpolicy="no-referrer"` or a
+  site-wide `<meta name="referrer">` that hides the origin). The author wants every site she
+  links to (the NYPL, small blogs, tools) to see shortobsessions.com in its analytics.
 - **`assets/` at the repo root is the shared asset library** for non-source files (encoded
   video, the intro image). Astro consumes from here via Vite `import`; Vite hashes the URLs in
   `dist/_astro/`.
